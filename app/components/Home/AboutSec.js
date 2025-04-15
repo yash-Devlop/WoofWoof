@@ -12,7 +12,7 @@ const AboutSec = () => {
           height={300}
           className=" right-0 bottom-0 absolute rounded-[4rem]"
         />
-        <div className=" grid grid-cols-1 lg:grid-cols-2 gap-4 pb-30">
+        <div className=" relative grid grid-cols-1 lg:grid-cols-2 gap-8 pb-30">
           <div className="">
             <Image
               src="/images/dogCouple.png"
@@ -22,14 +22,14 @@ const AboutSec = () => {
               className=" rounded-[4rem]"
             />
           </div>
-          <div className=" space-y-15 flex flex-col items-center">
-            <h2 className=" text-5xl font-extrabold text-gray-800">
+          <div className=" space-y-3 lg:space-y-15 flex flex-col items-center">
+            <h2 className=" text-3xl lg:text-5xl font-extrabold text-gray-800">
               ABOUT WED MY PET
             </h2>
-            <h3 className=" text-[2.15rem] font-semibold">
+            <h3 className=" text-2xl lg:text-[2.15rem] font-semibold">
               Welcome to Wedmypet - Where Pets Find Love!
             </h3>
-            <p className=" text-justify text-2xl scale-y-125 leading-10 font-medium font-saira">
+            <p className=" text-justify text-2xl lg:scale-y-125 lg:leading-10 font-medium font-saira">
               At Wedmypet, we believe that love knows no boundaries, not even
               for our furry friends. Our mission is to create a vibrant and
               inclusive community that connects pets and their loving owners,

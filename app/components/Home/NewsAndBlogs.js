@@ -35,9 +35,9 @@ const NewsAndBlogs = () => {
             alt="animatedDog"
             width={350}
             height={300}
-            className=" absolute -left-26.5 -top-30"
+            className="hidden lg:block absolute -left-26.5 -top-38"
           />
-          <div className="gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 px-25">
+          <div className="gap-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 lg:px-25 px-8">
             {blogData.map((blog, index) => (
               <div key={index} className=" space-y-4">
                 <Image

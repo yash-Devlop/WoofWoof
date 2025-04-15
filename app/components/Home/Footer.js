@@ -9,12 +9,12 @@ const Footer = () => {
         alt="footer"
         width={600}
         height={600}
-        className=" absolute w-full "
+        className=" absolute w-full h-full object-cover"
       />
       <div className="w-full relative py-12">
         <div className=" px-4 md:px-24 xl:px-40 space-y-10">
-          <div className=" flex justify-between items-center">
-            <div className=" max-w-[200px] space-y-5">
+          <div className=" grid grid-cols-1 lg:grid-cols-[25%_75%] gap-10 justify-center items-center">
+            <div className=" flex flex-col justify-center items-center lg:max-w-[200px] space-y-5">
               <Image src="/images/logo.png" alt="logo" width={50} height={50} />
               <div>
                 Connecting Pets and People: Your Happy Tails Start Here!
@@ -103,7 +103,7 @@ const Footer = () => {
               </div>
             </div>
             <div>
-              <div className=" flex gap-10">
+              <div className=" grid grid-cols-2 lg:grid-cols-4 gap-10">
                 <div className=" px-10 space-y-2">
                   <div className=" font-semibold">Company</div>
                   <div>About Us</div>
@@ -134,7 +134,7 @@ const Footer = () => {
               </div>
             </div>
           </div>
-          <div className=" flex justify-between items-center mt-10">
+          <div className=" flex justify-between flex-col md:flex-row items-center mt-10">
             <div> © Copyright Wed My Pet 2025.</div>
             <Image
               src="/images/payment.png"
