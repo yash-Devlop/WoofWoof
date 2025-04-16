@@ -21,7 +21,7 @@ const Page = () => {
   };
 
   const handleSubmit = () => {
-    console.log("Form Data :", formData);
+    console.log("Form Data1 :", formData);
     // You can send this to backend later
   };
 
