@@ -9,6 +9,7 @@ import SmartWay from "./components/Home/SmartWay";
 import Footer from "./components/Home/Footer";
 
 export default function Home() {
+  console.log("hello");
   return (
     <div className="">
       <div className="hidden w-full md:flex justify-between px-24 py-2 ">
