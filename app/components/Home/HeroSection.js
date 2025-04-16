@@ -2,10 +2,11 @@ import Image from "next/image";
 import React from "react";
 
 const HeroSection = () => {
+
   return (
     <div className="w-full py-32 lg:py-16">
       <div className=" px-4 md:px-24 xl:px-40">
-        <div className="relative w-full min-h-[400px]">
+        <div className="relative w-full min-h-[500px]">
           <Image
             src="/images/group1.png"
             alt="group"
