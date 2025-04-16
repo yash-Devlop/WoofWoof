@@ -172,7 +172,7 @@ const NavBar = () => {
         </div>
       </nav>
       {isOpen && (
-        <div className="absolute z-50 bg-gray-600 top-30 right-10 md:right-40 lg:right-50 rounded-2xl">
+        <div className="fixed z-50 bg-gray-600 top-30 right-10 md:right-40 lg:right-50 rounded-2xl">
           <ul className=" flex flex-col justify-center items-center gap-6 text-black font-semibold py-4">
             {["Home", "Shop", "About Us", "Contact Us", "Services"].map(
               (item, index) => {

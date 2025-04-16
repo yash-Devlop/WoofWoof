@@ -11,7 +11,7 @@ const HeroSection = () => {
             alt="group"
             width={400}
             height={400}
-            className="absolute w-full h-[60vh]"
+            className="absolute w-full h-full lg:h-[60vh] object-cover"
           />
           <div className=" grid grid-cols-1 lg:grid-cols-2 gap-4 ">
             <div className="relative flex flex-col justify-center items-center space-y-20">
