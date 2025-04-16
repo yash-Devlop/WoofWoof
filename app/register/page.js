@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-const page = () => {
+const Page = () => {
   const router = useRouter();
   const [formData, setFormData] = useState({
     email: "",
@@ -195,4 +195,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
