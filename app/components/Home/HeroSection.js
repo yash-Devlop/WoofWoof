@@ -1,38 +1,58 @@
+"use client";
 import Image from "next/image";
 import React from "react";
+import { useRouter } from "next/navigation";
 
 const HeroSection = () => {
+  const router = useRouter();
 
   return (
     <div className="w-full py-32 lg:py-16">
-      <div className=" px-4 md:px-24 xl:px-40">
-        <div className="relative w-full min-h-[500px]">
+      <div className=" px-4 md:px-16 xl:px-30">
+        <div className="relative w-full min-h-[600px]">
           <Image
             src="/images/group1.png"
             alt="group"
             width={400}
             height={400}
-            className="absolute w-full h-full lg:h-[60vh] object-cover"
+            className="hidden lg:block absolute w-full h-full xl:h-[85vh] object-contain"
           />
-          <div className=" grid grid-cols-1 lg:grid-cols-2 gap-4 ">
+          <div className=" grid grid-cols-1 lg:grid-cols-2 gap-4 lg:py-24 ">
             <div className="relative flex flex-col justify-center items-center space-y-20">
-              <div className=" text-3xl text-center lg:text-5xl font-bold">
+              <div
+                data-aos="fade-right"
+                data-aos-duration="1500"
+                className=" text-3xl lg:text-5xl font-bold"
+              >
                 <span className=" text-[#ff0047] ">Wed My Pet ,</span>
                 <span>
                   the pet dating website. Connect, match, and unleash happiness
                   today!
                 </span>
               </div>
-              <div className="relative flex gap-8">
-                <button className="bg-[rgba(255,86,79,0.5)] px-6 py-3 text-[#724319] font-medium lg:text-xl rounded-xl uppercase cursor-pointer">
-                  Add Pet Profile
+              <div className=" flex gap-8">
+                <button
+                  onClick={() => router.push("/register")}
+                  className="relative z-50 bg-[rgba(255,86,79,0.5)] px-6 py-3 hover:scale-105 transition-all duration-300 text-[#724319] font-medium lg:text-xl rounded-xl uppercase cursor-pointer"
+                >
+                  Add Your Pet Profile
                 </button>
-                <button className="bg-[rgba(255,86,79,0.5)] px-6 py-3 text-[#724319] font-medium lg:text-xl rounded-xl uppercase cursor-pointer">
+                {/* <button className="relative z-50 bg-[rgba(255,86,79,0.5)] px-6 py-3 text-[#724319] hover:scale-105 transition-all duration-300 font-medium lg:text-xl rounded-xl uppercase cursor-pointer">
                   Start Search
-                </button>
+                </button> */}
               </div>
             </div>
-            <div className=" flex w-full h-full justify-center items-center">
+            <div
+              data-aos="fade-left"
+              data-aos-duration="1500"
+              className=" flex w-full h-full justify-center items-center"
+            >
+              <Image
+                src="/images/pinkBG.png"
+                alt="Background"
+                fill
+                className="lg:hidden object-contain " // customize as needed
+              />
               <Image
                 src="/images/heroImage.png"
                 alt="heroImage"

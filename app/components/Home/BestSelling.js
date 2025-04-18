@@ -69,7 +69,7 @@ const BestSelling = () => {
                   alt="dogHut"
                   width={200}
                   height={200}
-                  className=" rounded-t-2xl w-full object-cover h-[300px]"
+                  className=" rounded-t-2xl w-full object-cover h-[300px] hover:scale-105 transition-all duration-500 cursor-pointer"
                 />
               </div>
               <div className=" flex flex-col gap-4 mt-4 px-6">
