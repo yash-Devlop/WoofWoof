@@ -7,12 +7,16 @@ const SmartWay = () => {
       <div className=" px-4 md:px-24 xl:px-40">
         <div className=" grid grid-cols-1 lg:grid-cols-2 gap-4">
           <Image
+            data-aos="flip-up"
             src="/images/vectorImage.png"
             alt="vectorImage"
             width={500}
             height={500}
           />
-          <div className=" space-y-3 flex flex-col justify-center lg:max-w-[350px]">
+          <div
+            data-aos="flip-down"
+            className=" space-y-3 flex flex-col justify-center lg:max-w-[350px]"
+          >
             <h4 className=" font-semibold text-[#E42916]">WED MY PET</h4>
             <h2 className=" text-4xl font-semibold">
               The smarter way to shop for your pet

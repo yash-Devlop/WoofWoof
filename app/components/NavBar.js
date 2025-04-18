@@ -65,7 +65,10 @@ const NavBar = () => {
           {["Home", "Shop", "About Us", "Contact Us", "Services"].map(
             (item, index) => {
               return (
-                <li key={index}>
+                <li
+                  key={index}
+                  className=" hover:scale-105 transition-all duration-300"
+                >
                   <Link
                     key={item}
                     href={
