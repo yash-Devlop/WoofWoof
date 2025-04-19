@@ -13,8 +13,7 @@ const HeroSection = () => {
           <Image
             src="/images/group1.png"
             alt="group"
-            width={400}
-            height={400}
+            fill
             className="hidden lg:block absolute w-full h-full  object-contain"
           />
           <div className=" grid grid-cols-1 lg:grid-cols-2 gap-4 lg:py-24 ">
