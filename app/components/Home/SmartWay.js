@@ -15,13 +15,13 @@ const SmartWay = () => {
           />
           <div
             data-aos="flip-down"
-            className=" space-y-3 flex flex-col justify-center lg:max-w-[350px]"
+            className=" space-y-3 flex flex-col justify-center lg:max-w-[420px]"
           >
             <h4 className=" font-semibold text-[#E42916]">WED MY PET</h4>
-            <h2 className=" text-4xl font-semibold">
+            <h2 className=" text-4xl lg:text-5xl font-semibold">
               The smarter way to shop for your pet
             </h2>
-            <p className=" text-[16px] tracking-wide font-normal text-gray-700">
+            <p className=" lg:text-[20px] tracking-wide font-normal text-gray-700">
               Lorem ipsum dolor sit amet consectetur. At et vehicula sodales est
               proin turpis pellentesque sinulla a aliquam amet rhoncus quisque
               eget sit

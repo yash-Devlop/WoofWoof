@@ -9,7 +9,7 @@ const Offers = () => {
     <div className=" w-full bg-[#ff3971e5] flex justify-center px-24 py-2 ">
       <div
         onClick={() => router.push("/register")}
-        className=" font-medium text-[10px] cursor-pointer"
+        className=" font-medium text-[10px] md:text-lg cursor-pointer"
       >
         Get a free Product worth 199 absolutely free
       </div>
