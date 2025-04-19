@@ -27,9 +27,9 @@ const FounderSec = () => {
             </div>
 
             <p className=" text-gray-800 italic text-lg xl:text-2xl xl:tracking-wide font-medium">
-              Wedmypet originated from the founders' love for their pet, a
-              two-month-old Pekingese named Tintin, adopted at their children's
-              request; Tintin subsequently became a central
+              Wedmypet originated from the founders&apos; love for their pet, a
+              two-month-old Pekingese named Tintin, adopted at their
+              children&apos;s request; Tintin subsequently became a central
               member of the family.
             </p>
           </div>

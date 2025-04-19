@@ -37,7 +37,7 @@ const AboutOurStore = () => {
             data-aos-duration="1200"
             className=" lg:text-[17px] lg:max-w-[420px] text-gray-800"
           >
-            <p>
+            <p className=" ">
               Our online pet store was founded on the principle of providing
               superior products and services to our beloved pets, reflecting the
               unconditional love they give us.
@@ -49,9 +49,9 @@ const AboutOurStore = () => {
             className=" lg:text-[17px] lg:max-w-[420px] text-gray-800"
           >
             <p className=" ">
-              Wedmypet originated from the founders' love for their pet, a
-              two-month-old Pekingese named Tintin, adopted at their children's
-              request; Tintin subsequently became a central
+              Wedmypet originated from the founders&apos; love for their pet, a
+              two-month-old Pekingese named Tintin, adopted at their
+              children&apos;s request; Tintin subsequently became a central
               member of the family.
             </p>
           </div>
