@@ -97,7 +97,7 @@ const FeatureProfile = () => {
 
         <div className=" grid md:grid-cols-2 gap-4 lg:grid-cols-4 px-8">
           {featuredProfileData.map((profile, index) => (
-            <div key={index} className="">
+            <div data-aos="zoom-in" key={index} className="">
               <Image
                 src={profile.image}
                 alt={profile.image}
