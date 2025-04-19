@@ -9,9 +9,9 @@ const HeroSection = () => {
   return (
     <div className="w-full pt-32 pb-16 lg:py-16">
       <div className=" px-4 md:px-16 xl:px-30">
-        <div className="relative w-full min-h-[600px]">
+        <div className="relative w-full">
           <Image
-            src="/images/group1.png"
+            src="/images/Group1.png"
             alt="group"
             fill
             className="hidden lg:block absolute w-full h-full  object-contain"
