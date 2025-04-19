@@ -32,7 +32,7 @@ const AboutSec = () => {
             <h3 className=" text-2xl lg:text-[2.15rem] font-semibold">
               Welcome to Wedmypet - Where Pets Find Love!
             </h3>
-            <p className=" text-justify text-lg lg:text-2xl lg:scale-y-125 lg:leading-10 font-medium font-saira">
+            <p className=" text-justify text-lg xl:text-2xl lg:scale-y-125 xl:leading-10 font-medium font-saira">
               At Wedmypet, we believe that love knows no boundaries, not even
               for our furry friends. Our mission is to create a vibrant and
               inclusive community that connects pets and their loving owners,

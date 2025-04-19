@@ -7,18 +7,17 @@ const HeroSection = () => {
   const router = useRouter();
 
   return (
-    <div className="w-full py-32 lg:py-16">
+    <div className="w-full pt-32 pb-16 lg:py-16">
       <div className=" px-4 md:px-16 xl:px-30">
-        <div className="relative w-full min-h-[600px]">
+        <div className="relative w-full">
           <Image
-            src="/images/group1.png"
+            src="/images/Group1.png"
             alt="group"
-            width={400}
-            height={400}
-            className="hidden lg:block absolute w-full h-full xl:h-[85vh] object-contain"
+            fill
+            className="hidden lg:block absolute w-full h-full  object-contain"
           />
           <div className=" grid grid-cols-1 lg:grid-cols-2 gap-4 lg:py-24 ">
-            <div className="relative flex flex-col justify-center items-center space-y-20">
+            <div className="relative flex flex-col justify-center items-center lg:items-start space-y-10  lg:space-y-20">
               <div
                 data-aos="fade-right"
                 data-aos-duration="1500"
@@ -30,10 +29,10 @@ const HeroSection = () => {
                   today!
                 </span>
               </div>
-              <div className=" flex gap-8">
+              <div className=" flex  gap-8">
                 <button
                   onClick={() => router.push("/register")}
-                  className="relative z-50 bg-[rgba(255,86,79,0.5)] px-6 py-3 hover:scale-105 transition-all duration-300 text-[#724319] font-medium lg:text-xl rounded-xl uppercase cursor-pointer"
+                  className=" bg-[rgba(255,86,79,0.5)] px-6 py-3 hover:scale-105 transition-all duration-300 text-[#724319] font-medium lg:text-xl rounded-xl uppercase cursor-pointer"
                 >
                   Add Your Pet Profile
                 </button>

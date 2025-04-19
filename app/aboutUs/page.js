@@ -1,7 +1,12 @@
 import React from "react";
+import Offers from "../components/Home/Offers";
 
 const page = () => {
-  return <div>About here</div>;
+  return (
+    <div>
+      <Offers />
+    </div>
+  );
 };
 
 export default page;
