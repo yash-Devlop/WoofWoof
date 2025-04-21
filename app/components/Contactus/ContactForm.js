@@ -10,8 +10,8 @@ export default function ContactForm() {
     firstName: "",
     lastName: "",
     email: "",
-    phone: "",
-    preferredTeam: "",
+    // phone: "",
+    // preferredTeam: "",
     message: "",
   });
 
@@ -21,8 +21,8 @@ export default function ContactForm() {
     firstName: "",
     lastName: "",
     email: "",
-    phone: "",
-    preferredTeam: "",
+    // phone: "",
+    // preferredTeam: "",
     message: "",
   });
 
@@ -34,15 +34,8 @@ export default function ContactForm() {
     if (!formData.lastName.trim())
       newErrors.lastName = "Last Name is required.";
     if (!formData.email.trim()) newErrors.email = "Email is required.";
-    if (!formData.phone.trim()) {
-      newErrors.phone = "Phone Number is required.";
-    } else if (formData.phone.length < 10) {
-      newErrors.phone = "Phone Number must be at least 10 digits.";
-    }
+
     if (!formData.message.trim()) newErrors.message = "Message is required.";
-    if (!formData.preferredTeam) {
-      newErrors.preferredTeam = "Choose a preferred team";
-    }
 
     setErrors(newErrors);
 
@@ -57,13 +50,15 @@ export default function ContactForm() {
     console.log(formData);
 
     try {
+      console.log(formData);
+
       setIsLoading(true);
       const response = await axios.post("/api/contact", formData, {
         headers: {
           "Content-Type": "application/json",
         },
       });
-
+      console.log(response);
       if (response.status === 200) {
         // ✅ Show success notification
         Swal.fire({
@@ -78,8 +73,8 @@ export default function ContactForm() {
           firstName: "",
           lastName: "",
           email: "",
-          phone: "",
-          preferredTeam: "",
+          // phone: "",
+          // preferredTeam: "",
           message: "",
         });
         setIsLoading(false);
@@ -87,8 +82,8 @@ export default function ContactForm() {
           firstName: "",
           lastName: "",
           email: "",
-          phone: "",
-          preferredTeam: "",
+          // phone: "",
+          // preferredTeam: "",
           message: "",
         });
       } else {
@@ -273,18 +268,18 @@ export default function ContactForm() {
         </div>
         <button
           type="submit"
-          className=" relative bg-[#F91F54] text-white py-3 px-8 rounded-full hover:scale-105  transition-all duration-500 flex items-center justify-center group shadow-md cursor-pointer"
+          className=" relative bg-[#F91F54] text-white py-3 px-10 rounded-2xl hover:scale-105  transition-all duration-500 flex items-center justify-center group shadow-md cursor-pointer"
           disabled={isLoading}
         >
           <span className="text-lg font-normal tracking-wider">
             {isLoading ? "Sending..." : "Send Message"}
           </span>
-          <ArrowForward className="pt-1 w-5 h-5 duration-500" />
+          <ArrowForward className="pt-1 w-4 h-4 duration-500" />
           {isLoading && (
             <CircularProgress
               size={30}
               color="success"
-              className="absolute top-2.5 right-3.5"
+              className="absolute top-2.5 right-3"
             />
           )}
         </button>
