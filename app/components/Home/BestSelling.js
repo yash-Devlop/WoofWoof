@@ -60,32 +60,34 @@ const BestSelling = () => {
         <div className="flex w-full justify-center">
           <h2 className=" text-4xl font-semibold">Best Selling Products</h2>
         </div>
-        <div className=" grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 justify-center gap-8 mt-10">
-          {productData.map((product, index) => (
-            <div key={index}>
-              <div className=" flex justify-center">
-                <Image
-                  src={product.image}
-                  alt="dogHut"
-                  width={200}
-                  height={200}
-                  className=" rounded-t-2xl w-full object-cover h-[300px] hover:scale-105 transition-all duration-500 cursor-pointer"
-                />
-              </div>
-              <div className=" flex flex-col gap-4 mt-4 px-6">
-                <div className=" flex justify-between">
-                  <span className=" text-xl font-semibold">
-                    {product.title}
-                  </span>
-                  <FavoriteBorderIcon sx={{ color: "#ff0047" }} />
+        <div className="overflow-x-auto scrollbar-hide no-scrollbar">
+          <div className="flex gap-6 mt-10 px-4 lg:grid lg:grid-cols-4 md:px-0">
+            {productData.map((product, index) => (
+              <div key={index} className="min-w-[220px]">
+                <div className="flex justify-center">
+                  <Image
+                    src={product.image}
+                    alt="dogHut"
+                    width={200}
+                    height={200}
+                    className="rounded-t-2xl w-full object-cover h-[200px] hover:scale-105 transition-all duration-500 cursor-pointer"
+                  />
                 </div>
-                <div>
-                  <span className=" text-md">Rs. </span>
-                  <span className=" text-md">{product.price}</span>
+                <div className="flex flex-col gap-4 mt-4 px-2">
+                  <div className="flex justify-between">
+                    <span className="text-xl font-semibold">
+                      {product.title}
+                    </span>
+                    <FavoriteBorderIcon sx={{ color: "#ff0047" }} />
+                  </div>
+                  <div>
+                    <span className="text-md">Rs. </span>
+                    <span className="text-md">{product.price}</span>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </div>
