@@ -2,7 +2,6 @@ import Image from "next/image";
 import React from "react";
 
 const NewsAndBlogs = () => {
-  console.log("hello");
   const blogData = [
     {
       id: 1,
