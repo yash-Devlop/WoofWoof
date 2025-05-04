@@ -47,10 +47,8 @@ export default function ContactForm() {
 
     if (!validateForm()) return;
 
-    console.log(formData);
 
     try {
-      console.log(formData);
 
       setIsLoading(true);
       const response = await axios.post("/api/contact", formData, {
@@ -58,7 +56,6 @@ export default function ContactForm() {
           "Content-Type": "application/json",
         },
       });
-      console.log(response);
       if (response.status === 200) {
         // ✅ Show success notification
         Swal.fire({
@@ -90,7 +87,6 @@ export default function ContactForm() {
         throw new Error("Failed to send message");
       }
     } catch (error) {
-      console.error("Error sending message:", error);
 
       // ❌ Show error notification
       Swal.fire({

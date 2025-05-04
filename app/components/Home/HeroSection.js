@@ -1,29 +1,31 @@
 "use client";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 
 const HeroSection = () => {
   const router = useRouter();
+  const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <div className="w-full pt-32 pb-16 lg:py-16">
+    <div className="w-full pt-20 pb-16 lg:py-16">
       <div className=" px-4 md:px-16 xl:px-30">
         <div className="relative w-full">
           <Image
             src="/images/Group1.png"
             alt="group"
             fill
-            className="hidden md:block absolute w-full h-full  object-contain"
+            className="hidden lg:block absolute w-full h-full  object-contain"
           />
-          <div className=" grid grid-cols-1 lg:grid-cols-2 gap-4 lg:py-24 ">
+          <div className=" grid grid-cols-1 lg:grid-cols-2 gap-10 lg:py-24 ">
             <div className="relative flex flex-col justify-center items-center lg:items-start space-y-10  lg:space-y-20">
               <div
-                data-aos="fade-right"
-                data-aos-duration="1500"
+                // data-aos="fade-right"
+                // data-aos-duration="1500"
                 className=" text-3xl lg:text-5xl font-bold"
               >
-                <span className=" text-[#ff0047] ">Wed My Pet ,</span>
+                <span className=" text-[#ff0047] ">Wed My Pet, </span>
                 <span>
                   the pet dating website. Connect, match, and unleash happiness
                   today!
@@ -32,33 +34,56 @@ const HeroSection = () => {
               <div className=" flex  gap-8">
                 <button
                   onClick={() => router.push("/register")}
-                  className=" bg-[rgba(255,86,79,0.5)] px-6 py-3 hover:scale-105 transition-all duration-300 text-[#724319] font-medium lg:text-xl rounded-xl uppercase cursor-pointer"
+                  onMouseEnter={() => setIsHovered(true)}
+                  onMouseLeave={() => setIsHovered(false)}
+                  className={` bg-black/97 gap-1 flex justify-center items-center px-4  py-1 group hover:scale-105 transition-all duration-300 text-white font-medium lg:text-lg  rounded-full uppercase cursor-pointer`}
                 >
                   Add Your Pet Profile
+                  {isHovered && (
+                    <motion.span
+                      className=" "
+                      initial={{ x: -5, opacity: 0 }}
+                      animate={{
+                        x: isHovered ? 10 : 0,
+                        opacity: isHovered ? 1 : 0,
+                      }}
+                      transition={{
+                        type: "easeIn",
+                        duration: 0.6,
+                      }}
+                    >
+                      <Image
+                        src="/images/logo.png"
+                        width={33}
+                        height={33}
+                        alt="logo"
+                        className="hidden  group-hover:block transition-all duration-300"
+                      />
+                    </motion.span>
+                  )}
                 </button>
-                {/* <button className="relative z-50 bg-[rgba(255,86,79,0.5)] px-6 py-3 text-[#724319] hover:scale-105 transition-all duration-300 font-medium lg:text-xl rounded-xl uppercase cursor-pointer">
-                  Start Search
-                </button> */}
               </div>
             </div>
             <div
-              data-aos="fade-left"
-              data-aos-duration="1500"
-              className=" flex w-full h-full justify-center items-center"
+              // data-aos="fade-right"
+              // data-aos-duration="1500"
+              className=" relative flex w-full h-full justify-center items-center"
             >
               <Image
                 src="/images/pinkBG.png"
                 alt="Background"
                 fill
-                className="md:hidden object-contain " // customize as needed
+                className="lg:hidden object-contain " // customize as needed
               />
-              <Image
-                src="/images/heroImage.png"
-                alt="heroImage"
-                width={400}
-                height={400}
-                className=" object-cover relative"
-              />
+              <div className=" h-full w-full flex justify-center xl:pl-20 lg:justify-start  items-center">
+                <Image
+                  src="/images/heroImage.png"
+                  alt="heroImage"
+                  width={400}
+                  height={200}
+                  className=" object-cover  relative"
+                />
+              </div>
             </div>
           </div>
         </div>

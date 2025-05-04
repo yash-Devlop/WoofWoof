@@ -7,7 +7,7 @@ const AboutHeroSection = () => {
   const router = useRouter();
 
   return (
-    <div className="w-full pt-32 pb-16 lg:py-16">
+    <div className="w-full pt-20 md:pt-0">
       <div className=" px-4 md:px-16 xl:px-30">
         <div className="relative w-full">
           <Image
@@ -19,8 +19,8 @@ const AboutHeroSection = () => {
           <div className=" grid grid-cols-1 lg:grid-cols-2 gap-4 lg:py-24 ">
             <div className="relative flex flex-col justify-center items-center lg:items-start space-y-10  lg:space-y-20">
               <div
-                data-aos="fade-right"
-                data-aos-duration="1500"
+                // data-aos="fade-right"
+                // data-aos-duration="1500"
                 className=" text-3xl lg:text-5xl font-bold"
               >
                 <span>If animals could talk, they’d talk </span>
@@ -39,9 +39,9 @@ const AboutHeroSection = () => {
               </div> */}
             </div>
             <div
-              data-aos="fade-left"
-              data-aos-duration="1500"
-              className=" flex w-full h-full justify-center items-center"
+              // data-aos="fade-left"
+              // data-aos-duration="1500"
+              className=" flex w-full h-full justify-start items-center"
             >
               <Image
                 src="/images/pinkBG.png"
@@ -49,13 +49,15 @@ const AboutHeroSection = () => {
                 fill
                 className="lg:hidden object-contain " // customize as needed
               />
-              <Image
-                src="/images/heroImage.png"
-                alt="heroImage"
-                width={400}
-                height={400}
-                className=" object-cover relative"
-              />
+              <div className=" flex justify-start xl:pl-20 items-center">
+                <Image
+                  src="/images/aboutHeroImg.png"
+                  alt="heroImage"
+                  width={420}
+                  height={400}
+                  className=" object-contain relative"
+                />
+              </div>
             </div>
           </div>
         </div>

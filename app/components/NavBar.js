@@ -8,6 +8,7 @@ import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import CloseIcon from "@mui/icons-material/Close";
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -45,7 +46,7 @@ const NavBar = () => {
   return (
     <div className="w-full shadow-md mx-auto flex justify-center">
       {/* Main Nav Bar */}
-      <nav className=" fixed z-50 top-10 gap-20 md:gap-[8rem] xl:gap-[10rem] flex items-center justify-between px-4 md:px-10 md:py-1 bg-white shadow-lg rounded-full">
+      <nav className=" fixed z-50 top-10 gap-28 md:gap-[8rem] xl:gap-[10rem] flex items-center justify-between px-4 py-2 md:px-6 bg-white shadow-lg rounded-full">
         {/* Left - Logo */}
         <div className="flex items-center lg:gap-6">
           <Image
@@ -54,7 +55,7 @@ const NavBar = () => {
             alt="logo"
             width={200}
             height={200}
-            className="md:h-16 md:w-15 h-15 w-12 object-cover cursor-pointer"
+            className="md:h-12 md:w-12 h-10 w-10 object-cover cursor-pointer rounded-full"
           ></Image>
           <h1 className="font-bold text-xl hidden lg:block">Wed My Pet</h1>
         </div>
@@ -175,12 +176,28 @@ const NavBar = () => {
         </div>
       </nav>
       {isOpen && (
-        <div className="fixed z-50 bg-gray-600 top-30 right-10 md:right-40 lg:right-50 rounded-2xl">
-          <ul className=" flex flex-col justify-center items-center gap-6 text-black font-semibold py-4">
+        <div className="fixed z-50 w-[70%] md:w-[50%] h-full bg-[#ff3971] top-0 right-0 rounded-l-2xl">
+          <div className=" flex justify-between p-4">
+            <div className=" flex gap-4 justify-center items-center">
+              <Image src="/images/logo.png" alt="logo" width={40} height={40} />
+
+              <h1 className=" text-2xl font-bold">WED MY PET</h1>
+            </div>
+
+            <CloseIcon fontSize="large" onClick={() => setIsOpen(!isOpen)} />
+          </div>
+          <ul className=" flex flex-col justify-center items-center gap-4 px-2  text-black font-semibold">
             {["Home", "Shop", "About Us", "Contact Us", "Services"].map(
               (item, index) => {
                 return (
-                  <li key={index} className="">
+                  <li
+                    key={index}
+                    className={` w-full flex py-0.5 justify-center ${
+                      item === activeTab
+                        ? " text-white bg-[#ed115a] text-xl rounded-2xl font-semibold"
+                        : "font-normal"
+                    }`}
+                  >
                     <Link
                       key={item}
                       href={
@@ -201,11 +218,7 @@ const NavBar = () => {
                         setActiveTab(item);
                         setIsOpen(false);
                       }}
-                      className={`  px-16 pb-1 ${
-                        item === activeTab
-                          ? " text-pink-600 bg-gray-300 rounded-2xl font-semibold"
-                          : "font-normal"
-                      }`}
+                      className=""
                     >
                       {item}
                     </Link>

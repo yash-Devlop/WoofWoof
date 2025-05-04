@@ -55,38 +55,40 @@ const productData = [
 
 const BestSelling = () => {
   return (
-    <div className="w-full relative py-16">
-      <div className=" px-4 md:px-24 xl:px-40">
-        <div className="flex w-full justify-center">
-          <h2 className=" text-4xl font-semibold">Best Selling Products</h2>
-        </div>
-        <div className="overflow-x-auto scrollbar-hide no-scrollbar">
-          <div className="flex gap-6 mt-10 px-4 lg:grid lg:grid-cols-4 md:px-0">
-            {productData.map((product, index) => (
-              <div key={index} className="min-w-[220px]">
-                <div className="flex justify-center">
-                  <Image
-                    src={product.image}
-                    alt="dogHut"
-                    width={200}
-                    height={200}
-                    className="rounded-t-2xl w-full object-cover h-[200px] hover:scale-105 transition-all duration-500 cursor-pointer"
-                  />
-                </div>
-                <div className="flex flex-col gap-4 mt-4 px-2">
-                  <div className="flex justify-between">
-                    <span className="text-xl font-semibold">
-                      {product.title}
-                    </span>
-                    <FavoriteBorderIcon sx={{ color: "#ff0047" }} />
+    <div className="w-full relative">
+      <div className="bg-white rounded-3xl m-4 md:m-12 py-8 md:py-16">
+        <div className=" px-4 md:px-20 xl:px-40">
+          <div className="flex w-full justify-center">
+            <h2 className=" text-4xl font-semibold">Best Selling Products</h2>
+          </div>
+          <div className="overflow-x-auto lg:overflow-x-visible no-scrollbar scrollbar-hide">
+            <div className="flex gap-6 mt-10  lg:grid lg:grid-cols-3 xl:grid-cols-4 md:px-0">
+              {productData.map((product, index) => (
+                <div key={index} className="min-w-[220px]">
+                  <div className="flex max-h-[200px] justify-center">
+                    <Image
+                      src={product.image}
+                      alt="dogHut"
+                      width={200}
+                      height={200}
+                      className="rounded-t-2xl w-full object-cover  hover:scale-105 transition-all duration-500 cursor-pointer"
+                    />
                   </div>
-                  <div>
-                    <span className="text-md">Rs. </span>
-                    <span className="text-md">{product.price}</span>
+                  <div className="flex flex-col gap-4 mt-4 px-2">
+                    <div className="flex justify-between">
+                      <span className="text-xl font-semibold">
+                        {product.title}
+                      </span>
+                      <FavoriteBorderIcon sx={{ color: "#ff0047" }} />
+                    </div>
+                    <div>
+                      <span className="text-md">Rs. </span>
+                      <span className="text-md">{product.price}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </div>

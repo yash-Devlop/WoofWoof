@@ -1,10 +1,8 @@
-import { Geist, Geist_Mono } from "next/font/google";
 import { Saira_Condensed } from "next/font/google";
 import "./globals.css";
-import NavBar from "./components/NavBar";
-import AOS from "aos";
 import "aos/dist/aos.css";
-import AOSWrapper from "./components/AosWrapper";
+import ClientLayout from "./components/ClientLayout";
+import Image from "next/image";
 
 const saira = Saira_Condensed({
   subsets: ["latin"],
@@ -22,9 +20,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={saira.variable}>
       <body className={`${saira.className} font-saira`}>
-        <AOSWrapper />
-        <NavBar />
-        {children}
+        <div className=" relative">
+          <ClientLayout>{children}</ClientLayout>
+        </div>
       </body>
     </html>
   );

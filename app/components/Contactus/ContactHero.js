@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 
 const ContactHero = () => {
   return (
-    <div className="w-full pt-32 pb-16 lg:py-16">
+    <div className="w-full pt-32 lg:py-16">
       <div className=" px-4 md:px-16 xl:px-30">
         <div className="relative w-full">
           <Image
@@ -14,11 +14,11 @@ const ContactHero = () => {
             fill
             className="hidden lg:block absolute w-full h-full  object-contain"
           />
-          <div className=" grid grid-cols-1 lg:grid-cols-2 gap-4 lg:py-24 ">
+          <div className=" grid grid-cols-1 lg:grid-cols-2 lg:gap-0 lg:py-24 ">
             <div className="relative flex flex-col justify-center items-center lg:items-start space-y-10  lg:space-y-20">
               <div
-                data-aos="fade-right"
-                data-aos-duration="1500"
+                // data-aos="fade-right"
+                // data-aos-duration="1500"
                 className=" text-3xl lg:text-5xl font-bold "
               >
                 <div className="">
@@ -42,23 +42,25 @@ const ContactHero = () => {
                   </div> */}
             </div>
             <div
-              data-aos="fade-left"
-              data-aos-duration="1500"
-              className=" flex w-full h-full justify-center items-center"
+              // data-aos="fade-left"
+              // data-aos-duration="1500"
+              className="relative flex w-full h-full justify-center items-center"
             >
               <Image
                 src="/images/pinkBG.png"
                 alt="Background"
                 fill
-                className="lg:hidden object-contain " // customize as needed
+                className="lg:hidden object-contains" // customize as needed
               />
-              <Image
-                src="/images/heroImage.png"
-                alt="heroImage"
-                width={400}
-                height={400}
-                className=" object-cover relative"
-              />
+              <div className=" h-full w-full flex justify-start items-center">
+                <Image
+                  src="/images/contactHero.png"
+                  alt="heroImage"
+                  width={600}
+                  height={450}
+                  className=" object-cover relative bottom-2 xl:right-10"
+                />
+              </div>
             </div>
           </div>
         </div>

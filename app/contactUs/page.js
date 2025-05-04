@@ -8,7 +8,7 @@ import ContactMap from "../components/Contactus/ContactMap";
 
 const page = () => {
   return (
-    <div>
+    <div className=" bg-[#EEEEEE]">
       <Offers />
       <ContactHero />
       <ContactSec />
