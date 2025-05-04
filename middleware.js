@@ -1,4 +1,3 @@
-export const runtime = "nodejs";
 import { verifyToken } from "@/lib/jwt";
 import { NextResponse } from "next/server";
 
@@ -8,12 +7,7 @@ export function middleware(request) {
     const token = request.cookies.get("auth-token")?.value;
 
     if (!token) {
-      return NextResponse.redirect(new URL("/login", request.url));
-    }
-
-    const decoded = verifyToken(token);
-    if (!decoded) {
-      return NextResponse.redirect(new URL("/login", request.url));
+      return NextResponse.redirect(new URL("/adminPortal", request.url));
     }
   }
 
@@ -21,5 +15,7 @@ export function middleware(request) {
 }
 
 export const config = {
-  matcher: "/adminPortal/:path*",
+  matcher: "/admin/:path*",
 };
+
+export const runtime = "nodejs";

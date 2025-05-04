@@ -1,6 +1,6 @@
 export const runtime = "nodejs";
 import User from "@/model/User";
-import { connectDB } from "@/db/connect";
+import { connectDB } from "@/lib/connect";
 import { comparePassword } from "@/lib/bcrypt";
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
@@ -46,6 +46,7 @@ export async function POST(req) {
         email: user.email,
         role: user.role,
       },
+      status: 200,
     });
   } catch (error) {
     return NextResponse.json(

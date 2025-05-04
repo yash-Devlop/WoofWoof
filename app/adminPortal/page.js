@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation"; // ✅ added this
 import React, { useState } from "react";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const Page = () => {
   const router = useRouter(); // ✅ initialized here
@@ -19,14 +20,15 @@ const Page = () => {
     try {
       if (!email || !password) {
         setError("All fields are required.");
+        toast.error(error);
         return;
       }
       const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailPattern.test(email)) {
         setError("Please enter a valid email address.");
+        toast.error(error);
         return;
       }
-
 
       const res = await axios.post(
         "/api/auth/login",
@@ -36,17 +38,24 @@ const Page = () => {
         }
       );
 
+      if (res.status !== 200) {
+        toast.error("Something went wrong!!");
+        return;
+      }
+
       if (res?.data?.user?.role === "admin") {
-        router.push("/adminPortal/dashboard"); // ✅ better redirect to dashboard, not login page
+        router.push("/admin"); // ✅ better redirect to dashboard, not login page
+        toast.success("Loging successfull");
       } else {
-        alert("wrong credentials");
-        router.push("/adminPortal"); // if you have a normal user dashboard
+        toast.success("You are unauthorized to access this page");
+        router.push("/"); // if you have a normal user dashboard
       }
 
       setEmail("");
       setPassword("");
     } catch (error) {
       setError("Login failed. Please try again.");
+      toast.error("You are unauthorized to access this page");
     }
   };
 
@@ -63,11 +72,7 @@ const Page = () => {
           Admin Portal Login
         </h2>
 
-        {error && (
-          <div className="bg-red-100 text-red-700 p-2 mb-4 rounded">
-            {error}
-          </div>
-        )}
+        
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>

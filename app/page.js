@@ -11,7 +11,7 @@ import Offers from "./components/Home/Offers";
 
 export default function Home() {
   return (
-    <div className="">
+    <div className=" bg-[#EEEEEE]">
       <Offers />
       <HeroSection />
       <AboutSec />

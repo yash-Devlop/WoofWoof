@@ -1,5 +1,5 @@
 const { NextResponse } = require("next/server");
-import { connectDB } from "@/db/connect";
+import { connectDB } from "@/lib/connect";
 import User from "@/model/User";
 import { Password } from "@mui/icons-material";
 import nodemailer from "nodemailer";

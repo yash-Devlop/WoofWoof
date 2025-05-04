@@ -11,7 +11,7 @@ import VideoSec from "../components/Aboutus/VideoSec";
 
 const page = () => {
   return (
-    <div>
+    <div className="  bg-[#EEEEEE]">
       <Offers />
       <AboutHeroSection />
       <AboutOurStore />

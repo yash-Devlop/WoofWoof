@@ -2,6 +2,7 @@ import { Saira_Condensed } from "next/font/google";
 import "./globals.css";
 import "aos/dist/aos.css";
 import ClientLayout from "./components/ClientLayout";
+import Image from "next/image";
 
 const saira = Saira_Condensed({
   subsets: ["latin"],
@@ -19,7 +20,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={saira.variable}>
       <body className={`${saira.className} font-saira`}>
-        <ClientLayout>{children}</ClientLayout>
+        <div className=" relative">
+          <ClientLayout>{children}</ClientLayout>
+        </div>
       </body>
     </html>
   );
