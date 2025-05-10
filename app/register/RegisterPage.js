@@ -43,7 +43,6 @@ const RegisterPage = ({ email }) => {
           confirmPassword,
         })
       );
-      console.log(result);
 
       if (registerUser.fulfilled.match(result)) {
         toast.success("Registered successfully!");

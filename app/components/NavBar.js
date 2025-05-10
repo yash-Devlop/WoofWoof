@@ -15,6 +15,8 @@ const NavBar = () => {
   const [activeTab, setActiveTab] = useState("");
   const pathname = usePathname();
   const router = useRouter();
+  const [showNavbar, setShowNavbar] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
 
   useEffect(() => {
     // Convert pathname to the correct format
@@ -43,10 +45,29 @@ const NavBar = () => {
     setActiveTab(tabMap[page] || "Home");
   }, [pathname]);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      if (currentScrollY > lastScrollY && currentScrollY > 40) {
+        setShowNavbar(false); // scroll down
+      } else {
+        setShowNavbar(true); // scroll up
+      }
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY]);
+
   return (
     <div className="w-full shadow-md mx-auto flex justify-center">
       {/* Main Nav Bar */}
-      <nav className=" fixed z-50 top-10 gap-28 md:gap-[8rem] xl:gap-[10rem] flex items-center justify-between px-4 py-2 md:px-6 bg-white shadow-lg rounded-full">
+      <nav
+        className={` fixed z-50   gap-28 ${
+          showNavbar ? "translate-y-0 top-6 md:top-8" : "-translate-y-full"
+        } md:gap-[8rem] xl:gap-[10rem] transition-all duration-300 flex items-center justify-between px-4 py-2 md:px-6 bg-white shadow-lg rounded-full`}
+      >
         {/* Left - Logo */}
         <div className="flex items-center lg:gap-6">
           <Image
@@ -175,60 +196,62 @@ const NavBar = () => {
           </button>
         </div>
       </nav>
-      {isOpen && (
-        <div className="fixed z-50 w-[70%] md:w-[50%] h-full bg-[#ff3971] top-0 right-0 rounded-l-2xl">
-          <div className=" flex justify-between p-4">
-            <div className=" flex gap-4 justify-center items-center">
-              <Image src="/images/logo.png" alt="logo" width={40} height={40} />
+      <div
+        className={`fixed z-50 w-[70%] md:w-[50%] h-full bg-[#EEEEEE] top-0 right-0 rounded-l-2xl transition-transform duration-500 ease-in-out ${
+          isOpen ? "translate-x-0" : "translate-x-full"
+        }`}
+      >
+        <div className=" flex justify-between p-4">
+          <div className=" flex gap-4 justify-center items-center">
+            <Image src="/images/logo.png" alt="logo" width={40} height={40} />
 
-              <h1 className=" text-2xl font-bold">WED MY PET</h1>
-            </div>
-
-            <CloseIcon fontSize="large" onClick={() => setIsOpen(!isOpen)} />
+            <h1 className=" text-2xl font-bold">WED MY PET</h1>
           </div>
-          <ul className=" flex flex-col justify-center items-center gap-4 px-2  text-black font-semibold">
-            {["Home", "Shop", "About Us", "Contact Us", "Services"].map(
-              (item, index) => {
-                return (
-                  <li
-                    key={index}
-                    className={` w-full flex py-0.5 justify-center ${
-                      item === activeTab
-                        ? " text-white bg-[#ed115a] text-xl rounded-2xl font-semibold"
-                        : "font-normal"
-                    }`}
-                  >
-                    <Link
-                      key={item}
-                      href={
-                        item === "Home"
-                          ? "/"
-                          : `/${item
-                              .split(" ") // Split into words
-                              .map(
-                                (word, index) =>
-                                  index === 0
-                                    ? word.toLowerCase() // First word lowercase
-                                    : word.charAt(0).toUpperCase() +
-                                      word.slice(1).toLowerCase() // Capitalize following words
-                              )
-                              .join("")}`
-                      }
-                      onClick={() => {
-                        setActiveTab(item);
-                        setIsOpen(false);
-                      }}
-                      className=""
-                    >
-                      {item}
-                    </Link>
-                  </li>
-                );
-              }
-            )}
-          </ul>
+
+          <CloseIcon fontSize="large" onClick={() => setIsOpen(!isOpen)} />
         </div>
-      )}
+        <ul className=" flex flex-col justify-center items-center gap-4 px-2  text-black font-semibold">
+          {["Home", "Shop", "About Us", "Contact Us", "Services"].map(
+            (item, index) => {
+              return (
+                <li
+                  key={index}
+                  className={` w-full flex py-0.5 justify-center ${
+                    item === activeTab
+                      ? " text-white bg-[#ed115a] text-xl rounded-2xl font-semibold"
+                      : "font-normal"
+                  }`}
+                >
+                  <Link
+                    key={item}
+                    href={
+                      item === "Home"
+                        ? "/"
+                        : `/${item
+                            .split(" ") // Split into words
+                            .map(
+                              (word, index) =>
+                                index === 0
+                                  ? word.toLowerCase() // First word lowercase
+                                  : word.charAt(0).toUpperCase() +
+                                    word.slice(1).toLowerCase() // Capitalize following words
+                            )
+                            .join("")}`
+                    }
+                    onClick={() => {
+                      setActiveTab(item);
+                      setIsOpen(false);
+                    }}
+                    className=""
+                  >
+                    {item}
+                  </Link>
+                </li>
+              );
+            }
+          )}
+        </ul>
+      </div>
     </div>
   );
 };

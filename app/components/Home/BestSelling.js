@@ -65,7 +65,7 @@ const BestSelling = () => {
             <div className="flex gap-6 mt-10  lg:grid lg:grid-cols-3 xl:grid-cols-4 md:px-0">
               {productData.map((product, index) => (
                 <div key={index} className="min-w-[220px]">
-                  <div className="flex max-h-[200px] justify-center">
+                  <div className="flex max-h-[200px] min-h-[200px] justify-center">
                     <Image
                       src={product.image}
                       alt="dogHut"

@@ -27,7 +27,7 @@ export default function Sidebar({ links }) {
           >
             {!collapsed && <h2 className="text-xl font-bold">Admin Panel</h2>}
             {collapsed && (
-              <span>
+              <span className=" cursor-pointer">
                 <MenuIcon />
               </span>
             )}

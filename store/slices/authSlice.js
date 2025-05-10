@@ -44,7 +44,6 @@ export const registerUser = createAsyncThunk(
         password,
         confirmPassword,
       });
-      console.log(res);
       return res.data;
     } catch (error) {
       return rejectWithValue(
