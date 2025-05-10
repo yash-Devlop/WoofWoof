@@ -17,13 +17,13 @@ const AboutSec = () => {
             className=" h-84 w-62 right-0 bottom-0 absolute rounded-[4rem]"
           />
           <div className=" relative grid grid-cols-1 lg:grid-cols-2 gap-8 pb-30">
-            <div data-aos="flip-left" className=" relative">
+            <div  className=" relative">
               <Image
                 src="/images/dogCouple.png"
                 alt="dogCouple"
                 width={500}
                 height={600}
-                className=" rounded-[4rem] relative z-50"
+                className=" rounded-[4rem] relative z-1"
               />
               <Image
                 src="/images/pinkRec.png"

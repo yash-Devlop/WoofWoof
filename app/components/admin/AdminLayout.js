@@ -2,14 +2,11 @@
 
 import React from "react";
 import PeopleIcon from "@mui/icons-material/People";
-import StarIcon from "@mui/icons-material/Star";
-import DescriptionIcon from "@mui/icons-material/Description";
 import ArticleIcon from "@mui/icons-material/Article";
 import CategoryIcon from "@mui/icons-material/Category";
 import ImageIcon from "@mui/icons-material/Image";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import AssignmentIcon from "@mui/icons-material/Assignment";
-import LogoutIcon from "@mui/icons-material/Logout";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 
@@ -29,7 +26,6 @@ const AdminLayoutComponent = ({ children }) => {
     { href: "/admin/products", label: "Products", icon: <InventoryIcon /> },
     { href: "/admin/orders", label: "Orders", icon: <AssignmentIcon /> },
     { href: "/admin/payments", label: "Payments", icon: <CurrencyRupeeIcon /> },
-    { href: "/admin/logout", label: "Logout", icon: <LogoutIcon /> },
   ];
 
   const activeTab = links.find((link) => pathname === link.href) // Exact match
@@ -37,7 +33,6 @@ const AdminLayoutComponent = ({ children }) => {
     : links.find((link) => pathname.startsWith(link.href))?.label ||
       "Dashboard";
 
-  console.log("active tab", activeTab);
 
   return (
     <div className="flex min-h-screen">

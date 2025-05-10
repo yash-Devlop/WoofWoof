@@ -5,16 +5,15 @@ import AdminLayoutComponent from "../components/admin/AdminLayout";
 export default async function AdminLayout({ children }) {
   const cookieStore = await cookies();
   const token = cookieStore.get("auth-token")?.value;
-
   if (!token) {
     redirect("/adminPortal"); // No token → redirect to login
   }
 
   try {
-    const decoded = verifyToken(token);
+    const decoded = await verifyToken(token);
 
-    if (decoded.role !== "admin") {
-      redirect("/"); // Not admin → redirect to homepage
+    if (!decoded || decoded.role !== "admin") {
+      return redirect("/"); // Not admin → redirect to homepage
     }
 
     return (
@@ -24,6 +23,6 @@ export default async function AdminLayout({ children }) {
     );
   } catch (err) {
     console.error("JWT error:", err.message);
-    redirect("/adminPortal"); // Invalid token
+    return redirect("/adminPortal"); // Invalid token
   }
 }

@@ -10,7 +10,6 @@ export function middleware(request) {
       return NextResponse.redirect(new URL("/adminPortal", request.url));
     }
   }
-
   return NextResponse.next();
 }
 

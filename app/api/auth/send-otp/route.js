@@ -29,7 +29,6 @@ export async function POST(req) {
 
     // Set expiry time (5 minutes)
     const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
-    console.log("helloo here");
     if (existingUser) {
       existingUser.username = username;
       existingUser.phone = phoneNumber;
