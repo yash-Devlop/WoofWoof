@@ -10,7 +10,6 @@ const page = () => {
       <Offers />
       <ShopHero />
       <ProductPage />
-
       <Footer />
     </div>
   );
