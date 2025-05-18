@@ -17,10 +17,27 @@ export const fetchProducts = createAsyncThunk(
   }
 );
 
+export const fetchProductById = createAsyncThunk(
+  "product/fetchProductById",
+  async (productId, thunkAPI) => {
+    try {
+      const response = await axios.get(`/api/user/product/${productId}`);
+      return response.data.product;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
+
 const productSlice = createSlice({
   name: "product",
   initialState: {
     products: [],
+    productDetails: {
+      product: null,
+      loading: false,
+      error: null,
+    },
     totalPages: 1,
     filters: {
       category: "",
@@ -72,6 +89,18 @@ const productSlice = createSlice({
       .addCase(fetchProducts.rejected, (state) => {
         state.status = "failed";
         console.error("Fetch failed:", action.error);
+      })
+      .addCase(fetchProductById.pending, (state) => {
+        state.productDetails.loading = true;
+        state.productDetails.error = null;
+      })
+      .addCase(fetchProductById.fulfilled, (state, action) => {
+        state.productDetails.loading = false;
+        state.productDetails.product = action.payload;
+      })
+      .addCase(fetchProductById.rejected, (state, action) => {
+        state.productDetails.loading = false;
+        state.productDetails.error = action.payload;
       });
   },
 });

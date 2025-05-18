@@ -7,6 +7,7 @@ import store from "@/store/store";
 import { usePathname } from "next/navigation";
 import { Toaster } from "react-hot-toast";
 import Image from "next/image";
+import Offers from "./Home/Offers";
 
 const ClientLayout = ({ children }) => {
   const path = usePathname();
@@ -17,6 +18,7 @@ const ClientLayout = ({ children }) => {
         <AOSWrapper />
         <Toaster position="top-right" reverseOrder={false} />
         {!isAdminRoute && <NavBar />}
+        <Offers />
         {children}
         {!isAdminRoute && (
           <Image
@@ -24,7 +26,7 @@ const ClientLayout = ({ children }) => {
             alt="whatsapp"
             width={40}
             height={40}
-            className=" fixed bottom-7 right-7 animate-bounce"
+            className=" z-40 fixed bottom-7 right-7 animate-bounce"
           />
         )}
       </Provider>
