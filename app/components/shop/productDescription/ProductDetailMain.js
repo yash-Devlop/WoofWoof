@@ -13,9 +13,10 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import Button from "@mui/material/Button";
+import { useRouter } from "next/navigation";
 
 export default function ProductDetailMain({ productId }) {
+  const router = useRouter();
   const dispatch = useDispatch();
   const productstate = useSelector((state) => state.product);
   const { loading, error, product } = productstate.productDetails;
@@ -127,11 +128,17 @@ export default function ProductDetailMain({ productId }) {
                   <AddOutlinedIcon />
                 </button>
               </div>
-              <button className="bg-pink-600 hover:bg-pink-700 text-white px-4 py-1 rounded cursor-pointer">
+              <button
+                onClick={() => router.push("/cart")}
+                className="bg-pink-600 hover:bg-pink-700 text-white px-4 py-1 rounded cursor-pointer"
+              >
                 Buy Now
               </button>
               <div className=" flex gap-4">
-                <button className="text-gray-500 text-xl cursor-pointer">
+                <button
+                  onClick={() => router.push("/cart")}
+                  className="text-gray-500 text-xl cursor-pointer"
+                >
                   <ShoppingCartOutlinedIcon />
                 </button>
                 <button className="text-gray-500 text-xl cursor-pointer">

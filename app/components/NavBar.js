@@ -48,7 +48,7 @@ const NavBar = () => {
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      if (currentScrollY > lastScrollY && currentScrollY > 40) {
+      if (currentScrollY > lastScrollY && currentScrollY > 10) {
         setShowNavbar(false); // scroll down
       } else {
         setShowNavbar(true); // scroll up
@@ -171,7 +171,10 @@ const NavBar = () => {
               },
             }}
           >
-            <ShoppingCartOutlinedIcon className=" cursor-pointer" />
+            <ShoppingCartOutlinedIcon
+              onClick={() => router.push("/cart")}
+              className=" cursor-pointer"
+            />
           </Badge>
           {/* <FaHeart className="text-black text-lg cursor-pointer" />
           <FaShoppingCart className="text-black text-lg cursor-pointer" /> */}

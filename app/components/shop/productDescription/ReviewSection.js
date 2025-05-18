@@ -48,7 +48,7 @@ export default function ReviewSection() {
   };
 
   return (
-    <div className="relative bg-white m-4 rounded-3xl  md:mx-12 md:py-16">
+    <div className="relative bg-white m-4 rounded-2xl py-8  md:mx-12 md:py-16">
       <div className="px-4 md:px-12 bg-white ">
         {/* Section Header */}
         <h2 className="text-2xl font-semibold text-center text-pink-600 mb-6">
