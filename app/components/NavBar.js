@@ -69,7 +69,7 @@ const NavBar = () => {
         } md:gap-[8rem] xl:gap-[10rem] transition-all duration-300 flex items-center justify-between px-4 py-2 md:px-6 bg-white shadow-lg rounded-full`}
       >
         {/* Left - Logo */}
-        <div className="flex items-center lg:gap-6">
+        {/* <div className="flex items-center lg:gap-6">
           <Image
             onClick={() => router.push("/")}
             src="/images/logo.png"
@@ -78,6 +78,20 @@ const NavBar = () => {
             height={200}
             className="md:h-12 md:w-12 h-10 w-10 object-cover cursor-pointer rounded-full"
           ></Image>
+          <h1 className="font-bold text-xl hidden lg:block">Wed My Pet</h1>
+        </div> */}
+        <div className="flex items-center lg:gap-6">
+          <video
+            onClick={() => router.push("/")}
+            src="/video/animatedLogo.mp4"
+            width={96} // equal to 12 tailwind units
+            height={96}
+            className="md:h-12 md:w-12 h-10 w-10 object-cover cursor-pointer"
+            autoPlay
+            loop
+            muted
+            playsInline
+          />
           <h1 className="font-bold text-xl hidden lg:block">Wed My Pet</h1>
         </div>
 
