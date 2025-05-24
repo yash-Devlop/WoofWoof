@@ -73,9 +73,9 @@ const BestSelling = () => {
       opacity: 1,
       y: 0,
       transition: {
-        duration: isMobile ? 0.2 : 0.6,
+        duration: 0.6,
         ease: "easeOut",
-        delay: isMobile ? 0 : i * 0.2, // stagger based on index
+        delay: i * 0.2, // stagger based on index
       },
     }),
   };
