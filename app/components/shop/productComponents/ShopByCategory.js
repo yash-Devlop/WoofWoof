@@ -36,6 +36,19 @@ const ShopByCategory = () => {
     }
   }, [selectedCategory, dispatch]);
 
+  const fadeDown = {
+    hidden: { opacity: 0, y: -30 },
+    visible: (i) => ({
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        ease: "easeOut",
+        delay: i * 0.2, // stagger based on index
+      },
+    }),
+  };
+
   return (
     <div className="relative">
       <div className="flex w-full justify-between mb-8">
@@ -46,12 +59,17 @@ const ShopByCategory = () => {
         className="relative grid grid-cols-3 gap-4"
         style={{ position: "relative" }}
       >
-        {categoryData.map((category) => (
-          <div
+        {categoryData.map((category, index) => (
+          <motion.div
             key={category.id}
             onClick={() => {
               setSelectedCategory(category.id);
             }}
+            custom={index}
+            variants={fadeDown}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
             className="relative cursor-pointer p-4 rounded-xl flex flex-col items-center transition-transform hover:scale-105 duration-300"
           >
             {selectedCategory === category.id && (
@@ -84,7 +102,7 @@ const ShopByCategory = () => {
                 {category.name}
               </h3>
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
     </div>

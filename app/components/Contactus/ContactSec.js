@@ -1,9 +1,10 @@
 import React from "react";
 import ContactForm from "./ContactForm";
+import Aos from "aos";
 
 const ContactSec = () => {
   return (
-    <div className="w-full relative">
+    <div data-aos="zoom-in-up" className="w-full relative">
       <div className="bg-white rounded-3xl m-4 md:m-12 py-6">
         <div className=" px-4 md:px-20 xl:px-40">
           <div className=" grid grid-cols-1 md:grid-cols-2 gap-8 justify-center ">

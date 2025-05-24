@@ -65,7 +65,7 @@ const NavBar = () => {
       {/* Main Nav Bar */}
       <nav
         className={` fixed z-50   gap-28 ${
-          showNavbar ? "translate-y-0 top-6 md:top-8" : "-translate-y-full"
+          showNavbar ? "translate-y-0 top-8 md:top-11" : "-translate-y-full"
         } md:gap-[8rem] xl:gap-[10rem] transition-all duration-300 flex items-center justify-between px-4 py-2 md:px-6 bg-white shadow-lg rounded-full`}
       >
         {/* Left - Logo */}

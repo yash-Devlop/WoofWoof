@@ -3,7 +3,7 @@ import React from "react";
 
 const FounderSec = () => {
   return (
-    <div className="w-full relative">
+    <div data-aos="zoom-in" className="w-full relative">
       <div className="bg-white rounded-3xl m-4 md:m-12 py-6">
         <div className=" px-4 md:px-24 xl:px-40">
           <div className=" relative grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -16,7 +16,7 @@ const FounderSec = () => {
                 alt="dogCouple"
                 width={500}
                 height={600}
-                className=" rounded-3xl"
+                className=" rounded-3xl h-[250px] md:h-[450px] w-full"
               />
             </div>
             <div

@@ -9,7 +9,7 @@ const ShopHero = () => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <div className="w-full  pt-20">
+    <div data-aos="fade-down" className="w-full  pt-20">
       <div className=" px-4 md:px-16 xl:px-30">
         <div className="relative w-full">
           <Image
@@ -18,13 +18,9 @@ const ShopHero = () => {
             fill
             className="hidden lg:block absolute w-full h-full  object-contain"
           />
-          <div className=" grid grid-cols-1 lg:grid-cols-2 gap-10 ">
-            <div className="relative flex flex-col justify-center items-center lg:items-start space-y-10  lg:space-y-20">
-              <div
-                // data-aos="fade-right"
-                // data-aos-duration="1500"
-                className=" text-3xl lg:text-5xl font-bold"
-              >
+          <div className=" grid grid-cols-1 lg:grid-cols-2 md:gap-10 ">
+            <div className="relative flex flex-col justify-center items-center lg:items-start space-y-2  lg:space-y-20">
+              <div className=" text-3xl text-center lg:text-start lg:text-5xl font-bold">
                 <span className=" text-[#ff0047] ">Wed My Pet, </span>
                 <span>
                   brings joyful, stylish essentials to pamper your dog with

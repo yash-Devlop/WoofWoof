@@ -1,5 +1,8 @@
+"use client";
+import { Scale } from "@mui/icons-material";
+import { motion } from "framer-motion";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 const InstaPage = () => {
   const instaData = [
@@ -29,6 +32,30 @@ const InstaPage = () => {
     },
   ];
 
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768); // mobile breakpoint
+    };
+    handleResize(); // run once on mount
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const fadeDown = {
+    hidden: { opacity: 0, scale: 0.3 },
+    visible: (i) => ({
+      opacity: 1,
+      scale: 1,
+      transition: {
+        duration: isMobile ? 0.2 : 0.6,
+        ease: "easeOut",
+        delay: isMobile ? 0 : i * 0.2, // stagger based on index
+      },
+    }),
+  };
+
   return (
     <div className="w-full relative">
       <div className="bg-white rounded-3xl m-4 md:m-12 py-6">
@@ -41,7 +68,12 @@ const InstaPage = () => {
           <div className=" overflow-x-auto no-scrollbar scrollbar-hide ">
             <div className=" flex lg:grid lg:grid-cols-4 gap-4">
               {instaData.map((insta, index) => (
-                <div
+                <motion.div
+                  custom={index}
+                  variants={fadeDown}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, amount: 0.2 }}
                   //  data-aos="zoom-in"
                   key={index}
                   className=" space-y-4"
@@ -62,7 +94,7 @@ const InstaPage = () => {
                   {team.Designation}
                 </h4>
               </div> */}
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>

@@ -4,6 +4,7 @@ import { useState } from "react";
 import axios from "axios";
 import CircularProgress from "@mui/material/CircularProgress";
 import Swal from "sweetalert2";
+import Aos from "aos";
 
 export default function ContactForm() {
   const [errors, setErrors] = useState({
@@ -47,9 +48,7 @@ export default function ContactForm() {
 
     if (!validateForm()) return;
 
-
     try {
-
       setIsLoading(true);
       const response = await axios.post("/api/contact", formData, {
         headers: {
@@ -87,7 +86,6 @@ export default function ContactForm() {
         throw new Error("Failed to send message");
       }
     } catch (error) {
-
       // ❌ Show error notification
       Swal.fire({
         icon: "error",
@@ -101,7 +99,10 @@ export default function ContactForm() {
   };
 
   return (
-    <div className="py-10 px-6 xl:mx-16 lg:py-none xl:px-10 bg-[#F8F9FA] rounded-3xl">
+    <div
+      
+      className="py-10 px-6 xl:mx-16 lg:py-none xl:px-10 bg-[#F8F9FA] rounded-3xl"
+    >
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>

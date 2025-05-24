@@ -8,12 +8,11 @@ const SmartWay = () => {
   const [isHovered, setIsHovered] = useState(false);
   const router = useRouter();
   return (
-    <div className="w-full relative">
+    <div data-aos="zoom-in" className="w-full relative">
       <div className="bg-white rounded-3xl m-4 md:m-12 py-8 md:py-16">
         <div className=" px-4 md:px-24 xl:px-40">
           <div className=" grid grid-cols-1 lg:grid-cols-2 gap-4">
             <Image
-              // data-aos="flip-up"
               src="/images/vectorImage.png"
               alt="vectorImage"
               width={500}

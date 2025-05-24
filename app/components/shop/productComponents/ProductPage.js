@@ -40,7 +40,7 @@ export default function ProductPage() {
 
   return (
     <div className="w-full relative ">
-      <div className="bg-white rounded-3xl p-4 m-4 md:m-12 md:p-10">
+      <div className="bg-white rounded-3xl p-4 mx-4 md:m-0 md:mx-12 md:p-10">
         <div className=" mb-8">
           <ShopByCategory />
         </div>
