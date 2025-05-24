@@ -8,7 +8,13 @@ const SmartWay = () => {
   const [isHovered, setIsHovered] = useState(false);
   const router = useRouter();
   return (
-    <div data-aos="zoom-in" className="w-full relative">
+    <motion.div
+      initial={{ opacity: 0, scale: 0.6 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ duration: 0.6 }}
+      className="w-full relative"
+    >
       <div className="bg-white rounded-3xl m-4 md:m-12 py-8 md:py-16">
         <div className=" px-4 md:px-24 xl:px-40">
           <div className=" grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -67,7 +73,7 @@ const SmartWay = () => {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
