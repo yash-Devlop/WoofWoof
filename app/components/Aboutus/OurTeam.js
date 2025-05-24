@@ -1,3 +1,6 @@
+"use client";
+import { Opacity } from "@mui/icons-material";
+import { motion } from "framer-motion";
 import Image from "next/image";
 import React from "react";
 
@@ -30,11 +33,18 @@ const OurTeam = () => {
             <h2 className=" text-4xl font-bold tracking-wide mb-6">Our Team</h2>
           </div>
           <div className=" overflow-x-auto  no-scrollbar scrollbar-hide">
-            <div className=" flex xl:grid xl:grid-cols-3 gap-4">
+            <motion.div
+              initial={{ Opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5 }}
+              className=" flex xl:grid xl:grid-cols-3 gap-4"
+            >
               {teamData.map((team, index) => (
                 <div
-                //  data-aos="zoom-in" 
-                 key={index} className=" space-y-4">
+                  //  data-aos="zoom-in"
+                  key={index}
+                  className=" space-y-4"
+                >
                   <div className=" overflow-hidden rounded-3xl ">
                     <Image
                       src={team.image}
@@ -53,7 +63,7 @@ const OurTeam = () => {
                   </div>
                 </div>
               ))}
-            </div>
+            </motion.div>
           </div>
         </div>
       </div>
@@ -62,3 +72,49 @@ const OurTeam = () => {
 };
 
 export default OurTeam;
+
+// "use client";
+// import { motion } from "framer-motion";
+// import React, { useState } from "react";
+
+// const FlipCard = () => {
+//   const [flipped, setFlipped] = useState(false);
+
+//   return (
+//     <div
+//       className="w-[300px] h-[200px] perspective cursor-pointer"
+//       onClick={() => setFlipped(!flipped)}
+//     >
+//       <motion.div
+//         className="relative w-full h-full duration-500"
+//         animate={{ rotateY: flipped ? [90, 180] : 0 }}
+//         transition={{ duration: 0.8 }}
+//         style={{ transformStyle: "preserve-3d" }}
+//       >
+//         {/* Front Side */}
+//         <div className="absolute w-full h-full bg-blue-500 text-white rounded-xl flex justify-center items-center backface-hidden">
+//           <h2 className="text-xl font-bold">Front Side</h2>
+//         </div>
+
+//         {/* Back Side */}
+//         <div className="absolute w-full h-full bg-green-500 text-white rounded-xl flex justify-center items-center rotate-y-180 backface-hidden">
+//           <h2 className="text-xl font-bold">Back Side</h2>
+//         </div>
+//       </motion.div>
+
+//       <style jsx>{`
+//         .perspective {
+//           perspective: 1000px;
+//         }
+//         .backface-hidden {
+//           backface-visibility: hidden;
+//         }
+//         .rotate-y-180 {
+//           transform: rotateY(180deg);
+//         }
+//       `}</style>
+//     </div>
+//   );
+// };
+
+// export default FlipCard;

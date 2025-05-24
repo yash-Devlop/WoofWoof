@@ -1,3 +1,4 @@
+import Aos from "aos";
 import Image from "next/image";
 import React from "react";
 
@@ -12,7 +13,11 @@ const Footer = () => {
           height={600}
           className=" absolute w-full h-full object-cover rounded-3xl"
         />
-        <div className="w-full relative py-4 md:py-12">
+        <div
+          data-aos="zoom-in-up"
+          data-aos-duration="1500"
+          className="w-full relative py-4 md:py-12"
+        >
           <div className=" px-4 md:px-16 xl:px-40 space-y-10">
             <div className=" grid grid-cols-1 lg:grid-cols-[25%_75%] lg:gap-10 gap-6 justify-center items-center">
               <div className=" flex flex-col justify-center items-center lg:max-w-[200px] space-y-5">

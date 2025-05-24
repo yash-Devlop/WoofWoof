@@ -37,6 +37,22 @@ const ServicesSec = () => {
       description: "coming soon",
     },
   ];
+
+  const slideInVariants = {
+    hidden: (i) => ({
+      opacity: 0,
+      x: i % 2 === 0 ? 100 : -100,
+    }),
+    visible: (i) => ({
+      opacity: 1,
+      x: 0,
+      transition: {
+        duration: 0.8,
+        ease: "easeOut",
+      },
+    }),
+  };
+
   return (
     <div className="w-full relative">
       <div className="bg-white rounded-3xl m-4 md:mx-12  py-8 md:py-16">
@@ -44,13 +60,18 @@ const ServicesSec = () => {
           {services.map((service, index) => {
             const orderChange = index % 2 === 0;
             return (
-              <div
+              <motion.div
                 key={service.id}
-                className={` grid grid-cols-1 gap-12 ${
+                className={`grid grid-cols-1 gap-12 ${
                   orderChange
                     ? "lg:grid-cols-[40%_60%]"
                     : "lg:grid-cols-[60%_40%]"
                 }`}
+                variants={slideInVariants}
+                custom={index}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: false, amount: 0.3 }}
               >
                 <div
                   className={` ${orderChange ? "lg:order-1" : "lg:order-2"}`}
@@ -112,7 +133,7 @@ const ServicesSec = () => {
                     </button>
                   )}
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>

@@ -7,9 +7,17 @@ import { motion } from "framer-motion";
 const HeroSection = () => {
   const router = useRouter();
   const [isHovered, setIsHovered] = useState(false);
+  const wordAnimation = {
+    hidden: { y: 20, opacity: 0 },
+    visible: (i) => ({
+      y: 0,
+      opacity: 1,
+      transition: { delay: i * 0.1, duration: 0.5 },
+    }),
+  };
 
   return (
-    <div className="w-full pt-20 pb-16 lg:py-16">
+    <div data-aos="fade-down" className="w-full pt-20 pb-16 lg:py-16">
       <div className=" px-4 md:px-16 xl:px-30">
         <div className="relative w-full">
           <Image
@@ -23,7 +31,7 @@ const HeroSection = () => {
               <div
                 // data-aos="fade-right"
                 // data-aos-duration="1500"
-                className=" text-3xl lg:text-5xl font-bold"
+                className=" text-3xl text-center md:text-start lg:text-5xl font-bold"
               >
                 <span className=" text-[#ff0047] ">Wed My Pet, </span>
                 <span>

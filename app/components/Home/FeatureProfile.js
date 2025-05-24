@@ -1,7 +1,33 @@
+"use client";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 
 const FeatureProfile = () => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  });
+
+  const slideInRight = {
+    hidden: { opacity: 0, x: 100 },
+    visible: (i) => ({
+      opacity: 1,
+      x: 0,
+      transition: {
+        duration: 0.6,
+        ease: "easeOut",
+        delay: isMobile ? 0 : i * 0.2, // staggered delay per index
+      },
+    }),
+  };
+
   const featuredProfileData = [
     {
       id: 1,
@@ -98,17 +124,23 @@ const FeatureProfile = () => {
           <div className="overflow-x-auto lg:overflow-x-visible no-scrollbar scrollbar-hide">
             <div className=" flex lg:grid gap-4 lg:grid-cols-4 ">
               {featuredProfileData.map((profile, index) => (
-                <div 
-                // data-aos="zoom-in" 
-                key={index} className="">
+                <motion.div
+                  key={index}
+                  custom={index}
+                  variants={slideInRight}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, amount: 0.2 }}
+                  className="rounded-2xl"
+                >
                   <Image
                     src={profile.image}
                     alt={profile.image}
                     width={300}
                     height={300}
-                    className=" rounded-t-2xl object-cover w-full h-[250px]"
+                    className=" rounded-t-2xl object-cover w-full h-[100px] md:h-[150px] lg:h-[250px]"
                   />
-                  <div className=" flex justify-between p-4 rounded-b-2xl bg-gray-100 mt-1 mb-3">
+                  <div className=" flex justify-between p-2 md:p-4 rounded-b-2xl bg-gray-100 mt-1 mb-3">
                     <div className=" text-lg font-semibold">{profile.name}</div>
                     <div className=" cursor-pointer">
                       <svg
@@ -136,27 +168,35 @@ const FeatureProfile = () => {
                       </svg>
                     </div>
                   </div>
-                  <div className=" px-6 py-4 bg-gray-200 rounded-2xl space-y-4">
+                  <div className=" p-2 md:px-6 md:py-4 bg-gray-200 rounded-2xl md:space-y-4">
                     <div className=" flex justify-between">
-                      <h3 className=" text-xl font-bold">Gender</h3>
-                      <h3 className=" text-xl font-bold">{profile.gender}</h3>
+                      <h3 className=" text-sm md:text-xl font-bold">Gender</h3>
+                      <h3 className=" text-sm md:text-xl font-bold">
+                        {profile.gender}
+                      </h3>
                     </div>
                     <div className=" flex justify-between">
-                      <h3 className=" text-xl font-bold">Ethnicity</h3>
-                      <h3 className=" text-xl font-bold">
+                      <h3 className=" text-sm md:text-xl font-bold">
+                        Ethnicity
+                      </h3>
+                      <h3 className=" text-sm md:text-xl font-bold">
                         {profile.ethnicity}
                       </h3>
                     </div>
                     <div className=" flex justify-between">
-                      <h3 className=" text-xl font-bold">Breed</h3>
-                      <h3 className=" text-xl font-bold">{profile.breed}</h3>
+                      <h3 className=" text-sm md:text-xl font-bold">Breed</h3>
+                      <h3 className=" text-sm md:text-xl font-bold">
+                        {profile.breed}
+                      </h3>
                     </div>
                     <div className=" flex justify-between">
-                      <h3 className=" text-xl font-bold">City</h3>
-                      <h3 className=" text-xl font-bold">{profile.city}</h3>
+                      <h3 className=" text-sm md:text-xl font-bold">City</h3>
+                      <h3 className=" text-sm md:text-xl font-bold">
+                        {profile.city}
+                      </h3>
                     </div>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>

@@ -1,6 +1,8 @@
+"use client";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import { motion } from "framer-motion";
 
 const productData = [
   {
@@ -54,6 +56,30 @@ const productData = [
 ];
 
 const BestSelling = () => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768); // mobile breakpoint
+    };
+    handleResize(); // run once on mount
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const fadeDown = {
+    hidden: { opacity: 0, y: -30 },
+    visible: (i) => ({
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: isMobile ? 0.2 : 0.6,
+        ease: "easeOut",
+        delay: isMobile ? 0 : i * 0.2, // stagger based on index
+      },
+    }),
+  };
+
   return (
     <div className="w-full relative">
       <div className="bg-white rounded-3xl m-4 md:m-12 py-8 md:py-16">
@@ -64,8 +90,16 @@ const BestSelling = () => {
           <div className="overflow-x-auto lg:overflow-x-visible no-scrollbar scrollbar-hide">
             <div className="flex gap-6 mt-10  lg:grid lg:grid-cols-3 xl:grid-cols-4 md:px-0">
               {productData.map((product, index) => (
-                <div key={index} className="min-w-[220px]">
-                  <div className="flex max-h-[200px] min-h-[200px] justify-center">
+                <motion.div
+                  key={product.id}
+                  className=""
+                  custom={index}
+                  variants={fadeDown}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, amount: 0.2 }}
+                >
+                  <div className="flex h-[100px] w-[100px] md:w-[200px]  md:h-[200px] lg:w-full justify-center">
                     <Image
                       src={product.image}
                       alt="dogHut"
@@ -74,19 +108,19 @@ const BestSelling = () => {
                       className="rounded-t-2xl w-full object-cover  hover:scale-105 transition-all duration-500 cursor-pointer"
                     />
                   </div>
-                  <div className="flex flex-col gap-4 mt-4 px-2">
+                  <div className="flex flex-col md:gap-4 mt-4 px-2">
                     <div className="flex justify-between">
-                      <span className="text-xl font-semibold">
+                      <span className="text-sm md:text-xl font-semibold">
                         {product.title}
                       </span>
                       <FavoriteBorderIcon sx={{ color: "#ff0047" }} />
                     </div>
-                    <div>
-                      <span className="text-md">Rs. </span>
-                      <span className="text-md">{product.price}</span>
+                    <div className=" text-sm">
+                      <span className="">Rs. </span>
+                      <span className="">{product.price}</span>
                     </div>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>

@@ -168,7 +168,7 @@ const Testimonial = () => {
                 </div>
               </div>
             </div>
-            <div className="relative w-full h-[400px] flex justify-center items-center">
+            <div className="relative w-full h-[200px] md:h-[400px] flex justify-center items-center">
               <Image
                 src="/images/testimonialBg.png"
                 alt="testimonialBG"
@@ -181,7 +181,7 @@ const Testimonial = () => {
                 alt={testimonials[current].name}
                 width={300}
                 height={300}
-                className=" h-[220px] w-[220px] xl:h-auto xl:w-auto rounded-full  relative "
+                className=" h-[150px] w-[150px] md:h-[220px] md:w-[220px] xl:h-auto xl:w-auto rounded-full  relative "
               />
             </div>
           </div>

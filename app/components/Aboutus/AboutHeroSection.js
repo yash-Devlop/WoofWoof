@@ -7,7 +7,7 @@ const AboutHeroSection = () => {
   const router = useRouter();
 
   return (
-    <div className="w-full pt-20 md:pt-0">
+    <div data-aos="fade-down" className="w-full pt-20 md:pt-0">
       <div className=" px-4 md:px-16 xl:px-30">
         <div className="relative w-full">
           <Image

@@ -1,3 +1,4 @@
+import Aos from "aos";
 import Image from "next/image";
 import React from "react";
 
@@ -30,7 +31,7 @@ const NewsAndBlogs = () => {
   ];
 
   return (
-    <div className="w-full relative">
+    <div data-aos="zoom-in" className="w-full relative">
       <div className="bg-white rounded-3xl m-4 md:m-12 py-8 md:py-20">
         <div className=" px-4 md:px-24 xl:px-40">
           <div className="flex w-full justify-center mb-8">
@@ -56,7 +57,7 @@ const NewsAndBlogs = () => {
                       className=" rounded-t-2xl min-w-[170px]"
                     />
                     <div className=" text-gray-600">{blog.date}</div>
-                    <div className=" underline text-lg font-semibold cursor-pointer">
+                    <div className=" text-sm underline md:text-lg font-semibold cursor-pointer">
                       {blog.link}
                     </div>
                   </div>

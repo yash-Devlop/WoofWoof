@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 
 const ContactHero = () => {
   return (
-    <div className="w-full pt-32 lg:py-16">
+    <div data-aos="fade-down" className="w-full pt-32 lg:py-16">
       <div className=" px-4 md:px-16 xl:px-30">
         <div className="relative w-full">
           <Image
