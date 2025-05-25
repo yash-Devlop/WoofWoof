@@ -4,7 +4,7 @@ import ShopHero from "../components/shop/ShopHero";
 import Footer from "../components/Home/Footer";
 import ProductPage from "../components/shop/productComponents/ProductPage";
 
-const page = () => {
+const Page = () => {
   const productRef = useRef(null);
   return (
     <div className=" bg-[#EEEEEE]">
@@ -19,4 +19,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
