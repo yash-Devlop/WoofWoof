@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 
-const ShopHero = () => {
+const ShopHero = ({ scrollToProduct }) => {
   const router = useRouter();
   const [isHovered, setIsHovered] = useState(false);
 
@@ -29,7 +29,7 @@ const ShopHero = () => {
               </div>
               <div className=" flex  gap-8">
                 <button
-                  onClick={() => router.push("/register")}
+                  onClick={scrollToProduct}
                   onMouseEnter={() => setIsHovered(true)}
                   onMouseLeave={() => setIsHovered(false)}
                   className={` bg-black/97 gap-1 flex justify-center items-center px-4  py-1 group hover:scale-105 transition-all duration-300 text-white font-medium lg:text-lg  rounded-full uppercase cursor-pointer`}
