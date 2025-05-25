@@ -48,7 +48,7 @@ const NavBar = () => {
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      if (currentScrollY > lastScrollY && currentScrollY > 10) {
+      if (currentScrollY > lastScrollY && currentScrollY > 5) {
         setShowNavbar(false); // scroll down
       } else {
         setShowNavbar(true); // scroll up
@@ -64,9 +64,9 @@ const NavBar = () => {
     <div className="w-full shadow-md mx-auto flex justify-center">
       {/* Main Nav Bar */}
       <nav
-        className={` fixed z-50   gap-28 ${
+        className={` fixed z-50 w-[90%] gap-28 ${
           showNavbar ? "translate-y-0 top-8 md:top-11" : "-translate-y-full"
-        } md:gap-[8rem] xl:gap-[10rem] transition-all duration-300 flex items-center justify-between px-4 py-2 md:px-6 bg-white shadow-lg rounded-full`}
+        } md:gap-[8rem] xl:gap-[10rem] transition-all duration-300 flex items-center justify-between px-4 py-1 md:px-6 bg-white shadow-lg rounded-full`}
       >
         {/* Left - Logo */}
         {/* <div className="flex items-center lg:gap-6">
@@ -92,7 +92,7 @@ const NavBar = () => {
             muted
             playsInline
           />
-          <h1 className="font-bold text-xl hidden lg:block">Wed My Pet</h1>
+          <h1 className="font-bold text-lg lg:text-2xl ">Wed My Pet</h1>
         </div>
 
         {/* Center - Nav Links */}
@@ -157,7 +157,7 @@ const NavBar = () => {
             <SearchIcon className=" cursor-pointer" />
           </div>
 
-          <Badge
+          {/* <Badge
             badgeContent={4}
             sx={{
               "& .MuiBadge-badge": {
@@ -171,8 +171,8 @@ const NavBar = () => {
             }}
           >
             <FavoriteBorderIcon className=" cursor-pointer" />
-          </Badge>
-          <Badge
+          </Badge> */}
+          {/* <Badge
             badgeContent={`0`}
             sx={{
               "& .MuiBadge-badge": {
@@ -189,7 +189,7 @@ const NavBar = () => {
               onClick={() => router.push("/cart")}
               className=" cursor-pointer"
             />
-          </Badge>
+          </Badge> */}
           {/* <FaHeart className="text-black text-lg cursor-pointer" />
           <FaShoppingCart className="text-black text-lg cursor-pointer" /> */}
           <button
@@ -197,7 +197,7 @@ const NavBar = () => {
             onClick={() => setIsOpen(!isOpen)}
           >
             <svg
-              className="w-8 h-8"
+              className="w-7 h-7"
               fill="none"
               stroke="currentColor"
               strokeWidth={2}

@@ -4,13 +4,15 @@ import NavBar from "./NavBar";
 import AOSWrapper from "./AosWrapper";
 import { Provider } from "react-redux";
 import store from "@/store/store";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Toaster } from "react-hot-toast";
 import Image from "next/image";
 import Offers from "./Home/Offers";
 import IntroVideo from "./IntroVideo";
 
+
 const ClientLayout = ({ children }) => {
+  const router = useRouter();
   const path = usePathname();
   const isAdminRoute = path.startsWith("/admin");
 
@@ -36,13 +38,23 @@ const ClientLayout = ({ children }) => {
           <Offers />
           {children}
           {!isAdminRoute && (
-            <Image
-              src="/images/whatsapp.png"
-              alt="whatsapp"
-              width={40}
-              height={40}
-              className=" z-40 fixed bottom-7 right-7 animate-bounce"
-            />
+            <div>
+              <Image
+                onClick={() => router.push("/cart")}
+                src="/images/trolley.png"
+                alt="whatsapp"
+                width={40}
+                height={40}
+                className=" z-40 fixed bottom-20 right-7 "
+              />
+              <Image
+                src="/images/whatsapp.png"
+                alt="whatsapp"
+                width={35}
+                height={35}
+                className=" z-40 fixed bottom-7 right-7 "
+              />
+            </div>
           )}
         </Provider>
       )}

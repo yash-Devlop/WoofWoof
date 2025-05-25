@@ -7,12 +7,14 @@ import Testimonial from "../components/Aboutus/Testimonial";
 import InstaPage from "../components/Aboutus/InstaPage";
 import Footer from "../components/Home/Footer";
 import VideoSec from "../components/Aboutus/VideoSec";
+import TinTinSec from "../components/Aboutus/TinTinSec";
 
 const page = () => {
   return (
     <div className="  bg-[#EEEEEE]">
       <AboutHeroSection />
       <AboutOurStore />
+      <TinTinSec />
       <FounderSec />
       <OurTeam />
       <Testimonial />
