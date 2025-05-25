@@ -21,15 +21,18 @@ const SmartWay = () => {
             <Image
               src="/images/vectorImage.png"
               alt="vectorImage"
-              width={500}
-              height={500}
+              width={600}
+              height={600}
+              className=" w-full h-full"
             />
             <div
               // data-aos="flip-down"
               className=" space-y-3 flex flex-col justify-center lg:max-w-[420px]"
             >
-              <h4 className=" font-semibold text-[#E42916]">WED MY PET</h4>
-              <h2 className=" text-4xl lg:text-5xl font-semibold">
+              <h4 className=" font-bold text-[#ff0047] text-3xl text-center md:text-start">
+                WED MY PET
+              </h4>
+              <h2 className=" text-4xl lg:text-5xl font-semibold text-center md:text-start">
                 The smarter way to shop for your pet
               </h2>
               <p className=" lg:text-[20px] tracking-wide font-normal text-gray-700">

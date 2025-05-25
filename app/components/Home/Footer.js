@@ -5,13 +5,13 @@ import React from "react";
 const Footer = () => {
   return (
     <div className=" md:p-10 p-4">
-      <div className=" relative">
+      <div className=" relative bg-[#292929] rounded-3xl text-white">
         <Image
-          src="/images/Footer.png"
+          src="/images/vectorPaws.png"
           alt="footer"
           width={600}
           height={600}
-          className=" absolute w-full h-full object-cover rounded-3xl"
+          className=" absolute w-full h-full object-contain rounded-3xl"
         />
         <div
           data-aos="zoom-in-up"

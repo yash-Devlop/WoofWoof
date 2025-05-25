@@ -1,20 +1,39 @@
 "use client";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import React from "react";
+import { motion } from "framer-motion";
 
-const Offers = () => {
-  const router = useRouter();
+const Offer = () => {
   return (
-    <div className=" w-full bg-[#ff3971e5] flex justify-center px-24 py-2 ">
-      <div
-        onClick={() => router.push("/register")}
-        className=" font-medium text-[10px] md:text-lg cursor-pointer"
+    <div className="w-full overflow-hidden bg-[#ff3971e5] py-2">
+      <motion.div
+        className="flex gap-10 whitespace-nowrap text-black text-[11px] md:text-lg font-semibold"
+        animate={{ x: ["100%", "-100%"] }}
+        transition={{
+          repeat: Infinity,
+          duration: 10,
+          ease: "linear",
+        }}
       >
-        Get a free Product worth 199 absolutely free
-      </div>
+        <span>Special Offer! 50% Off on All Items</span>
+        <span>Free Shipping Above $99</span>
+        <span>Limited Time Deal! Grab Now</span>
+        <span>Special Offer! 50% Off on All Items</span>
+        <span>Free Shipping Above $99</span>
+        <span>Limited Time Deal! Grab Now</span>
+        <span>Special Offer! 50% Off on All Items</span>
+        <span>Free Shipping Above $99</span>
+        <span>Limited Time Deal! Grab Now</span>
+        <span>Special Offer! 50% Off on All Items</span>
+        <span>Free Shipping Above $99</span>
+        <span>Limited Time Deal! Grab Now</span>
+        <span>Special Offer! 50% Off on All Items</span>
+        <span>Free Shipping Above $99</span>
+        <span>Limited Time Deal! Grab Now</span>
+        <span>Special Offer! 50% Off on All Items</span>
+        <span>Free Shipping Above $99</span>
+        <span>Limited Time Deal! Grab Now</span>
+      </motion.div>
     </div>
   );
 };
 
-export default Offers;
+export default Offer;

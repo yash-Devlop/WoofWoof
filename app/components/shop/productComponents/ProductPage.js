@@ -7,10 +7,10 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import SearchIcon from "@mui/icons-material/Search";
 import { useDispatch, useSelector } from "react-redux";
 import { setSort } from "@/store/slices/user/productSlice";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { fetchProducts } from "@/store/slices/user/productSlice";
 
-export default function ProductPage() {
+export default function ProductPage({ innerRef }) {
   const dispatch = useDispatch();
   const filters = useSelector((state) => state.product.filters);
 
@@ -96,7 +96,10 @@ export default function ProductPage() {
                   </div>
                 </div>
               </div>
-              <ProductGrid />
+              <div ref={innerRef}>
+                <ProductGrid />
+              </div>
+
               <PaginationSec />
             </main>
           </div>

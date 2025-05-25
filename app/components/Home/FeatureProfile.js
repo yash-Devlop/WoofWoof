@@ -75,49 +75,23 @@ const FeatureProfile = () => {
             <h2 className=" text-4xl font-semibold">Featured Profiles</h2>
             <div className=" flex  gap-3">
               <div className=" cursor-pointer">
-                <svg
-                  width="35"
-                  height="35"
-                  viewBox="0 0 40 40"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <rect
-                    width="40"
-                    height="40"
-                    rx="20"
-                    transform="matrix(-1 0 0 1 40 0)"
-                    fill="black"
-                  />
-                  <path
-                    d="M23 26L17 20L23 14"
-                    stroke="white"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
+                <Image
+                  src="/images/previous.png"
+                  width={35}
+                  height={35}
+                  alt="previous button"
+                />
               </div>
               <div
                 className=" cursor-pointer
             "
               >
-                <svg
-                  width="35"
-                  height="35"
-                  viewBox="0 0 40 40"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <rect width="40" height="40" rx="20" fill="black" />
-                  <path
-                    d="M17 26L23 20L17 14"
-                    stroke="white"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
+                <Image
+                  src="/images/next.png"
+                  width={35}
+                  height={35}
+                  alt="previous button"
+                />
               </div>
             </div>
           </div>
@@ -153,14 +127,14 @@ const FeatureProfile = () => {
                         <rect width="24" height="24" rx="12" fill="white" />
                         <path
                           d="M7.33203 12H16.6654"
-                          stroke="#FD7E14"
+                          stroke="#ff0047"
                           strokeWidth="2"
                           strokeLinecap="round"
                           strokeLinejoin="round"
                         />
                         <path
                           d="M12 7.33325L16.6667 11.9999L12 16.6666"
-                          stroke="#FD7E14"
+                          stroke="#ff0047"
                           strokeWidth="2"
                           strokeLinecap="round"
                           strokeLinejoin="round"
