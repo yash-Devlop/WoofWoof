@@ -9,7 +9,7 @@ const Offer = () => {
         animate={{ x: ["100%", "-100%"] }}
         transition={{
           repeat: Infinity,
-          duration: 10,
+          duration: 20,
           ease: "linear",
         }}
       >
