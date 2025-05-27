@@ -19,7 +19,7 @@ const TermsAndConditions = () => {
           {/* Introduction */}
           <div className="prose max-w-none">
             <p>
-              Welcome to <strong>Wed My Pet</strong> – your go-to pet store for
+              Welcome to <strong>Wed My Pet</strong> your go-to pet store for
               all things adorable and essential! By using our website, you agree
               to be bound by the following Terms and Conditions. Please read
               them carefully.
@@ -66,7 +66,7 @@ const TermsAndConditions = () => {
                 time and may change without prior notice.
               </li>
               <li>
-                "✨ 10% OFF on orders above ₹1,000" is applicable before taxes
+                {`"✨ 10% OFF on orders above ₹1,000"`} is applicable before taxes
                 and shipping.
               </li>
             </ul>
@@ -92,7 +92,7 @@ const TermsAndConditions = () => {
               </li>
               <li>
                 Refunds will be initiated after inspection and processed to the
-                original payment method within 5–7 business days.
+                original payment method within {`5–7`} business days.
               </li>
             </ul>
             <p className="text-gray-600 mt-4">
@@ -115,10 +115,10 @@ const TermsAndConditions = () => {
             </h3>
             <ul className="list-disc pl-5 space-y-2 text-gray-600">
               <li>
-                Orders processed within <strong>1–2 business days</strong>.
+                Orders processed within <strong>{`1–2`} business days</strong>.
               </li>
               <li>
-                Delivery typically takes <strong>3–7 business days</strong>,
+                Delivery typically takes <strong>{`3–7`} business days</strong>,
                 depending on your location.
               </li>
             </ul>
@@ -147,9 +147,9 @@ const TermsAndConditions = () => {
               Tracking & Delays:
             </h3>
             <p className="text-gray-600">
-              Once shipped, you'll receive an SMS/email with a tracking number.
+              {`Once shipped, you'll receive an SMS/email with a tracking number.
               In case of unforeseen delays (e.g., weather, strikes), we will
-              inform you proactively.
+              inform you proactively.`}
             </p>
           </div>
 
