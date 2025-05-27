@@ -10,11 +10,12 @@ import Image from "next/image";
 import Offers from "./Home/Offers";
 import IntroVideo from "./IntroVideo";
 
-
 const ClientLayout = ({ children }) => {
   const router = useRouter();
   const path = usePathname();
   const isAdminRoute = path.startsWith("/admin");
+  const hideNavAndOffersRoutes = ["/terms-and-conditions", "/privacy-policy"];
+  const shouldHideNavAndOffers = hideNavAndOffersRoutes.includes(path);
 
   const [showIntro, setShowIntro] = useState(true);
 
@@ -34,10 +35,10 @@ const ClientLayout = ({ children }) => {
         <Provider store={store}>
           <AOSWrapper />
           <Toaster position="top-right" reverseOrder={false} />
-          {!isAdminRoute && <NavBar />}
-          <Offers />
+          {!isAdminRoute && !shouldHideNavAndOffers && <NavBar />}
+          {!isAdminRoute && !shouldHideNavAndOffers && <Offers />}
           {children}
-          {!isAdminRoute && (
+          {!isAdminRoute && !shouldHideNavAndOffers && (
             <div>
               <Image
                 onClick={() => router.push("/cart")}

@@ -1,8 +1,11 @@
-import Aos from "aos";
+"use client";
+import { motion } from "framer-motion";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 const Footer = () => {
+  const router = useRouter();
   return (
     <div className=" md:p-10 p-4">
       <div className=" relative bg-[#292929] rounded-3xl text-white">
@@ -13,9 +16,11 @@ const Footer = () => {
           height={600}
           className=" absolute w-full h-full object-contain rounded-3xl"
         />
-        <div
-          data-aos="zoom-in-up"
-          data-aos-duration="1500"
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8, y: 40 }}
+          whileInView={{ opacity: 1, scale: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.5 }} // animate once when 50% visible
+          transition={{ duration: 1, ease: "easeOut" }}
           className="w-full relative py-4 md:py-12"
         >
           <div className=" px-4 md:px-16 xl:px-40 space-y-10">
@@ -120,21 +125,40 @@ const Footer = () => {
                 <div className=" grid grid-cols-2 lg:grid-cols-4 lg:gap-10 gap-4">
                   <div className=" px-4 md:px-10 lg:space-y-2">
                     <div className=" font-semibold">Company</div>
-                    <div>About Us</div>
+                    <div
+                      className=" cursor-pointer"
+                      onClick={() => router.push("/aboutUs")}
+                    >
+                      About Us
+                    </div>
                     <div>Blog</div>
                     <div>Gift Card</div>
-                    <div>Career</div>
                   </div>
                   <div className=" px-4 md:px-10 lg:space-y-2">
                     <div className=" font-semibold">Useful Links</div>
-                    <div>New Product</div>
+                    <div
+                      className=" cursor-pointer"
+                      onClick={() => router.push("/shop")}
+                    >
+                      New Product
+                    </div>
                     <div>Best Seller</div>
-                    <div>Discount</div>
+                    <div
+                      className=" cursor-pointer"
+                      onClick={() => router.push("/terms-and-conditions")}
+                    >
+                      Terms & Conditions
+                    </div>
                     <div>F.A.Q</div>
                   </div>
                   <div className=" px-4 md:px-10 lg:space-y-2">
                     <div className=" font-semibold">Customer Services</div>
-                    <div>Contact Us</div>
+                    <div
+                      className=" cursor-pointer"
+                      onClick={() => router.push("/contactUs")}
+                    >
+                      Contact Us
+                    </div>
                     <div>Shipping</div>
                     <div>Returns</div>
                     <div>Order Tracking</div>
@@ -143,7 +167,7 @@ const Footer = () => {
                     <div className=" font-semibold">Store</div>
                     <div>Faridabad, Haryana (India)</div>
                     <div>+91- 9999887030</div>
-                    <div>info@wedmypet.com</div>
+                    <div>Contact@wedmypet.in</div>
                   </div>
                 </div>
               </div>
@@ -158,7 +182,7 @@ const Footer = () => {
               />
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </div>
   );
