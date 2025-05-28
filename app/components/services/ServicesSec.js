@@ -178,7 +178,7 @@ const ServicesSec = () => {
         <div className="relative h-[860px] lg:h-auto px-4 md:px-30 flex flex-col">
           <div className=" absolute inset-0 top-0 z-10 flex justify-center items-start">
             <Image
-              src="/images/pawsFlow.PNG"
+              src="/images/pawsFlow.png"
               alt="pawsFlow"
               fill
               className="absolute h-full w-full object-contain"
