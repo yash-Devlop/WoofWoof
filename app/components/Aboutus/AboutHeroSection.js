@@ -21,7 +21,7 @@ const AboutHeroSection = () => {
               <div
                 // data-aos="fade-right"
                 // data-aos-duration="1500"
-                className=" text-3xl lg:text-5xl font-bold"
+                className=" text-3xl lg:text-5xl font-bold text-center lg:text-start"
               >
                 <span>If animals could talk, they’d talk </span>
                 <span className=" text-[#ff0047] ">about us!</span>
