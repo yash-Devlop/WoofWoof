@@ -19,7 +19,7 @@ const ContactHero = () => {
               <div
                 // data-aos="fade-right"
                 // data-aos-duration="1500"
-                className=" text-3xl lg:text-5xl font-bold "
+                className=" text-3xl lg:text-5xl font-bold text-center lg:text-start "
               >
                 <div className="">
                   Need help or have a paw-some idea <span>to share?</span>

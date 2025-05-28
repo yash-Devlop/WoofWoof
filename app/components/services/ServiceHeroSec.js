@@ -23,7 +23,7 @@ const ServiceHeroSec = () => {
               <div
                 // data-aos="fade-right"
                 // data-aos-duration="1500"
-                className=" text-3xl lg:text-5xl font-bold"
+                className=" text-3xl lg:text-5xl font-bold text-center lg:text-start"
               >
                 <span className=" text-[#ff0047] ">Wed My Pet, </span>
                 <span>
