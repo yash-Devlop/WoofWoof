@@ -40,36 +40,21 @@ const SmartWay = () => {
                 est proin turpis pellentesque sinulla a aliquam amet rhoncus
                 quisque eget sit
               </p>
-              <div className=" flex mt-6  gap-8">
+              <div className=" mt-6 flex justify-center lg:justify-start  gap-8">
                 <button
                   onClick={() => router.push("/shop")}
-                  onMouseEnter={() => setIsHovered(true)}
-                  onMouseLeave={() => setIsHovered(false)}
-                  className={` bg-black/97 gap-1 flex justify-center items-center px-4  py-1 group hover:scale-105 transition-all duration-300 text-white font-medium lg:text-lg rounded-full uppercase cursor-pointer`}
+                  className={` bg-black/97 gap-1 flex justify-center items-center pl-4 pr-1.5  py-1 group hover:scale-105 transition-all duration-300 text-white font-medium lg:text-lg rounded-full uppercase cursor-pointer`}
                 >
                   Shop Now
-                  {isHovered && (
-                    <motion.span
-                      className=" "
-                      initial={{ x: -5, opacity: 0 }}
-                      animate={{
-                        x: isHovered ? 10 : 0,
-                        opacity: isHovered ? 1 : 0,
-                      }}
-                      transition={{
-                        type: "easeIn",
-                        duration: 0.6,
-                      }}
-                    >
-                      <Image
-                        src="/images/logo.png"
-                        width={33}
-                        height={33}
-                        alt="logo"
-                        className="hidden  group-hover:block transition-all duration-300"
-                      />
-                    </motion.span>
-                  )}
+                  <motion.span className=" ">
+                    <Image
+                      src="/images/logo.png"
+                      width={33}
+                      height={33}
+                      alt="logo"
+                      className="  group-hover:block transition-all duration-300"
+                    />
+                  </motion.span>
                 </button>
               </div>
             </div>

@@ -2,19 +2,68 @@
 import Image from "next/image";
 import React from "react";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 
 const ContactHero = () => {
   return (
-    <div data-aos="fade-down" className="w-full pt-32 lg:py-16">
+    <div data-aos="fade-down" className="w-full pt-20">
       <div className=" px-4 md:px-16 xl:px-30">
         <div className="relative w-full">
+          <div className=" absolute inset-0  ">
+            {/* Top Image */}
+            <div className="absolute  top-0 left-0">
+              <motion.div
+                initial={{ x: 20, y: -10, scale: 1 }}
+                animate={{
+                  x: [0, -30, -50, -30, 0],
+                  y: [0, 20, 40, 20, 0],
+                }}
+                transition={{
+                  duration: 7,
+                  repeat: Infinity,
+                  ease: "linear",
+                }}
+              >
+                <Image
+                  src="/images/testimonialBg.PNG"
+                  alt="floatingVector1"
+                  width={200}
+                  height={200}
+                  className="object-contain h-[100px] w-[100px] lg:h-[150px] lg:w-[150px]"
+                />
+              </motion.div>
+            </div>
+            {/* Bottom Image */}
+            <div className="absolute bottom-3/7 lg:bottom-1/8 right-4 lg:right-1/2">
+              <motion.div
+                initial={{ x: 10, y: -10, scale: 1 }}
+                animate={{
+                  x: [0, 20, 40, 20, 0],
+                  y: [0, -10, 0, 10, 0],
+                }}
+                transition={{
+                  duration: 7,
+                  repeat: Infinity,
+                  ease: "linear",
+                }}
+              >
+                <Image
+                  src="/images/transitionBg.PNG"
+                  alt="floatingVector2"
+                  width={200}
+                  height={200}
+                  className="object-contain h-[100px] w-[100px] lg:h-[150px] lg:w-[150px]"
+                />
+              </motion.div>
+            </div>
+          </div>
           <Image
             src="/images/Group1.png"
             alt="group"
             fill
-            className="hidden lg:block absolute w-full h-full  object-contain"
+            className="hidden absolute w-full h-full  object-contain"
           />
-          <div className=" grid grid-cols-1 lg:grid-cols-2 lg:gap-0 lg:py-24 ">
+          <div className=" grid grid-cols-1 lg:grid-cols-2 gap-24 lg:gap-0 lg:py-24 ">
             <div className="relative flex flex-col justify-center items-center lg:items-start space-y-10  lg:space-y-20">
               <div
                 // data-aos="fade-right"
@@ -50,15 +99,15 @@ const ContactHero = () => {
                 src="/images/pinkBG.png"
                 alt="Background"
                 fill
-                className="lg:hidden object-contains" // customize as needed
+                className=" object-contains" // customize as needed
               />
-              <div className=" h-full w-full flex justify-start items-center">
+              <div className=" h-full w-full flex justify-center items-center">
                 <Image
                   src="/images/contactHero.png"
                   alt="heroImage"
-                  width={600}
+                  width={500}
                   height={450}
-                  className=" object-cover relative bottom-2 xl:right-10"
+                  className=" object-contain relative bottom-7 "
                 />
               </div>
             </div>

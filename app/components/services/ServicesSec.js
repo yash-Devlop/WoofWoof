@@ -201,31 +201,17 @@ const ServicesSec = () => {
                   Looking to relocate your furry friend? You’ve come to the
                   right place
                 </h1>
-                <button
-                  onMouseEnter={() => setIsHovered(true)}
-                  onMouseLeave={() => setIsHovered(false)}
-                  className="bg-black/97 gap-1 flex justify-start items-center px-4 py-1 group transition-all duration-300 text-white font-medium lg:text-lg lg:mb-8 rounded-full uppercase cursor-pointer"
-                >
+                <button className="bg-black/97 gap-1 flex justify-start items-center pl-4 pr-1.5 py-1 group transition-all duration-300 text-white font-medium lg:text-lg lg:mb-8 rounded-full uppercase cursor-pointer">
                   Know More
-                  {isHovered && (
-                    <motion.span
-                      className=""
-                      initial={{ x: -5, opacity: 0 }}
-                      animate={{
-                        x: isHovered ? 10 : 0,
-                        opacity: isHovered ? 1 : 0,
-                      }}
-                      transition={{ type: "easeIn", duration: 0.6 }}
-                    >
-                      <Image
-                        src="/images/logo.png"
-                        width={33}
-                        height={33}
-                        alt="logo"
-                        className="hidden group-hover:block transition-all duration-300"
-                      />
-                    </motion.span>
-                  )}
+                  <motion.span className="">
+                    <Image
+                      src="/images/logo.png"
+                      width={33}
+                      height={33}
+                      alt="logo"
+                      className="group-hover:block transition-all duration-300"
+                    />
+                  </motion.span>
                 </button>
               </div>
               <div className="order-2 flex justify-start items-center">
@@ -310,31 +296,17 @@ const ServicesSec = () => {
                     Looking to relocate your furry friend? You’ve come to the
                     right place
                   </h1>
-                  <button
-                    onMouseEnter={() => setIsHovered(true)}
-                    onMouseLeave={() => setIsHovered(false)}
-                    className="bg-black/97 gap-1 flex justify-start items-center px-4 py-1 group transition-all duration-300 text-white text-sm font-medium lg:text-lg lg:mb-8 rounded-full uppercase cursor-pointer"
-                  >
+                  <button className="bg-black/97 gap-1 flex justify-start items-center pl-4 pr-1.5 py-1 group transition-all duration-300 text-white text-sm font-medium lg:text-lg lg:mb-8 rounded-full uppercase cursor-pointer">
                     Know More
-                    {isHovered && (
-                      <motion.span
-                        className=""
-                        initial={{ x: -5, opacity: 0 }}
-                        animate={{
-                          x: isHovered ? 10 : 0,
-                          opacity: isHovered ? 1 : 0,
-                        }}
-                        transition={{ type: "easeIn", duration: 0.6 }}
-                      >
-                        <Image
-                          src="/images/logo.png"
-                          width={33}
-                          height={33}
-                          alt="logo"
-                          className="hidden group-hover:block transition-all duration-300"
-                        />
-                      </motion.span>
-                    )}
+                    <motion.span className="">
+                      <Image
+                        src="/images/logo.png"
+                        width={33}
+                        height={33}
+                        alt="logo"
+                        className=" group-hover:block transition-all duration-300"
+                      />
+                    </motion.span>
                   </button>
                 </div>
                 <div className="order-2 flex justify-start items-center">

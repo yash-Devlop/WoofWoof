@@ -90,33 +90,18 @@ const HeroSection = () => {
               <div className=" flex  gap-8">
                 <button
                   onClick={() => router.push("/register")}
-                  onMouseEnter={() => setIsHovered(true)}
-                  onMouseLeave={() => setIsHovered(false)}
-                  className={` bg-black/97 gap-1 flex justify-center items-center px-4  py-1 group hover:scale-105 transition-all duration-300 text-white font-medium lg:text-lg  rounded-full uppercase cursor-pointer`}
+                  className={` bg-black/97 gap-1 flex justify-center items-center pl-4 pr-1.5  py-1 group hover:scale-105 transition-all duration-300 text-white font-medium lg:text-lg  rounded-full uppercase cursor-pointer`}
                 >
                   Add Your Pet Profile
-                  {isHovered && (
-                    <motion.span
-                      className=" "
-                      initial={{ x: -5, opacity: 0 }}
-                      animate={{
-                        x: isHovered ? 10 : 0,
-                        opacity: isHovered ? 1 : 0,
-                      }}
-                      transition={{
-                        type: "easeIn",
-                        duration: 0.6,
-                      }}
-                    >
-                      <Image
-                        src="/images/logo.png"
-                        width={33}
-                        height={33}
-                        alt="logo"
-                        className="hidden  group-hover:block transition-all duration-300"
-                      />
-                    </motion.span>
-                  )}
+                  <motion.span className=" ">
+                    <Image
+                      src="/images/logo.png"
+                      width={33}
+                      height={33}
+                      alt="logo"
+                      className="  group-hover:block transition-all duration-300"
+                    />
+                  </motion.span>
                 </button>
               </div>
             </div>
@@ -129,7 +114,7 @@ const HeroSection = () => {
                 src="/images/pinkBG.png"
                 alt="Background"
                 fill
-                className=" object-contain lg:object-cover " // customize as needed
+                className=" object-contain " // customize as needed
               />
               <div className=" h-full w-full flex justify-center xl:pl-20 lg:justify-start  items-center">
                 <Image
@@ -137,7 +122,7 @@ const HeroSection = () => {
                   alt="heroImage"
                   width={400}
                   height={200}
-                  className=" object-cover  relative"
+                  className=" object-cover lg:left-10  relative"
                 />
               </div>
             </div>

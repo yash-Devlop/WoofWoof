@@ -12,11 +12,59 @@ const ShopHero = ({ scrollToProduct }) => {
     <div data-aos="fade-down" className="w-full  pt-20">
       <div className=" px-4 md:px-16 xl:px-30">
         <div className="relative w-full">
+          <div className=" absolute inset-0  ">
+            {/* Top Image */}
+            <div className="absolute top-0 left-0">
+              <motion.div
+                initial={{ x: 20, y: -10, scale: 1 }}
+                animate={{
+                  x: [0, -30, -50, -30, 0],
+                  y: [0, 20, 40, 20, 0],
+                }}
+                transition={{
+                  duration: 7,
+                  repeat: Infinity,
+                  ease: "linear",
+                }}
+              >
+                <Image
+                  src="/images/testimonialBg.PNG"
+                  alt="floatingVector1"
+                  width={200}
+                  height={200}
+                  className="object-contain h-[100px] w-[100px] lg:h-[150px] lg:w-[150px]"
+                />
+              </motion.div>
+            </div>
+            {/* Bottom Image */}
+            <div className="absolute bottom-3/5 lg:bottom-1/10 right-4 lg:right-3/6">
+              <motion.div
+                initial={{ x: 10, y: -10, scale: 1 }}
+                animate={{
+                  x: [0, 20, 40, 20, 0],
+                  y: [0, -10, 0, 10, 0],
+                }}
+                transition={{
+                  duration: 7,
+                  repeat: Infinity,
+                  ease: "linear",
+                }}
+              >
+                <Image
+                  src="/images/transitionBg.PNG"
+                  alt="floatingVector2"
+                  width={200}
+                  height={200}
+                  className="object-contain h-[100px] w-[100px] lg:h-[150px] lg:w-[150px]"
+                />
+              </motion.div>
+            </div>
+          </div>
           <Image
             src="/images/ServiceGroup1.png"
             alt="group"
             fill
-            className="hidden lg:block absolute w-full h-full  object-contain"
+            className="hidden absolute w-full h-full  object-contain"
           />
           <div className=" grid grid-cols-1 lg:grid-cols-2 md:gap-10 ">
             <div className="relative flex flex-col justify-center items-center lg:items-start space-y-2  lg:space-y-20">
@@ -30,33 +78,18 @@ const ShopHero = ({ scrollToProduct }) => {
               <div className=" flex  gap-8">
                 <button
                   onClick={scrollToProduct}
-                  onMouseEnter={() => setIsHovered(true)}
-                  onMouseLeave={() => setIsHovered(false)}
-                  className={` bg-black/97 gap-1 flex justify-center items-center px-4  py-1 group hover:scale-105 transition-all duration-300 text-white font-medium lg:text-lg  rounded-full uppercase cursor-pointer`}
+                  className={` bg-black/97 gap-1 flex justify-center items-center pl-4 pr-1.5  py-1 group hover:scale-105 transition-all duration-300 text-white font-medium lg:text-lg  rounded-full uppercase cursor-pointer`}
                 >
                   Shop Now
-                  {isHovered && (
-                    <motion.span
-                      className=" "
-                      initial={{ x: -5, opacity: 0 }}
-                      animate={{
-                        x: isHovered ? 10 : 0,
-                        opacity: isHovered ? 1 : 0,
-                      }}
-                      transition={{
-                        type: "easeIn",
-                        duration: 0.6,
-                      }}
-                    >
-                      <Image
-                        src="/images/logo.png"
-                        width={33}
-                        height={33}
-                        alt="logo"
-                        className="hidden  group-hover:block transition-all duration-300"
-                      />
-                    </motion.span>
-                  )}
+                  <motion.span className=" ">
+                    <Image
+                      src="/images/logo.png"
+                      width={33}
+                      height={33}
+                      alt="logo"
+                      className=" group-hover:block transition-all duration-300"
+                    />
+                  </motion.span>
                 </button>
               </div>
             </div>
@@ -69,7 +102,7 @@ const ShopHero = ({ scrollToProduct }) => {
                 src="/images/pinkBG.png"
                 alt="Background"
                 fill
-                className="lg:hidden object-contain " // customize as needed
+                className=" object-contain " // customize as needed
               />
               <div className=" h-full w-full flex justify-center   items-center">
                 <Image
@@ -77,7 +110,7 @@ const ShopHero = ({ scrollToProduct }) => {
                   alt="heroImage"
                   width={450}
                   height={200}
-                  className=" object-cover  relative 2xl:right-32"
+                  className=" object-cover  relative"
                 />
               </div>
             </div>
