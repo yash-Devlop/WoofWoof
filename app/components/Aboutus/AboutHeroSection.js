@@ -17,7 +17,7 @@ const AboutHeroSection = () => {
               <motion.div
                 initial={{ x: 20, y: -10, scale: 1 }}
                 animate={{
-                  x: [0, -30, -50, -30, 0],
+                  x: [0, -30, -60, -30, 0],
                   y: [0, 20, 40, 20, 0],
                 }}
                 transition={{

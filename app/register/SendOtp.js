@@ -7,11 +7,13 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import CircularProgress from "@mui/material/CircularProgress";
+import SettingsIcon from "@mui/icons-material/Settings";
 
 export default function SendOtp({ formData, setFormData }) {
   const dispatch = useDispatch();
   const router = useRouter();
   const { loading, error } = useSelector((state) => state.auth);
+  const [isSignUp, setIsSignUp] = useState(false);
 
   const [termsAccepted, setTermsAccepted] = useState(false);
 
@@ -75,8 +77,21 @@ export default function SendOtp({ formData, setFormData }) {
     }
   };
 
+  const handleToggle = () => {
+    setIsSignUp(!isSignUp);
+    router.push("/login");
+  };
+
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center px-4 justify-center z-50">
+    <div className=" h-screen flex items-center px-4 justify-center z-50">
+      <div className=" absolute inset-0 ">
+        <Image
+          src="/images/loginBg.jpg"
+          alt="Loging Background"
+          fill
+          className=" object-cover "
+        />
+      </div>
       <div className=" relative">
         <Image
           src="/images/bone1.png"
@@ -95,19 +110,62 @@ export default function SendOtp({ formData, setFormData }) {
               className=" hidden md:block xl:h-[85vh] w-full rounded-xl  "
             />
           </div>
-          <div className=" bg-white text-black rounded-xl relative md:right-4 p-12">
+          <div className=" bg-white text-black rounded-xl relative md:right-4 p-6 md:px-12 md:py-8 shadow-2xl">
             <div
               onClick={() => {
                 dispatch(resetAuthState());
                 router.back();
               }}
-              className=" cursor-pointer mb-2"
+              className=" cursor-pointer "
             >
               <ArrowBackIcon fontSize="large" sx={{}} />
             </div>
             <div className=" flex items-center justify-center">
+              <div className="flex flex-col justify-center"></div>
               <div className="w-full">
-                <h2 className="text-3xl font-black mb-6">Create Account</h2>
+                <div className="flex items-center justify-center space-x-8 mb-4">
+                  <h1
+                    className={`text-4xl font-bold cursor-pointer transition-colors ${
+                      !isSignUp ? "text-black" : "text-gray-400"
+                    }`}
+                    onClick={() => setIsSignUp(false)}
+                  >
+                    Sign Up
+                  </h1>
+
+                  <h1
+                    className={`text-4xl font-bold cursor-pointer transition-colors ${
+                      isSignUp ? "text-black" : "text-gray-400"
+                    }`}
+                    onClick={() => {
+                      setIsSignUp(true);
+                      router.push("/login");
+                    }}
+                  >
+                    Log In
+                  </h1>
+                </div>
+                <div className=" flex justify-center items-center mb-4">
+                  <div
+                    className="relative w-30 h-10 bg-black rounded-full cursor-pointer transition-all duration-300 ease-in-out"
+                    onClick={handleToggle}
+                  >
+                    <div
+                      className={`absolute top-1 w-8 h-8 bg-pink-500 rounded-full flex items-center justify-center transition-transform duration-300 ease-in-out ${
+                        isSignUp ? "translate-x-21" : "translate-x-1"
+                      }`}
+                    >
+                      <Image
+                        src="/images/loginLogo.PNG"
+                        alt="logoSwitch"
+                        width={12}
+                        height={12}
+                        className="w-8 h-8 text-white"
+                      />
+                    </div>
+                  </div>
+                </div>
+                {/* <h2 className="text-3xl font-black mb-6">Create Account</h2> */}
 
                 {/* Social Sign-ins */}
                 <div className="flex justify-between gap-4 mb-4">
@@ -228,7 +286,7 @@ export default function SendOtp({ formData, setFormData }) {
                     <span className="text-xs md:max-w-[250px]">
                       I agree to the{" "}
                       <a
-                        href="/terms"
+                        href="/terms-and-conditions"
                         className="text-blue-500 underline hover:text-blue-700"
                         target="_blank"
                       >
@@ -236,7 +294,7 @@ export default function SendOtp({ formData, setFormData }) {
                       </a>{" "}
                       and{" "}
                       <a
-                        href="/privacy"
+                        href="/terms-and-conditions"
                         className="text-blue-500 underline hover:text-blue-700"
                         target="_blank"
                       >
