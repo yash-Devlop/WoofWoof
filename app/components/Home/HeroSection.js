@@ -36,7 +36,7 @@ const HeroSection = () => {
                 }}
               >
                 <Image
-                  src="/images/testimonialBg.PNG"
+                  src="/images/testimonialBg.png"
                   alt="floatingVector1"
                   width={200}
                   height={200}
@@ -59,7 +59,7 @@ const HeroSection = () => {
                 }}
               >
                 <Image
-                  src="/images/transitionBg.PNG"
+                  src="/images/transitionBg.png"
                   alt="floatingVector2"
                   width={200}
                   height={200}
