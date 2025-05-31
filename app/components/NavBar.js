@@ -2,13 +2,20 @@
 import Image from "next/image";
 import React from "react";
 import SearchIcon from "@mui/icons-material/Search";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import Badge from "@mui/material/Badge";
-import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import CloseIcon from "@mui/icons-material/Close";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import LocalGroceryStoreOutlinedIcon from "@mui/icons-material/LocalGroceryStoreOutlined";
+import MiscellaneousServicesOutlinedIcon from "@mui/icons-material/MiscellaneousServicesOutlined";
+import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
+import ForwardToInboxOutlinedIcon from "@mui/icons-material/ForwardToInboxOutlined";
+import CreditCardOutlinedIcon from "@mui/icons-material/CreditCardOutlined";
+import LocalShippingOutlinedIcon from "@mui/icons-material/LocalShippingOutlined";
+import LocalMallOutlinedIcon from "@mui/icons-material/LocalMallOutlined";
+import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,6 +24,49 @@ const NavBar = () => {
   const router = useRouter();
   const [showNavbar, setShowNavbar] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+
+  const menuItems = [
+    {
+      label: "Edit Pet Profile",
+      icon: <AccountCircleIcon fontSize="small" />,
+      href: "/",
+    },
+    {
+      label: "Shop",
+      icon: <LocalGroceryStoreOutlinedIcon fontSize="small" />,
+      href: "/shop",
+    },
+    {
+      label: "Services",
+      icon: <MiscellaneousServicesOutlinedIcon fontSize="small" />,
+      href: "/services",
+    },
+    {
+      label: "About Us",
+      icon: <DescriptionOutlinedIcon fontSize="small" />,
+      href: "/aboutUs",
+    },
+    {
+      label: "Contact Us",
+      icon: <ForwardToInboxOutlinedIcon fontSize="small" />,
+      href: "/contactUs",
+    },
+    {
+      label: "Payments",
+      icon: <CreditCardOutlinedIcon fontSize="small" />,
+      href: "/",
+    },
+    {
+      label: "Track Orders",
+      icon: <LocalShippingOutlinedIcon fontSize="small" />,
+      href: "/",
+    },
+    {
+      label: "Cart",
+      icon: <LocalMallOutlinedIcon fontSize="small" />,
+      href: "/cart",
+    },
+  ];
 
   useEffect(() => {
     // Convert pathname to the correct format
@@ -214,11 +264,11 @@ const NavBar = () => {
         </div>
       </nav>
       <div
-        className={`fixed z-50 w-[70%] md:w-[50%] h-full bg-[#EEEEEE] top-0 right-0 rounded-l-2xl transition-transform duration-500 ease-in-out ${
+        className={`fixed z-50 w-[70%] md:w-[50%] h-full bg-white top-0 right-0 rounded-l-2xl transition-transform duration-500 ease-in-out ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        <div className=" flex justify-between p-4">
+        <div className=" flex mt-3.5 justify-between p-4">
           <div className=" flex gap-4 justify-center items-center">
             <Image src="/images/logo.png" alt="logo" width={40} height={40} />
 
@@ -227,47 +277,65 @@ const NavBar = () => {
 
           <CloseIcon fontSize="large" onClick={() => setIsOpen(!isOpen)} />
         </div>
-        <ul className=" flex flex-col justify-center items-center gap-4 px-2  text-black font-semibold">
-          {["Home", "Shop", "About Us", "Contact Us", "Services"].map(
-            (item, index) => {
+        <div className=" relative h-[400px] mt-10">
+          <div className=" absolute inset-0 flex justify-end right-0">
+            <div className=" absolute inset-0 border-b mx-8 border-gray-500"></div>
+            <Image
+              src="/images/sidebarBg.png"
+              alt=" sidebarBG"
+              width={400}
+              height={400}
+              className=" object-cover w-[140px] "
+            />
+          </div>
+          <ul className="relative flex flex-col justify-center items-center gap-4 px-4 space-y-1  text-black font-semibold">
+            {menuItems.map((item, index) => {
               return (
                 <li
                   key={index}
-                  className={` w-full flex py-0.5 justify-center ${
-                    item === activeTab
-                      ? " text-white bg-[#ed115a] text-xl rounded-2xl font-semibold"
-                      : "font-normal"
+                  className={` w-full flex py-0.5 justify-start items-center mx-8 pr-4 ${
+                    item.label === activeTab
+                      ? " text-black  border-2 border-[#FE0050] text-xl rounded-lg font-semibold"
+                      : "font-medium"
                   }`}
                 >
                   <Link
-                    key={item}
-                    href={
-                      item === "Home"
-                        ? "/"
-                        : `/${item
-                            .split(" ") // Split into words
-                            .map(
-                              (word, index) =>
-                                index === 0
-                                  ? word.toLowerCase() // First word lowercase
-                                  : word.charAt(0).toUpperCase() +
-                                    word.slice(1).toLowerCase() // Capitalize following words
-                            )
-                            .join("")}`
-                    }
+                    key={index}
+                    href={item.href}
                     onClick={() => {
-                      setActiveTab(item);
+                      setActiveTab(item.label);
                       setIsOpen(false);
                     }}
-                    className=""
+                    className=" px-4"
                   >
-                    {item}
+                    <div className=" flex text-xl justify-center items-center gap-4">
+                      <div>{item.icon}</div>
+                      <span>{item.label}</span>
+                    </div>
                   </Link>
                 </li>
               );
-            }
-          )}
-        </ul>
+            })}
+          </ul>
+        </div>
+        <div className=" mx-4 mt-8 space-y-2 px-4">
+          <Link href="/login">
+            <div className=" flex items-center gap-4 text-[#FE0050]">
+              <div className=" ">
+                <PersonOutlineOutlinedIcon />
+              </div>
+              <span className=" font-medium text-xl">Login</span>
+            </div>
+          </Link>
+          <Link href="/login">
+            <div className=" flex items-center gap-4 text-[#FE0050]">
+              <div className=" ">
+                <DeleteOutlineOutlinedIcon />
+              </div>
+              <span className=" font-medium text-xl">Logout</span>
+            </div>
+          </Link>
+        </div>
       </div>
     </div>
   );

@@ -14,7 +14,12 @@ const ClientLayout = ({ children }) => {
   const router = useRouter();
   const path = usePathname();
   const isAdminRoute = path.startsWith("/admin");
-  const hideNavAndOffersRoutes = ["/terms-and-conditions", "/privacy-policy"];
+  const hideNavAndOffersRoutes = [
+    "/terms-and-conditions",
+    "/privacy-policy",
+    "/login",
+    "/register",
+  ];
   const shouldHideNavAndOffers = hideNavAndOffersRoutes.includes(path);
 
   const [showIntro, setShowIntro] = useState(true);
