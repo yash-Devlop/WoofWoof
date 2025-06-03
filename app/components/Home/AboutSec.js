@@ -3,8 +3,10 @@ import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useMediaQuery } from "react-responsive";
+import { useRouter } from "next/navigation";
 
 const AboutSec = () => {
+  const router = useRouter();
   const [mounted, setMounted] = useState(false);
   useEffect(() => {
     setMounted(true);
@@ -22,16 +24,24 @@ const AboutSec = () => {
       <div className="bg-white rounded-3xl m-4 md:m-12 py-8 md:py-16">
         <div className=" px-4 md:px-24 xl:px-40 rounded-3xl">
           <motion.div
-            animate={{ rotate: [0, 10, -10, 10, -10, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            className="h-auto w-62 right-6 bottom-4 absolute rounded-[4rem]"
+            initial={{ x: 20, y: -10, scale: 1 }}
+            animate={{
+              x: [0, -30, -50, -30, 0],
+              y: [0, 20, 40, 20, 0],
+            }}
+            transition={{
+              duration: 12,
+              repeat: Infinity,
+              ease: "linear",
+            }}
+            className="h-auto w-62 right-0 bottom-1/6 md:right-1/8 md:bottom-1/8 absolute rounded-[4rem]"
           >
             <Image
               src="/images/bone1.png"
               alt="dogCouple"
               width={300}
               height={300}
-              className="rounded-[4rem] w-full h-auto  md:rotate-0"
+              className="rounded-[4rem] h-[200px] w-[200px]  md:rotate-0"
             />
           </motion.div>
           <div className=" relative grid grid-cols-1 lg:grid-cols-2 gap-8 pb-10">
@@ -64,6 +74,23 @@ const AboutSec = () => {
                 website develops, we are initially focusing on delivering
                 high-quality, RoHS-compliant, and innovative pet products.
               </p>
+              <div className=" mt-6 flex justify-center md:justify-start w-full  gap-8">
+                <button
+                  onClick={() => router.push("/aboutUs")}
+                  className={` bg-black/97 gap-1 flex justify-center items-center pl-4 pr-1.5  py-1 group hover:scale-105 transition-all duration-300 text-white font-medium lg:text-lg rounded-full uppercase cursor-pointer`}
+                >
+                  About Us
+                  <motion.span className=" ">
+                    <Image
+                      src="/images/logo.png"
+                      width={33}
+                      height={33}
+                      alt="logo"
+                      className="  group-hover:block transition-all duration-300"
+                    />
+                  </motion.span>
+                </button>
+              </div>
             </div>
           </div>
         </div>

@@ -99,7 +99,12 @@ const BestSelling = () => {
                   whileInView="visible"
                   viewport={{ once: true, amount: 0.2 }}
                 >
-                  <div className="flex h-[100px] w-[100px] md:w-[200px]  md:h-[200px] lg:w-full justify-center">
+                  <div className="relative flex h-[120px] w-[120px] md:w-[200px]  md:h-[200px] lg:w-full justify-center">
+                    <div className=" absolute bottom-1 z-10 left-1 md:bottom-2 md:left-2">
+                      <div className=" bg-[#FF3971] text-sm px-1 rounded-full">
+                        20% off
+                      </div>
+                    </div>
                     <Image
                       src={product.image}
                       alt="dogHut"
@@ -108,16 +113,19 @@ const BestSelling = () => {
                       className="rounded-t-2xl w-full object-cover  hover:scale-105 transition-all duration-500 cursor-pointer"
                     />
                   </div>
-                  <div className="flex flex-col md:gap-4 mt-4 px-2">
+                  <div className="flex flex-col md:gap-2 mt-4 px-2">
                     <div className="flex justify-between">
                       <span className="text-sm md:text-xl font-semibold">
                         {product.title}
                       </span>
                       <FavoriteBorderIcon sx={{ color: "#ff0047" }} />
                     </div>
-                    <div className=" text-sm">
-                      <span className="">Rs. </span>
-                      <span className="">{product.price}</span>
+                    <div className="text-sm">
+                      <span>Rs. </span>
+                      <span>{product.price}</span>
+                      <span className="line-through ml-2 text-gray-500">
+                        Rs. {Number(product.price) + 200}
+                      </span>
                     </div>
                   </div>
                 </motion.div>

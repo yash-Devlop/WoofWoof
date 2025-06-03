@@ -13,7 +13,9 @@ export default function Home() {
     <div className=" bg-[#EEEEEE]">
       <HeroSection />
       <AboutSec />
-      <SmartWay />
+      <div id="thirdSection">
+        <SmartWay />
+      </div>
       <BestSelling />
       <FeatureProfile />
       <NewsAndBlogs />

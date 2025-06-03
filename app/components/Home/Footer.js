@@ -6,16 +6,54 @@ import React from "react";
 
 const Footer = () => {
   const router = useRouter();
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
-    <div className=" md:p-10 p-4">
-      <div className=" relative bg-[#292929] rounded-3xl text-white">
+    <div className=" relative md:p-6 p-4">
+      <div className=" absolute z-10 bottom-0 right-0">
         <Image
-          src="/images/vectorPaws.png"
-          alt="footer"
-          width={600}
-          height={600}
-          className=" absolute w-full h-full object-contain rounded-3xl"
+          src="/images/bottomVector.png"
+          alt="bottom vector"
+          width={150}
+          height={150}
+          className=" object-contain"
         />
+      </div>
+
+      <div className=" relative bg-[#292929] rounded-3xl text-white overflow-hidden">
+        <div className=" absolute z-10 top-0 left-0 rotate-180 ">
+          <Image
+            src="/images/bottomVector.png"
+            alt="bottom vector"
+            width={120}
+            height={120}
+            className=" object-contain "
+          />
+        </div>
+        <motion.div
+          initial={{ x: 20, y: -10, scale: 1 }}
+          animate={{
+            x: [0, -30, -50, -30, 0],
+            y: [0, 20, 40, 20, 0],
+          }}
+          transition={{
+            duration: 12,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+          className=" absolute inset-0"
+        >
+          <Image
+            src="/images/vectorPaws.png"
+            alt="footer"
+            width={600}
+            height={600}
+            className=" w-full h-full object-contain rounded-3xl"
+          />
+        </motion.div>
         <motion.div
           initial={{ opacity: 0, scale: 0.8, y: 40 }}
           whileInView={{ opacity: 1, scale: 1, y: 0 }}
@@ -26,7 +64,7 @@ const Footer = () => {
           <div className=" px-4 md:px-16 xl:px-40 space-y-10">
             <div className=" grid grid-cols-1 lg:grid-cols-[25%_75%] lg:gap-10 gap-6 justify-center items-center">
               <div className=" flex flex-col justify-center items-center lg:max-w-[200px] space-y-5">
-                <div className=" flex justify-center items-center gap-2">
+                <div className=" flex justify-center items-center gap-2 z-10">
                   <Image
                     src="/images/logo.png"
                     alt="logo"
@@ -35,7 +73,7 @@ const Footer = () => {
                   />
                   <span className=" font-bold text-xl">Wed My Pet</span>
                 </div>
-                <div>
+                <div className=" text-center">
                   Connecting Pets and People: Your Happy Tails Start Here!
                 </div>
                 <div className=" flex gap-3">
@@ -133,6 +171,9 @@ const Footer = () => {
                     </div>
                     <div>Blog</div>
                     <div>Gift Card</div>
+                    <div onClick={scrollToTop} className=" cursor-pointer">
+                      Back to top
+                    </div>
                   </div>
                   <div className=" px-4 md:px-10 lg:space-y-2">
                     <div className=" font-semibold">Useful Links</div>
@@ -163,7 +204,7 @@ const Footer = () => {
                     <div>Returns</div>
                     <div>Order Tracking</div>
                   </div>
-                  <div className="px-4 md:px-10 lg:space-y-2">
+                  <div className="px-4 md:px-8 lg:space-y-2">
                     <div className=" font-semibold">Store</div>
                     <div>Faridabad, Haryana (India)</div>
                     <div>+91- 9999887030</div>
@@ -172,7 +213,7 @@ const Footer = () => {
                 </div>
               </div>
             </div>
-            <div className=" flex justify-between flex-col md:flex-row items-center mt-10">
+            <div className=" flex justify-center md:gap-8 flex-col md:flex-row items-center mt-10">
               <div> © Copyright Wed My Pet 2025.</div>
               <Image
                 src="/images/payment.png"

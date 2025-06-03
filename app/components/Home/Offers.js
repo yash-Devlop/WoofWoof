@@ -6,7 +6,7 @@ const Offer = () => {
     <div className="w-full overflow-hidden bg-[#ff3971e5] py-2">
       <motion.div
         className="flex gap-10 whitespace-nowrap text-black text-[11px] md:text-lg font-semibold"
-        animate={{ x: ["100%", "-100%"] }}
+        animate={{ x: ["0%", "-100%"] }}
         transition={{
           repeat: Infinity,
           duration: 20,
