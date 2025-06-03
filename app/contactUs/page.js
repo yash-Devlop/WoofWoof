@@ -10,7 +10,9 @@ const page = () => {
     <div className=" bg-[#EEEEEE]">
       <ContactHero />
       <ContactSec />
-      <ContactMap />
+      <div id="thirdSection">
+        <ContactMap />
+      </div>
       <Footer />
     </div>
   );

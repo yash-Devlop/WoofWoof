@@ -9,7 +9,15 @@ const ServiceHeroSec = () => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <div data-aos="fade-down" className="w-full  pt-20">
+    <div data-aos="fade-down" className="w-full relative pt-20">
+      <div className=" absolute inset-0 opacity-30">
+        <Image
+          src="/images/pinkPaws.png"
+          alt="background paws"
+          fill
+          className=" object-top w-full h-full"
+        />
+      </div>
       <div className=" px-4 md:px-16 xl:px-30">
         <div className="relative w-full">
           <div className=" absolute inset-0  ">

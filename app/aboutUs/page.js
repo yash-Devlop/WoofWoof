@@ -15,7 +15,9 @@ const page = () => {
       <AboutHeroSection />
       <AboutOurStore />
       <TinTinSec />
-      <FounderSec />
+      <div id="thirdSection">
+        <FounderSec />
+      </div>
       <OurTeam />
       <Testimonial />
       <VideoSec />

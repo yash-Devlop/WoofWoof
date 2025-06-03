@@ -140,7 +140,7 @@ const Page = () => {
                       }`}
                     >
                       <Image
-                        src="/images/loginLogo.PNG"
+                        src="/images/loginLogo.png"
                         alt="logoSwitch"
                         width={12}
                         height={12}
