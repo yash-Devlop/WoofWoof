@@ -103,7 +103,7 @@ export default function SendOtp({ formData, setFormData }) {
         <div className="relative grid grid-cols-1 md:grid-cols-2">
           <div>
             <Image
-              src="/images/login4.png"
+              src="/images/login6.png"
               alt="login"
               width={400}
               height={300}

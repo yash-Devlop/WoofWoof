@@ -39,19 +39,21 @@ export default function ProductPage({ innerRef }) {
   }, [dispatch, filters]);
 
   return (
-    <div className="w-full relative ">
-      <div className="bg-white rounded-3xl p-4 mx-4 md:m-0 md:mx-12 md:p-10">
-        <div className=" mb-8">
+    <div className="w-full relative md:mt-10 ">
+      <div className="bg-gray-50 rounded-3xl p-4 mx-4 md:m-0 md:mx-12 md:p-10">
+        <div className=" bg-white mb-8 md:p-4 rounded-2xl">
           <ShopByCategory />
         </div>
 
         <div className=" py-4">
           <div className="flex flex-col lg:flex-row gap-4">
             <aside className="w-full lg:w-1/4">
-              <FilterSidebar />
+              <div className="sticky top-24">
+                <FilterSidebar />
+              </div>
             </aside>
-            <main className="w-full lg:w-3/4 px-4">
-              <div className="flex justify-between items-center mb-4 flex-wrap gap-2">
+            <main className="w-full  lg:w-3/4 px-4 ">
+              <div className="hidden md:flex justify-between items-center mb-4 flex-wrap gap-2">
                 <div className="flex gap-2">
                   <div className="w-full relative">
                     <select
@@ -85,18 +87,21 @@ export default function ProductPage({ innerRef }) {
                     />
                   </div>
                 </div>
-                <div className="relative mx-auto md:mx-0">
+                <div className="hidden md:block relative mx-auto md:mx-0">
                   <input
                     type="text"
                     placeholder="Search products..."
                     className="px-3 py-1.5 rounded-full border bg-gray-300 border-none"
                   />
-                  <div className=" absolute top-1 right-1.5 bg-black px-0.5 text-white rounded-full">
+                  <div className="  absolute top-1 right-1.5 bg-black px-0.5 text-white rounded-full">
                     <SearchIcon className=" cursor-pointer" />
                   </div>
                 </div>
               </div>
-              <div ref={innerRef}>
+              <div
+                ref={innerRef}
+                className="max-h-[500px] overflow-y-auto m-2 md:p-8"
+              >
                 <ProductGrid />
               </div>
 

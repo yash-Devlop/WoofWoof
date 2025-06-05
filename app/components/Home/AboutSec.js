@@ -22,7 +22,7 @@ const AboutSec = () => {
       className="w-full relative "
     >
       <div className="bg-white rounded-3xl m-4 md:m-12 py-8 md:py-16">
-        <div className=" px-4 md:px-24 xl:px-40 rounded-3xl">
+        <div className=" px-4 md:px-24 xl:px-30 rounded-3xl">
           <motion.div
             initial={{ x: 20, y: -10, scale: 1 }}
             animate={{
@@ -44,7 +44,7 @@ const AboutSec = () => {
               className="rounded-[4rem] h-[200px] w-[200px]  md:rotate-0"
             />
           </motion.div>
-          <div className=" relative grid grid-cols-1 lg:grid-cols-2 gap-8 pb-10">
+          <div className=" relative grid grid-cols-1 lg:grid-cols-2 gap-8 xl:gap-30 pb-10">
             <div className=" relative">
               <Image
                 src="/images/dogCouple.png"

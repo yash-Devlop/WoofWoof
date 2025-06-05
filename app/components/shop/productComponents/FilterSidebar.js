@@ -3,6 +3,9 @@ import React, { useEffect, useRef, useState } from "react";
 import Slider from "@mui/material/Slider";
 import HorizontalRuleIcon from "@mui/icons-material/HorizontalRule";
 import { useDispatch, useSelector } from "react-redux";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import SearchIcon from "@mui/icons-material/Search";
+import { setSort } from "@/store/slices/user/productSlice";
 
 import {
   fetchProducts,
@@ -32,12 +35,32 @@ const FilterSidebar = () => {
     }, 500); // delay in milliseconds
   };
 
+  const handlePriceSort = (e) => {
+    const value = e.target.value;
+    if (value === "Low to High") {
+      dispatch(setSort({ type: "price", order: "asc" }));
+    } else if (value === "High to Low") {
+      dispatch(setSort({ type: "price", order: "desc" }));
+    }
+    dispatch(fetchProducts());
+  };
+
+  const handleOtherSort = (e) => {
+    const value = e.target.value;
+    if (value === "Latest") {
+      dispatch(setSort({ type: "latest", order: "desc" }));
+    } else if (value === "Popularity") {
+      dispatch(setSort({ type: "popularity", order: "desc" }));
+    }
+    dispatch(fetchProducts());
+  };
+
   useEffect(() => {
     return () => clearTimeout(debounceRef.current);
   }, []);
 
   return (
-    <div className="bg-white px-4 rounded-2xl space-y-6">
+    <div className=" px-4 rounded-2xl space-y-6">
       <div>
         <h2 className="text-xl font-semibold mb-2">Filter by Price</h2>
         <Slider
@@ -84,10 +107,10 @@ const FilterSidebar = () => {
                       dispatch(fetchProducts());
                     }, 300); // slight debounce for better UX
                   }}
-                  className={`text-sm px-3 py-1 rounded-full cursor-pointer transition-transform hover:scale-105 ${
+                  className={`text-sm px-3 py-1 rounded-lg cursor-pointer transition-transform hover:scale-105 ${
                     isSelected
                       ? "bg-[#ffcad7] font-semibold"
-                      : "bg-[#EEEEEE] font-medium"
+                      : "bg-white font-medium"
                   }`}
                 >
                   {tag}
@@ -98,7 +121,53 @@ const FilterSidebar = () => {
         </div>
       </div>
 
-      <div>
+      <div className="flex md:hidden justify-between items-center mb-4 flex-wrap gap-2">
+        <div className="flex gap-2">
+          <div className="w-full relative">
+            <select
+              className="cursor-pointer border appearance-none w-full rounded-lg px-3 pr-6 py-1 text-sm"
+              onChange={handlePriceSort}
+              defaultValue="Sort by Price"
+            >
+              <option disabled>Sort by Price</option>
+              <option>Low to High</option>
+              <option>High to Low</option>
+            </select>
+            <ArrowDropDownIcon
+              className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none"
+              fontSize="small"
+            />
+          </div>
+
+          <div className="w-full relative">
+            <select
+              className="cursor-pointer border appearance-none w-full rounded-lg px-3 pr-10 py-1 text-sm"
+              onChange={handleOtherSort}
+              defaultValue="Sort by"
+            >
+              <option disabled>Sort by</option>
+              <option>Latest</option>
+              <option>Popularity</option>
+            </select>
+            <ArrowDropDownIcon
+              className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none"
+              fontSize="small"
+            />
+          </div>
+        </div>
+        <div className="hidden md:block relative mx-auto md:mx-0">
+          <input
+            type="text"
+            placeholder="Search products..."
+            className="px-3 py-1.5 rounded-full border bg-gray-300 border-none"
+          />
+          <div className="  absolute top-1 right-1.5 bg-black px-0.5 text-white rounded-full">
+            <SearchIcon className=" cursor-pointer" />
+          </div>
+        </div>
+      </div>
+
+      <div className=" hidden md:block">
         <h2 className="font-semibold mb-2">Popular Products</h2>
         <ul className="space-y-2 text-sm text-gray-800">
           <li>🧸 Pink Star Pillow - ₹99</li>

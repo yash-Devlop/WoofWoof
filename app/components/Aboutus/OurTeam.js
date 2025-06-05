@@ -20,7 +20,7 @@ const OurTeam = () => {
     },
     {
       id: 3,
-      name: "Rajiv",
+      name: "Iyra",
       Designation: "Social Media Manager",
       image: "/images/team3.png",
     },

@@ -40,6 +40,12 @@ export default function ProductDetailMain({ productId }) {
 
   return (
     <div className="relative bg-white m-4 rounded-3xl md:m-12 md:py-16 min-h-screen">
+      <Image
+        src="/images/bgPaws1.png"
+        alt="bgpaws"
+        fill
+        className=" h-full w-full absolute inset-0 opacity-30"
+      />
       {/* Background paw prints */}
       {/* <div className="absolute inset-0 z-0 bg-[url('/paws-bg.png')] bg-no-repeat bg-contain md:bg-[length:200px_200px] opacity-10 pointer-events-none" /> */}
 

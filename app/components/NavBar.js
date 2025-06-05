@@ -24,6 +24,7 @@ const NavBar = () => {
   const router = useRouter();
   const [showNavbar, setShowNavbar] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
 
   const menuItems = [
     {
@@ -67,6 +68,30 @@ const NavBar = () => {
       href: "/cart",
     },
   ];
+
+  const suggestions = ["Dog Toys", "Pet Accessories", "Birthday Gifts"];
+  const [displayedText, setDisplayedText] = useState("");
+  const [wordIndex, setWordIndex] = useState(0);
+  const [charIndex, setCharIndex] = useState(0);
+
+  useEffect(() => {
+    const currentWord = suggestions[wordIndex];
+    if (charIndex < currentWord.length) {
+      const timeout = setTimeout(() => {
+        setDisplayedText((prev) => prev + currentWord[charIndex]);
+        setCharIndex((prev) => prev + 1);
+      }, 120);
+      return () => clearTimeout(timeout);
+    } else {
+      // Wait and then move to next word
+      const timeout = setTimeout(() => {
+        setDisplayedText("");
+        setCharIndex(0);
+        setWordIndex((prev) => (prev + 1) % suggestions.length);
+      }, 1500);
+      return () => clearTimeout(timeout);
+    }
+  }, [charIndex, wordIndex]);
 
   useEffect(() => {
     // Convert pathname to the correct format
@@ -190,21 +215,39 @@ const NavBar = () => {
         </ul>
 
         {/* Right - Search and Icons */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2">
           <div className="relative hidden md:block">
             <input
               type="text"
-              placeholder="Search products..."
+              placeholder={displayedText}
               className="px-3 py-1.5 rounded-full border bg-gray-300 border-none"
             />
-            <div className=" absolute top-1 right-1.5 bg-black px-0.5 text-white rounded-full">
+            <div className=" absolute top-1 right-1 bg-[#ff3971e5] py-0.5 px-0.75 text-white rounded-full">
               <SearchIcon className=" cursor-pointer" />
             </div>
           </div>
 
           {/* for mobile search icon*/}
-          <div className="md:hidden top-1 right-1.5 bg-black px-0.5 text-white rounded-full">
-            <SearchIcon className=" cursor-pointer" />
+
+          <div className="relative md:hidden">
+            {/* Search Icon */}
+            <SearchIcon
+              onClick={() => setMobileSearchOpen(!mobileSearchOpen)}
+              className="bg-[#ff3971e5] p-1 text-white rounded-full cursor-pointer z-40 relative"
+            />
+
+            {/* Sliding Search Input */}
+            <input
+              type="text"
+              autoFocus
+              placeholder="Search products..."
+              onBlur={() => setMobileSearchOpen(false)}
+              className={`absolute top-[0.75px] -right-[1px] h-6.5 transform transition-all duration-300 ease-in-out px-4 pr-10 rounded-full border bg-gray-100 shadow-md text-sm ${
+                mobileSearchOpen
+                  ? "translate-x-0 opacity-100 w-[140px]"
+                  : "translate-x-0 opacity-0 w-0"
+              }`}
+            />
           </div>
 
           {/* <Badge
