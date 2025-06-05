@@ -85,6 +85,12 @@ export default function SimilarProducts({}) {
 
   return (
     <div className="relative bg-white m-4 rounded-3xl md:m-12 md:py-16">
+      <Image
+        src="/images/bgPaws1.png"
+        alt="bgpaws"
+        fill
+        className=" h-full w-full absolute inset-0 opacity-30"
+      />
       <div className="p-4 md:px-12">
         <h2 className="text-xl md:text-2xl font-semibold mb-4 border-l-4 border-red-500 pl-2">
           Related Items

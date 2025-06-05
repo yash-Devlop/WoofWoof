@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import WriteReviewModal from "./WriteReviewModal";
+import Image from "next/image";
 
 export default function ReviewSection() {
   const [open, setOpen] = useState(false);
@@ -49,6 +50,12 @@ export default function ReviewSection() {
 
   return (
     <div className="relative bg-white m-4 rounded-2xl py-8  md:mx-12 md:py-16">
+      <Image
+        src="/images/bgPaws1.png"
+        alt="bgpaws"
+        fill
+        className=" h-full w-full absolute inset-0 opacity-30"
+      />
       <div className="px-4 md:px-12 bg-white ">
         {/* Section Header */}
         <h2 className="text-2xl font-semibold text-center text-pink-600 mb-6">
