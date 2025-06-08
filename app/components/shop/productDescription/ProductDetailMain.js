@@ -14,6 +14,8 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useRouter } from "next/navigation";
+import StarRating from "./StarRating";
+import QuantitySelector from "./QuantitySelector";
 
 export default function ProductDetailMain({ productId }) {
   const router = useRouter();
@@ -52,8 +54,8 @@ export default function ProductDetailMain({ productId }) {
       <div className="relative z-10 container mx-auto px-4 py-4 md:px-24 xl:px-20 rounded-3xl">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
           {/* Left: Product Images */}
-          <div className="">
-            <div className="w-full h-[500px] bg-gray-100 flex items-center justify-center rounded-3xl overflow-hidden">
+          <div className=" md:sticky top-10 ">
+            <div className="w-full md:h-[500px] bg-gray-100 flex items-center justify-center rounded-3xl overflow-hidden">
               <Image
                 src={`/${mainImage}`}
                 width={400}
@@ -81,12 +83,13 @@ export default function ProductDetailMain({ productId }) {
           </div>
 
           {/* Right: Product Info */}
-          <div className=" mx-auto">
-            <h2 className="text-pink-600 font-semibold text-sm">Wed My Pet</h2>
+          <div className=" mx-auto max-w-md">
+            <h2 className="text-[#F91F54] font-semibold text-sm">Wed My Pet</h2>
             <h1 className="text-2xl font-bold mt-1">{product?.name}</h1>
             <div className="flex items-center gap-2 mt-2 text-sm text-yellow-500">
-              ★★★★☆ (50 Reviews)
-              <span className="text-green-600 ml-2">In Stock</span>
+              {/* ★★★★☆ (50 Reviews)
+              <span className="text-green-600 ml-2">In Stock</span> */}
+              <StarRating rating={4.5} totalReviews={50} />
             </div>
 
             <div className="mt-3">
@@ -100,8 +103,8 @@ export default function ProductDetailMain({ productId }) {
             <div className=" mt-3 border-[0.5px] border-gray-300"></div>
 
             {/* Color selection */}
-            <div className="mt-3">
-              <label className="block mb-1 font-medium">Colours:</label>
+            <div className="mt-3 flex gap-2">
+              <div className="block mb-1 font-medium pr-3">Colours:</div>
               <div className="flex gap-2">
                 <div className="w-6 h-6 bg-red-500 rounded-full border-2 border-gray-300 cursor-pointer" />
                 <div className="w-6 h-6 bg-blue-500 rounded-full border-2 border-gray-300 cursor-pointer" />
@@ -115,7 +118,7 @@ export default function ProductDetailMain({ productId }) {
                 {["XS", "S", "M", "L", "XL"].map((size) => (
                   <button
                     key={size}
-                    className="border px-3  rounded text-sm hover:bg-pink-100 cursor-pointer"
+                    className="border h-6 w-6  rounded text-sm hover:bg-[#F91F54] hover:text-white cursor-pointer"
                   >
                     {size}
                   </button>
@@ -125,18 +128,10 @@ export default function ProductDetailMain({ productId }) {
 
             {/* Quantity & Buy */}
             <div className="flex items-center gap-4 mt-6">
-              <div className="flex items-center border px-2 rounded">
-                <button className=" flex justify-center items-center px-1 border-r-1 cursor-pointer">
-                  <RemoveOutlinedIcon />
-                </button>
-                <span className="px-6 ">1</span>
-                <button className=" flex justify-center items-center px-1 border-l-1 cursor-pointer">
-                  <AddOutlinedIcon />
-                </button>
-              </div>
+              <QuantitySelector />
               <button
                 onClick={() => router.push("/cart")}
-                className="bg-pink-600 hover:bg-pink-700 text-white px-4 py-1 rounded cursor-pointer"
+                className="bg-[#F91F54] hover:bg-[#d20037] text-white px-4 py-1 rounded cursor-pointer"
               >
                 Buy Now
               </button>
