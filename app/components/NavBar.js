@@ -129,6 +129,7 @@ const NavBar = () => {
         setShowNavbar(true); // scroll up
       }
       setLastScrollY(currentScrollY);
+      console.log("last scroll", lastScrollY);
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -140,11 +141,13 @@ const NavBar = () => {
       {/* Main Nav Bar */}
       <nav
         className={` fixed z-50 w-[90%] gap-28 ${
-          showNavbar ? "translate-y-0 top-8 md:top-11" : "-translate-y-full"
+          showNavbar
+            ? `${lastScrollY > 44 ? "top-2" : "top-8 md:top-11"} translate-y-0`
+            : "-translate-y-full"
         } md:gap-[8rem] xl:gap-[10rem] transition-all duration-300 flex items-center justify-between px-4 py-1 md:px-6 bg-white shadow-lg rounded-full`}
       >
         {/* Left - Logo */}
-        {/* <div className="flex items-center lg:gap-6">
+        <div className="flex items-center lg:gap-6">
           <Image
             onClick={() => router.push("/")}
             src="/images/logo.png"
@@ -154,8 +157,8 @@ const NavBar = () => {
             className="md:h-12 md:w-12 h-10 w-10 object-cover cursor-pointer rounded-full"
           ></Image>
           <h1 className="font-bold text-xl hidden lg:block">Wed My Pet</h1>
-        </div> */}
-        <div className="flex items-center lg:gap-6">
+        </div>
+        {/* <div className="flex items-center lg:gap-6">
           <video
             onClick={() => router.push("/")}
             src="/video/animatedLogo.mp4"
@@ -168,7 +171,7 @@ const NavBar = () => {
             playsInline
           />
           <h1 className="font-bold text-lg lg:text-2xl ">Wed My Pet</h1>
-        </div>
+        </div> */}
 
         {/* Center - Nav Links */}
 

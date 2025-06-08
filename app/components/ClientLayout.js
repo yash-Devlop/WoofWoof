@@ -71,7 +71,7 @@ const ClientLayout = ({ children }) => {
                 <Tooltip title="Back to top">
                   <div
                     onClick={scrollToTop}
-                    className=" z-40 fixed bottom-33 right-7 cursor-pointer animate-bounce"
+                    className=" z-40 fixed bottom-33 right-7 cursor-pointer "
                   >
                     <BackToTopIcon />
                   </div>

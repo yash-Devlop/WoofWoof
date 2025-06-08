@@ -49,13 +49,21 @@ export default function ReviewSection() {
   };
 
   return (
-    <div className="relative bg-white m-4 rounded-2xl py-8  md:mx-12 md:py-16">
-      <Image
+    <div className="relative  bg-white m-4 rounded-2xl py-8  md:mx-12 md:py-16">
+      <div className="h-full w-full absolute inset-0 opacity-30">
+        <Image
+          src="/images/bgPaws1.png"
+          alt="bgpaws"
+          fill
+          className=" h-full w-full"
+        />
+      </div>
+      {/* <Image
         src="/images/bgPaws1.png"
         alt="bgpaws"
         fill
         className=" h-full w-full absolute inset-0 opacity-30"
-      />
+      /> */}
       <div className="px-4 md:px-12 bg-white ">
         {/* Section Header */}
         <h2 className="text-2xl font-semibold text-center text-pink-600 mb-6">
@@ -63,7 +71,7 @@ export default function ReviewSection() {
         </h2>
 
         {/* Rating Stars Input */}
-        <div className="bg-gray-100 p-4 rounded-xl max-w-lg mx-auto gap-8 mb-6">
+        <div className="bg-gray-100 p-4 rounded-xl max-w-lg mx-auto gap-8 mb-6 relative">
           <p className="text-gray-700">
             Rate this Product and tell others what you think
           </p>
