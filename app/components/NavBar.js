@@ -129,7 +129,6 @@ const NavBar = () => {
         setShowNavbar(true); // scroll up
       }
       setLastScrollY(currentScrollY);
-      console.log("last scroll", lastScrollY);
     };
 
     window.addEventListener("scroll", handleScroll);
