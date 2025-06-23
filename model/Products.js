@@ -9,6 +9,8 @@ const ProductSchema = new mongoose.Schema(
       ref: "Category",
       required: true,
     },
+    markedPrice: { type: Number, required: true },
+    rating: { type: Number, default: 0 },
     images: [
       {
         url: { type: String, required: true },
@@ -20,8 +22,6 @@ const ProductSchema = new mongoose.Schema(
       detailedInfo: { type: String },
       additionalDetails: { type: String },
     },
-    averageRating: { type: Number, default: 0 },
-    reviewCount: { type: Number, default: 0 },
     tags: [String],
     popularity: { type: Number, default: 0 },
     reviews: [{ type: mongoose.Schema.Types.ObjectId, ref: "Review" }],

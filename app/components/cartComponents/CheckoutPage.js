@@ -2,8 +2,12 @@
 import Image from "next/image";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { addUserAddress } from "@/store/slices/user/addressSlice";
+import toast from "react-hot-toast";
 
 const CheckoutPage = ({ onNext, onBack }) => {
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -16,6 +20,16 @@ const CheckoutPage = ({ onNext, onBack }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
+    // Restrict input for specific fields
+    if (name === "pincode") {
+      if (!/^\d{0,6}$/.test(value)) return; // Only allow up to 6 digits
+    }
+
+    if (name === "contact") {
+      if (!/^\d{0,10}$/.test(value)) return; // Only allow up to 10 digits
+    }
+
     setFormData((prev) => ({
       ...prev,
       [name]: value,
@@ -36,22 +50,26 @@ const CheckoutPage = ({ onNext, onBack }) => {
       !city ||
       !contact
     ) {
-      alert("Please fill in all fields.");
+      toast.error("Please fill in all fields.");
       return;
     }
 
     if (!/^\d{6}$/.test(pincode)) {
-      alert("Please enter a valid 6-digit pincode.");
+      toast.error("Please enter a valid 6-digit pincode.");
+
       return;
     }
 
     if (!/^\d{10}$/.test(contact)) {
-      alert("Please enter a valid 10-digit contact number.");
+      toast.error("Please enter a valid 10-digit contact number.");
       return;
     }
 
-    console.log("Form Data:", formData);
-    onNext();
+    dispatch(addUserAddress(formData)).then((res) => {
+      if (!res.error) {
+        onNext();
+      }
+    });
   };
 
   return (

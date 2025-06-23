@@ -44,6 +44,7 @@ export const registerUser = createAsyncThunk(
         password,
         confirmPassword,
       });
+      console.log("res data", res);
       return res.data;
     } catch (error) {
       return rejectWithValue(
@@ -53,8 +54,21 @@ export const registerUser = createAsyncThunk(
   }
 );
 
+let savedUser = null;
+
+if (typeof window !== "undefined") {
+  const stored = localStorage.getItem("WMPuser");
+  if (stored) {
+    try {
+      savedUser = JSON.parse(stored);
+    } catch (e) {
+      savedUser = null;
+    }
+  }
+}
+
 const initialState = {
-  user: null,
+  user: savedUser,
   isAuthenticated: false,
   role: "user",
   loading: false,
@@ -116,7 +130,7 @@ const authSlice = createSlice({
         state.isAuthenticated = true;
         state.user = action.payload.user;
         state.role = action.payload.role;
-        localStorage.setItem("user", JSON.stringify(action.payload));
+        localStorage.setItem("WMPuser", JSON.stringify(action.payload.email));
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;

@@ -14,22 +14,45 @@ export const config = {
 };
 
 export async function POST(req) {
-  console.log("Received POST request");
   await connectDB();
 
   const formData = await req.formData();
+
   const name = formData.get("name");
-  const price = formData.get("price");
+  const price = Number(formData.get("price"));
+  const markedPrice = Number(formData.get("markedPrice"));
+  const rating = Number(formData.get("rating"));
   const categoryName = formData.get("categoryName")?.trim();
   const tags = formData
     .get("tags")
     ?.split(",")
     .map((tag) => tag.trim());
+
+  const description = {
+    coreInstruction: formData.get("description.coreInstruction") || "",
+    detailedInfo: formData.get("description.detailedInfo") || "",
+    additionalDetails: formData.get("description.additionalDetails") || "",
+  };
+
   const files = formData.getAll("images");
 
-  if (!name || !price || !categoryName || files.length === 0) {
+  if (
+    !name ||
+    !price ||
+    !markedPrice ||
+    isNaN(rating) ||
+    !categoryName ||
+    files.length === 0
+  ) {
     return NextResponse.json(
       { message: "All fields and at least one image are required." },
+      { status: 400 }
+    );
+  }
+
+  if (rating < 0 || rating > 5) {
+    return NextResponse.json(
+      { message: "Rating must be between 0 and 5." },
       { status: 400 }
     );
   }
@@ -63,7 +86,7 @@ export async function POST(req) {
       await writeFile(filePath, buffer);
 
       savedImages.push({
-        url: `uploads/${uniqueName}`,
+        url: `/uploads/${uniqueName}`,
         altText: name,
       });
     }
@@ -71,9 +94,12 @@ export async function POST(req) {
     const product = await Products.create({
       name,
       price,
+      markedPrice,
+      rating,
       Category: category._id,
       tags,
       images: savedImages,
+      description,
     });
 
     return NextResponse.json({
@@ -117,32 +143,6 @@ export async function GET(req) {
     });
   }
 }
-
-// export async function DELETE(req) {
-//   await connectDB();
-//   const { searchParams } = new URL(req.url);
-//   const id = searchParams.get("id");
-
-//   if (!id) {
-//     return Response.json({ message: "Product ID is required", status: 400 });
-//   }
-
-//   try {
-//     const deletedProduct = await Products.findByIdAndDelete(id);
-//     if (!deletedProduct) {
-//       return Response.json({ message: "Product not found", status: 404 });
-//     }
-
-//     return Response.json({
-//       message: "Product deleted successfully",
-//       status: 200,
-//       deletedProduct,
-//     });
-//   } catch (error) {
-//     console.error("Error deleting product:", error);
-//     return Response.json({ message: "Internal Server Error", status: 500 });
-//   }
-// }
 
 export async function DELETE(req) {
   await connectDB();
@@ -192,53 +192,91 @@ export async function PATCH(req) {
 
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
-
     if (!id) {
-      return NextResponse.json({
-        message: "Product ID is required.",
-        status: 400,
-      });
-    }
-    const body = await req.json();
-    const { name, price, tags, categoryName } = body;
-
-    const category = await Category.findOne({ name: categoryName });
-    if (!category) {
-      return NextResponse.json({
-        message: "Category not found.",
-        status: 400,
-      });
+      return NextResponse.json(
+        { message: "Product ID is required." },
+        { status: 400 }
+      );
     }
 
-    const updatedProduct = await Products.findByIdAndUpdate(
-      id,
-      {
-        name,
-        price,
-        tags,
-        Category: category._id,
-      },
-      { new: true }
-    ).populate("Category", "name");
-    console.log("kjdhckj", id);
+    const contentType = req.headers.get("content-type");
+
+    let updateData = {};
+    let files = [];
+
+    if (contentType?.includes("application/json")) {
+      const body = await req.json();
+      updateData = body;
+    } else if (contentType?.includes("multipart/form-data")) {
+      const formData = await req.formData();
+
+      updateData.name = formData.get("name");
+      updateData.price = Number(formData.get("price"));
+      updateData.markedPrice = Number(formData.get("markedPrice"));
+      updateData.rating = Number(formData.get("rating"));
+      const tags = formData.get("tags");
+      updateData.tags = tags?.split(",").map((tag) => tag.trim()) || [];
+      updateData.description = {
+        coreInstruction: formData.get("description.coreInstruction"),
+        detailedInfo: formData.get("description.detailedInfo"),
+        additionalDetails: formData.get("description.additionalDetails"),
+      };
+
+      const categoryName = formData.get("categoryName");
+      const category = await Category.findOne({ name: categoryName });
+      if (!category) {
+        return NextResponse.json(
+          { message: "Category not found." },
+          { status: 400 }
+        );
+      }
+      updateData.Category = category._id;
+      if (!updateData.name || !updateData.price || !updateData.markedPrice) {
+        return NextResponse.json(
+          { message: "Missing required fields." },
+          { status: 400 }
+        );
+      }
+
+      files = formData.getAll("images");
+      if (files && files.length > 0) {
+        const imageUrls = [];
+
+        for (const file of files) {
+          const buffer = Buffer.from(await file.arrayBuffer());
+          const fileName = `${Date.now()}_${file.name}`;
+          const filePath = path.join(process.cwd(), "public/uploads", fileName);
+          await writeFile(filePath, buffer);
+          imageUrls.push({
+            url: `/uploads/${fileName}`,
+            altText: file.name || "Product Image",
+          });
+        }
+
+        updateData.images = imageUrls;
+      }
+    }
+
+    const updatedProduct = await Products.findByIdAndUpdate(id, updateData, {
+      new: true,
+    }).populate("Category", "name");
 
     if (!updatedProduct) {
-      return NextResponse.json({
-        message: "Product not found or failed to update.",
-        status: 400,
-      });
+      return NextResponse.json(
+        { message: "Product not found." },
+        { status: 404 }
+      );
     }
 
-    return NextResponse.json({
-      message: "Product updated successfully.",
-      status: 200,
-      product: updatedProduct,
-    });
+    return NextResponse.json(
+      { message: "Product updated successfully", product: updatedProduct },
+      { status: 200 }
+    );
   } catch (error) {
     console.error("Update Product Error:", error);
-    return NextResponse.json({
-      message: "Internal Server Error. Failed to update product.",
-      status: 500,
-    });
+    return NextResponse.json(
+      { message: "Internal Server Error. Failed to update product." },
+      { status: 500 }
+    );
   }
 }

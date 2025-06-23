@@ -34,21 +34,29 @@ export const updateProduct = createAsyncThunk(
   "admin/products/updateProduct",
   async (productData, { rejectWithValue }) => {
     try {
-      const {
-        id,
-        updatedFields: { name, price, tags, categoryName },
-      } = productData;
+      const isFormData = productData instanceof FormData;
 
-      const response = await axios.patch(`/api/admin/products?id=${id}`, {
-        name,
-        price,
-        tags,
-        categoryName,
-      });
+      const config = {
+        headers: {
+          "Content-Type": isFormData
+            ? "multipart/form-data"
+            : "application/json",
+        },
+      };
+
+      const id = isFormData ? productData.get("id") : productData.id;
+
+      const response = await axios.patch(
+        `/api/admin/products?id=${id}`,
+        productData,
+        config
+      );
 
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(
+        error?.response?.data || { message: "Unknown error" }
+      );
     }
   }
 );

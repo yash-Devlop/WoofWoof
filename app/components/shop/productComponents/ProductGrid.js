@@ -6,6 +6,13 @@ import { fetchProducts } from "@/store/slices/user/productSlice";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
+function normalizeUrl(url) {
+  if (!url) return "/placeholder.png";
+  if (url.startsWith("//")) return url.replace(/^\/\//, "/");
+  if (!url.startsWith("/")) return "/" + url;
+  return url;
+}
+
 export default function ProductGrid() {
   const dispatch = useDispatch();
   const { products, status } = useSelector((state) => state.product);
@@ -45,7 +52,10 @@ export default function ProductGrid() {
             <div className="rounded-2xl cursor-pointer shadow-md hover:shadow-lg transition-transform hover:scale-[1.02]">
               <div className="bg-[#ececec] lg:min-h-[200px] overflow-hidden rounded-t-2xl">
                 <Image
-                  src={`/${product?.images?.[0]?.url || "placeholder.png"}`}
+                  src={
+                    normalizeUrl(product?.images?.[0]?.url) ||
+                    "/placeholder.png"
+                  }
                   alt={product?.images?.[0]?.altText || product.name}
                   width={100}
                   height={100}

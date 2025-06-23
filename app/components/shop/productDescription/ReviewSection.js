@@ -40,9 +40,6 @@ export default function ReviewSection() {
   ];
 
   const handleSubmitReview = () => {
-    console.log("Rating:", rating);
-    console.log("Review Text:", reviewText);
-    // Optional: Add API call here to save review
     setOpen(false);
     setRating(0);
     setReviewText("");

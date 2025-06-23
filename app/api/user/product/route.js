@@ -17,7 +17,6 @@ export async function GET(req) {
     const sortOrder = searchParams.get("sortOrder") || "asc";
     const page = parseInt(searchParams.get("page")) || 1;
     const limit = parseInt(searchParams.get("limit")) || 10;
-    console.log("category", category);
 
     const query = {
       price: { $gte: Number(minPrice), $lte: Number(maxPrice) },
@@ -25,7 +24,6 @@ export async function GET(req) {
 
     if (category) {
       const foundCategory = await Category.findOne({ name: category });
-      console.log("hellllll", foundCategory);
       if (foundCategory) {
         query.Category = foundCategory._id;
       } else {

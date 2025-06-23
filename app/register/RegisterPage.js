@@ -45,11 +45,11 @@ const RegisterPage = ({ email }) => {
       );
 
       if (registerUser.fulfilled.match(result)) {
-        toast.success("Registered successfully!");
+        toast.success("Registered successfully! Please login.");
         setTimeout(() => {
           router.push("/login");
-        }, 1000);
-        dispatch(resetAuthState());
+        }, 1500);
+        // dispatch(resetAuthState());
       } else {
         const errorMsg = result?.payload || "Registration failed.";
         toast.error(errorMsg);
