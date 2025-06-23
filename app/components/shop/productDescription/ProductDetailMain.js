@@ -37,7 +37,6 @@ export default function ProductDetailMain({ productId }) {
 
     // If the action was fulfilled (not rejected)
     if (addToCart.fulfilled.match(result)) {
-      toast.success("Product added to cart!");
       router.push("/cart");
     } else {
       toast.error(result.payload?.message || "Unable to add to cart");

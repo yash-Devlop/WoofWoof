@@ -61,3 +61,34 @@ export async function POST(req) {
     );
   }
 }
+
+export async function GET() {
+  try {
+    await connectDB();
+
+    const cookieStore = await cookies();
+    const token = cookieStore.get("auth-token");
+
+    if (!token) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
+
+    const decoded = verifyToken(token.value); // e.g., decoded.id = userId
+    const user = await User.findById(decoded.id).select("deliveryAddresses");
+
+    if (!user) {
+      return NextResponse.json({ message: "User not found" }, { status: 404 });
+    }
+
+    return NextResponse.json(
+      { addresses: user.deliveryAddresses },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Fetch address error:", error);
+    return NextResponse.json(
+      { message: "Failed to fetch addresses", error: error.message },
+      { status: 500 }
+    );
+  }
+}
