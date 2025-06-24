@@ -37,12 +37,11 @@ export async function POST(req) {
 
     await user.save();
 
-    return NextResponse.json(
-      {
-        message: "Password set successfully. Registration complete!",
-      },
-      { status: 200 }
-    );
+    return NextResponse.json({
+      email,
+      message: "Password set successfully. Registration complete!",
+      status: 200,
+    });
   } catch (error) {
     return NextResponse.json(
       {

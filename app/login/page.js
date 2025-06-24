@@ -40,8 +40,9 @@ const Page = () => {
       const res = await axios.post("/api/auth/login", formData, {
         withCredentials: true,
       });
-      if (res?.data?.message) {
+      if (res?.data?.status === 200) {
         toast.success("Logged in successfully!");
+        localStorage.setItem("WMPuser", formData.email);
         setTimeout(() => {
           router.push("/");
         }, 1500);

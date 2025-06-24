@@ -3,12 +3,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProductById } from "@/store/slices/user/productSlice";
 import Image from "next/image";
-import RemoveOutlinedIcon from "@mui/icons-material/RemoveOutlined";
-import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
-import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
-import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import Accordion from "@mui/material/Accordion";
-import AccordionActions from "@mui/material/AccordionActions";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
@@ -16,25 +11,50 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useRouter } from "next/navigation";
 import StarRating from "./StarRating";
 import QuantitySelector from "./QuantitySelector";
+import toast from "react-hot-toast";
+import { addToCart } from "@/store/slices/user/cartSlice";
+
+const normalizeUrl = (url) => {
+  if (!url) return "/images/logo.png"; // fallback image path
+  if (url.startsWith("//")) return url.replace(/^\/\//, "/");
+  if (!url.startsWith("/")) return "/" + url;
+  return url;
+};
 
 export default function ProductDetailMain({ productId }) {
   const router = useRouter();
   const dispatch = useDispatch();
   const productstate = useSelector((state) => state.product);
   const { loading, error, product } = productstate.productDetails;
+  const [quantity, setQuantity] = useState(1);
+
+  const handleAddToCart = () => {
+    dispatch(addToCart({ productId, quantity }));
+  };
+
+  const handleBuy = async () => {
+    const result = await dispatch(addToCart({ productId, quantity }));
+
+    // If the action was fulfilled (not rejected)
+    if (addToCart.fulfilled.match(result)) {
+      router.push("/cart");
+    } else {
+      toast.error(result.payload?.message || "Unable to add to cart");
+    }
+  };
 
   const productImages = product?.images || ["/images/logo.png"];
-  const [mainImage, setMainImage] = useState(null);
+  const [mainImage, setMainImage] = useState("/images/logo.png"); // default fallback image
+
+  useEffect(() => {
+    if (product?.images && product.images.length > 0) {
+      setMainImage(product.images[0].url || "/images/logo.png");
+    }
+  }, [product]);
 
   useEffect(() => {
     if (productId) dispatch(fetchProductById(productId));
   }, [productId, dispatch]);
-
-  useEffect(() => {
-    if (product?.images && product.images.length > 0) {
-      setMainImage(product?.images[0]?.url);
-    }
-  }, [product]);
 
   if (loading) return <p className="p-8 text-center">Loading…</p>;
   if (error) return <p className="p-8 text-center text-red-600">{error}</p>;
@@ -57,7 +77,7 @@ export default function ProductDetailMain({ productId }) {
           <div className=" md:sticky top-10 ">
             <div className="w-full md:h-[500px] bg-gray-100 flex items-center justify-center rounded-3xl overflow-hidden">
               <Image
-                src={`/${mainImage}`}
+                src={`${mainImage}`}
                 width={400}
                 height={400}
                 alt="Product"
@@ -70,11 +90,11 @@ export default function ProductDetailMain({ productId }) {
                 <div
                   key={idx}
                   onClick={() => setMainImage(image.url)}
-                  className="w-20 h-20 bg-gray-100 rounded-md p-1"
+                  className="w-20 h-20 bg-gray-100 rounded-md p-1 cursor-pointer"
                 >
                   <img
-                    src={`/${image?.url}`}
-                    alt={image?.alt}
+                    src={normalizeUrl(image?.url)}
+                    alt={image?.alt || "thumbnail"}
                     className="w-full h-full object-contain"
                   />
                 </div>
@@ -89,13 +109,16 @@ export default function ProductDetailMain({ productId }) {
             <div className="flex items-center gap-2 mt-2 text-sm text-yellow-500">
               {/* ★★★★☆ (50 Reviews)
               <span className="text-green-600 ml-2">In Stock</span> */}
-              <StarRating rating={4.5} totalReviews={50} />
+              <StarRating
+                rating={product.rating ?? 4.5}
+                totalReviews={product.totalReviews ?? 10}
+              />
             </div>
 
             <div className="mt-3">
               <span className="text-xl font-bold">{`₹ ${product?.price}`}</span>
               <span className="line-through text-gray-400 ml-2">{`₹ ${
-                product?.price + 50
+                product?.markedPrice ?? product?.price + 50
               }`}</span>
             </div>
 
@@ -128,14 +151,20 @@ export default function ProductDetailMain({ productId }) {
 
             {/* Quantity & Buy */}
             <div className="flex items-center gap-4 mt-6">
-              <QuantitySelector />
+              <QuantitySelector quantity={quantity} setQuantity={setQuantity} />
               <button
-                onClick={() => router.push("/cart")}
+                onClick={handleBuy}
                 className="bg-[#F91F54] hover:bg-[#d20037] text-white px-4 py-1 rounded cursor-pointer"
               >
                 Buy Now
               </button>
-              <div className=" flex gap-4">
+              <button
+                onClick={handleAddToCart}
+                className="bg-[#F91F54] hover:bg-[#d20037] text-white px-4 py-1 rounded cursor-pointer"
+              >
+                Add to cart
+              </button>
+              {/* <div className=" flex gap-4">
                 <button
                   onClick={() => router.push("/cart")}
                   className="text-gray-500 text-xl cursor-pointer"
@@ -145,7 +174,7 @@ export default function ProductDetailMain({ productId }) {
                 <button className="text-gray-500 text-xl cursor-pointer">
                   <FavoriteBorderOutlinedIcon />
                 </button>
-              </div>
+              </div> */}
             </div>
 
             {/* Delivery info */}
@@ -279,7 +308,9 @@ export default function ProductDetailMain({ productId }) {
                   <Typography component="span">Description</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                  {`The ball’s lightweight yet durable design makes it ideal for
+                  {product?.description?.additionalDetails
+                    ? product?.description?.additionalDetails
+                    : `The ball’s lightweight yet durable design makes it ideal for
                   both indoor and outdoor environments. Bright colors and
                   pet-safe materials ensure it's easy to spot and safe for
                   chewing, chasing, or batting. It's an ideal toy for pet
@@ -296,7 +327,9 @@ export default function ProductDetailMain({ productId }) {
                   <Typography component="span">Details</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                  {`The ball’s lightweight yet durable design makes it ideal for
+                  {product?.description?.detailedInfo
+                    ? product?.description?.detailedInfo
+                    : `The ball’s lightweight yet durable design makes it ideal for
                   both indoor and outdoor environments. Bright colors and
                   pet-safe materials ensure it's easy to spot and safe for
                   chewing, chasing, or batting. It's an ideal toy for pet
@@ -313,7 +346,9 @@ export default function ProductDetailMain({ productId }) {
                   <Typography component="span">Care Instruction</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                  {`The ball’s lightweight yet durable design makes it ideal for
+                  {product?.description?.coreInstruction
+                    ? product?.description?.coreInstruction
+                    : `The ball’s lightweight yet durable design makes it ideal for
                   both indoor and outdoor environments. Bright colors and
                   pet-safe materials ensure it's easy to spot and safe for
                   chewing, chasing, or batting. It's an ideal toy for pet
@@ -324,27 +359,6 @@ export default function ProductDetailMain({ productId }) {
             </div>
           </div>
         </div>
-
-        {/* Description & Details */}
-        {/* <div className="mt-10 max-w-4xl">
-          <h2 className="text-lg font-semibold">Description</h2>
-          <p className="text-gray-600 mt-2 text-sm">
-            The ball’s lightweight yet durable design makes it ideal for both
-            indoor and outdoor environments. Bright colors and pet-safe
-            materials ensure it’s easy to spot and safe for chewing, chasing, or
-            batting...
-          </p>
-
-          <h2 className="text-lg font-semibold mt-6">Details</h2>
-          <p className="text-gray-600 mt-2 text-sm">
-            • Size: M, Colors: Yellow, Red
-          </p>
-
-          <h2 className="text-lg font-semibold mt-6">Care Instruction</h2>
-          <p className="text-gray-600 mt-2 text-sm">
-            Clean with mild soap and water regularly to maintain hygiene.
-          </p>
-        </div> */}
       </div>
     </div>
   );
