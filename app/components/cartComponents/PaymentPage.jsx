@@ -10,8 +10,11 @@ import {
   ArrowLeft,
 } from "lucide-react";
 import { useSelector } from "react-redux";
+import axios from "axios";
+import useRazorpayLoader from "@/hooks/useRazorpayLoader";
 
 const PaymentPage = ({ onBack }) => {
+  const isRazorpayLoaded = useRazorpayLoader();
   const [selectedPayment, setSelectedPayment] = useState("card");
   const [currentStep, setCurrentStep] = useState(1);
   const items = useSelector((state) => state.userCart?.items);
@@ -49,6 +52,49 @@ const PaymentPage = ({ onBack }) => {
   const shipping = 20;
   const tax = subtotal * 0.08;
   const total = subtotal + shipping + tax;
+
+  // razorpay payments
+  const handleRazorpayPayment = async () => {
+    if (!isRazorpayLoaded || typeof window.Razorpay === "undefined") {
+      alert("Razorpay SDK is still loading. Please try again in a second.");
+      return;
+    }
+
+    const amount = total.toFixed(0);
+    const { data } = await axios.post("/api/payment/createOrder", { amount });
+
+    const options = {
+      key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+      amount: data.order.amount,
+      currency: "INR",
+      name: "Wed My Pet",
+      description: "Pet Purchase",
+      image: "/logo.png",
+      order_id: data.order.id,
+      handler: async function (response) {
+        await axios.post("/api/payment/verifyPayment", {
+          razorpay_order_id: response.razorpay_order_id,
+          razorpay_payment_id: response.razorpay_payment_id,
+          razorpay_signature: response.razorpay_signature,
+          items,
+          amount,
+          userId: data.userId, // ✅ Add this
+        });
+      },
+      prefill: {
+        name: "Customer",
+        email: "test@example.com",
+        contact: "9999999999",
+      },
+      theme: {
+        color: "#F37254",
+      },
+    };
+
+    const rzp = new window.Razorpay(options);
+    rzp.open();
+  };
+
   return (
     <div className="">
       {/* Header */}
@@ -370,8 +416,12 @@ const PaymentPage = ({ onBack }) => {
                 </div>
               </div>
 
-              <button className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-4 px-6 rounded-xl font-medium hover:from-blue-700 hover:to-blue-800 transform hover:scale-[1.02] transition-all duration-200 shadow-lg hover:shadow-xl mt-6">
-                Complete Payment
+              <button
+                onClick={handleRazorpayPayment}
+                disabled={!isRazorpayLoaded}
+                className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-4 px-6 rounded-xl font-medium hover:from-blue-700 hover:to-blue-800 transform hover:scale-[1.02] transition-all duration-200 shadow-lg hover:shadow-xl mt-6"
+              >
+                {isRazorpayLoaded ? "Complete Payment" : "Loading..."}
               </button>
 
               {/* Security Badges */}
