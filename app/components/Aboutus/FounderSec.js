@@ -31,7 +31,7 @@ const FounderSec = () => {
               </div>
 
               <p className=" text-gray-800 italic text-lg xl:text-2xl xl:tracking-wide font-medium">
-                Wedmypet originated from the founders&apos; love for their pet,
+                Woof Woof originated from the founders&apos; love for their pet,
                 a two-month-old Pekingese named Tintin, adopted at their
                 children&apos;s request; Tintin subsequently became a central
                 member of the family.

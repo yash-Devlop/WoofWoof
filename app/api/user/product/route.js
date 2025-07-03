@@ -47,7 +47,8 @@ export async function GET(req) {
     const products = await Products.find(query)
       .sort(sortOptions)
       .skip((page - 1) * limit)
-      .limit(limit);
+      .limit(limit)
+      .lean();
 
     const total = await Products.countDocuments(query);
 
