@@ -6,9 +6,9 @@ export async function GET(req, { params }) {
   await connectDB();
 
   try {
-    const { id } = await params;
+    const { id } = params;
 
-    const product = await Products.findById(id).populate("Category");
+    const product = await Products.findById(id).populate("Category").lean();
 
     if (!product) {
       return NextResponse.json({ error: "Product not found" }, { status: 404 });

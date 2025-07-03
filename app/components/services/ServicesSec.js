@@ -201,7 +201,7 @@ const ServicesSec = () => {
                   Looking to relocate your furry friend? You’ve come to the
                   right place
                 </h1>
-                <button className="bg-black/97 gap-1 flex justify-start items-center pl-4 pr-1.5 py-1 group transition-all duration-300 text-white font-medium lg:text-lg lg:mb-8 rounded-full uppercase cursor-pointer">
+                <button className="bg-black/97 gap-1 text-sm flex justify-start items-center pl-4 pr-1.5 py-1 group transition-all duration-300 text-white font-medium lg:text-lg lg:mb-8 rounded-full uppercase cursor-pointer">
                   Know More
                   <motion.span className="">
                     <Image

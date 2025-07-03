@@ -149,13 +149,13 @@ const NavBar = () => {
         <div className="flex items-center lg:gap-6">
           <Image
             onClick={() => router.push("/")}
-            src="/images/logo.png"
+            src="/images/woof.png"
             alt="logo"
             width={200}
             height={200}
-            className="md:h-12 md:w-12 h-10 w-10 object-cover cursor-pointer rounded-full"
+            className="md:h-12 w-fit h-10 object-cover cursor-pointer"
           ></Image>
-          <h1 className="font-bold text-xl hidden lg:block">Wed My Pet</h1>
+          {/* <h1 className="font-bold text-xl hidden lg:block">Woof Woof</h1> */}
         </div>
         {/* <div className="flex items-center lg:gap-6">
           <video
@@ -315,9 +315,9 @@ const NavBar = () => {
       >
         <div className=" flex mt-3.5 justify-between p-4">
           <div className=" flex gap-4 justify-center items-center">
-            <Image src="/images/logo.png" alt="logo" width={40} height={40} />
+            <Image src="/images/woof.png" alt="logo" width={80} height={40} />
 
-            <h1 className=" text-2xl font-bold">WED MY PET</h1>
+            {/* <h1 className=" text-2xl font-bold">Woof Woof</h1> */}
           </div>
 
           <CloseIcon fontSize="large" onClick={() => setIsOpen(!isOpen)} />

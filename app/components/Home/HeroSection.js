@@ -89,7 +89,7 @@ const HeroSection = () => {
                 // data-aos-duration="1500"
                 className=" text-3xl text-center md:text-start lg:text-5xl font-bold"
               >
-                <span className=" text-[#ff0047] ">Wed My Pet, </span>
+                <span className=" text-[#ff0047] ">Woof Woof, </span>
                 <span>
                   the pet dating website. Connect, match, and unleash happiness
                   today!

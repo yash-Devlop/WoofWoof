@@ -77,7 +77,7 @@ const ShopHero = ({ scrollToProduct }) => {
           <div className=" grid grid-cols-1 lg:grid-cols-2 md:gap-10 ">
             <div className="relative flex flex-col justify-center items-center lg:items-start space-y-2  lg:space-y-20">
               <div className=" text-3xl text-center lg:text-start lg:text-5xl font-bold">
-                <span className=" text-[#ff0047] ">Wed My Pet, </span>
+                <span className=" text-[#ff0047] ">Woof Woof, </span>
                 <span>
                   brings joyful, stylish essentials to pamper your dog with
                   love, care, and fun.

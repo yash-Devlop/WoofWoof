@@ -66,12 +66,12 @@ const Footer = () => {
               <div className=" flex flex-col justify-center items-center lg:max-w-[200px] space-y-5">
                 <div className=" flex justify-center items-center gap-2 z-10">
                   <Image
-                    src="/images/logo.png"
+                    src="/images/woof2.png"
                     alt="logo"
-                    width={40}
+                    width={150}
                     height={40}
                   />
-                  <span className=" font-bold text-xl">Wed My Pet</span>
+                  {/* <span className=" font-bold text-xl">Woof Woof</span> */}
                 </div>
                 <div className=" text-center">
                   Connecting Pets and People: Your Happy Tails Start Here!
@@ -199,13 +199,13 @@ const Footer = () => {
                     <div className=" font-semibold">Store</div>
                     <div>Faridabad, Haryana (India)</div>
                     <div>+91- 9999887030</div>
-                    <div>Contact@wedmypet.in</div>
+                    <div>Contact@woofwoof.in</div>
                   </div>
                 </div>
               </div>
             </div>
             <div className=" flex justify-center md:gap-8 flex-col md:flex-row items-center mt-10">
-              <div> © Copyright Wed My Pet 2025.</div>
+              <div> © Copyright Woof Woof 2025.</div>
               <Image
                 src="/images/payment.png"
                 alt="payment"

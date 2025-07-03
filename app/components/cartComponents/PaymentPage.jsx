@@ -16,15 +16,13 @@ import useRazorpayLoader from "@/hooks/useRazorpayLoader";
 const PaymentPage = ({ onBack }) => {
   const isRazorpayLoaded = useRazorpayLoader();
   const [selectedPayment, setSelectedPayment] = useState("card");
-  const [currentStep, setCurrentStep] = useState(1);
   const items = useSelector((state) => state.userCart?.items);
+  const formattedItems = items.map((item) => ({
+    productId: item.product._id, // get only the product ID
+    quantity: item.quantity,
+    price: item.product.price,
+  }));
   console.log("items", items);
-
-  const steps = [
-    { id: 1, name: "Shipping", completed: true },
-    { id: 2, name: "Payment", completed: false },
-    { id: 3, name: "Confirmation", completed: false },
-  ];
 
   const orderItems = [
     {
@@ -76,7 +74,7 @@ const PaymentPage = ({ onBack }) => {
           razorpay_order_id: response.razorpay_order_id,
           razorpay_payment_id: response.razorpay_payment_id,
           razorpay_signature: response.razorpay_signature,
-          items,
+          items: formattedItems,
           amount,
           userId: data.userId, // ✅ Add this
         });

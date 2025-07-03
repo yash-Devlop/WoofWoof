@@ -30,7 +30,7 @@ const SmartWay = () => {
               className=" space-y-3 flex flex-col justify-center lg:max-w-[420px]"
             >
               <h4 className=" font-bold text-[#ff0047] text-3xl text-center md:text-start">
-                WED MY PET
+                Woof Woof
               </h4>
               <h2 className=" text-4xl lg:text-5xl font-semibold text-center md:text-start">
                 The smarter way to shop for your pet

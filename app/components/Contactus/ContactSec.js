@@ -77,7 +77,7 @@ const ContactSec = () => {
                     </svg>
                   </span>
                   <span className="font-semibold text-lg">
-                    info@wedmypet.com
+                    info@woofwoof.com
                   </span>
                 </div>
 
