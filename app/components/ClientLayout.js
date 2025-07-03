@@ -25,7 +25,7 @@ const ClientLayout = ({ children }) => {
   ];
   const shouldHideNavAndOffers = hideNavAndOffersRoutes.includes(path);
 
-  const [showIntro, setShowIntro] = useState(true);
+  const [showIntro, setShowIntro] = useState(false);
 
   useEffect(() => {
     document.body.style.overflow = showIntro ? "hidden" : "auto";

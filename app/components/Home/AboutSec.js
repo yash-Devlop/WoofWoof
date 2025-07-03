@@ -63,7 +63,7 @@ const AboutSec = () => {
             </div>
             <div className=" space-y-2 lg:space-y-10 flex flex-col items-center">
               <h2 className=" text-3xl lg:text-5xl font-extrabold text-[#ff0047]">
-                ABOUT Woof Woof
+                ABOUT WOOf WOOf
               </h2>
               <h3 className=" text-2xl lg:text-[2.15rem] font-semibold">
                 Welcome to Woof Woof - Where Pets Find Love!
