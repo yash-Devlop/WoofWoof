@@ -91,8 +91,9 @@ const HeroSection = () => {
               >
                 <span className=" text-[#ff0047] ">Woof Woof, </span>
                 <span>
-                  the pet dating website. Connect, match, and unleash happiness
-                  today!
+                  our one stop destination for fun, safe, and durable pet toys.
+                  Keep your furry friends happy, active, and entertained every
+                  day.
                 </span>
               </div>
               <div className=" flex  gap-8">
