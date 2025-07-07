@@ -166,7 +166,9 @@ const Footer = () => {
 
                     <div
                       className="cursor-pointer hover:underline"
-                      onClick={() => router.push("/terms-and-conditions")}
+                      onClick={() =>
+                        router.push("/policies/terms-and-conditions")
+                      }
                     >
                       Terms & Conditions
                     </div>
@@ -184,10 +186,16 @@ const Footer = () => {
                       Contact Us
                     </div>
 
-                    <div className="cursor-pointer hover:underline">
+                    <div
+                      className="cursor-pointer hover:underline"
+                      onClick={() => router.push("/policies/shipping")}
+                    >
                       Shipping
                     </div>
-                    <div className="cursor-pointer hover:underline">
+                    <div
+                      className="cursor-pointer hover:underline"
+                      onClick={() => router.push("/policies/return-refund")}
+                    >
                       Returns
                     </div>
                     <div className="cursor-pointer hover:underline">
