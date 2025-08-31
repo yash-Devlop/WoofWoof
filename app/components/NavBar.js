@@ -325,13 +325,13 @@ const NavBar = () => {
         <div className=" relative h-[400px] mt-10">
           <div className=" absolute inset-0 flex justify-end right-0">
             <div className=" absolute inset-0 border-b mx-8 border-gray-500"></div>
-            <Image
+            {/* <Image
               src="/images/sidebarBg.png"
               alt=" sidebarBG"
               width={400}
               height={400}
               className=" object-cover w-[140px] "
-            />
+            /> */}
           </div>
           <ul className="relative flex flex-col justify-center items-center gap-4 px-4 space-y-1  text-black font-semibold">
             {menuItems.map((item, index) => {

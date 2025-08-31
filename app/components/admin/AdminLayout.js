@@ -20,7 +20,7 @@ const AdminLayoutComponent = ({ children }) => {
   const links = [
     { href: "/admin", label: "Dashboard", icon: <DashboardIcon /> },
     { href: "/admin/users", label: "Users", icon: <PeopleIcon /> },
-    // { href: "/admin/blogs", label: "Blogs", icon: <ArticleIcon /> },
+    { href: "/admin/blogs", label: "Blogs", icon: <ArticleIcon /> },
     { href: "/admin/categories", label: "Categories", icon: <CategoryIcon /> },
     // { href: "/admin/banners", label: "Banners", icon: <ImageIcon /> },
     { href: "/admin/products", label: "Products", icon: <InventoryIcon /> },
