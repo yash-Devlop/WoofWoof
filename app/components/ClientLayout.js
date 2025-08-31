@@ -22,8 +22,11 @@ const ClientLayout = ({ children }) => {
     "/privacy-policy",
     "/login",
     "/register",
+    "/blog",
   ];
-  const shouldHideNavAndOffers = hideNavAndOffersRoutes.includes(path);
+  const shouldHideNavAndOffers = hideNavAndOffersRoutes.some((route) =>
+    path.startsWith(route)
+  );
 
   const [showIntro, setShowIntro] = useState(true);
 
