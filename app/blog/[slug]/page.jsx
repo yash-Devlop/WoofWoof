@@ -67,7 +67,7 @@ export default function BlogDetail() {
             initial={{ x: 20, y: -10, scale: 1 }}
             animate={{
               x: [0, -30, -50, -30, 0],
-              y: [0, 20, 40, 20, 0],
+              y: [0, 20, 40, 20, 1],
             }}
             transition={{
               duration: 7,
