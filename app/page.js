@@ -26,7 +26,7 @@ export default function Home() {
         <SmartWay />
       </div>
       <BestSelling />
-      <FeatureProfile />
+      {/* <FeatureProfile /> */}
       <NewsAndBlogs />
       <Footer />
     </div>

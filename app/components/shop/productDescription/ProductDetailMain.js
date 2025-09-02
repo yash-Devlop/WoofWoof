@@ -104,7 +104,7 @@ export default function ProductDetailMain({ productId }) {
 
           {/* Right: Product Info */}
           <div className=" mx-auto max-w-md">
-            <h2 className="text-[#F91F54] font-semibold text-sm">Wed My Pet</h2>
+            <h2 className="text-[#F91F54] font-semibold text-sm">Woof Woof</h2>
             <h1 className="text-2xl font-bold mt-1">{product?.name}</h1>
             <div className="flex items-center gap-2 mt-2 text-sm text-yellow-500">
               {/* ★★★★☆ (50 Reviews)

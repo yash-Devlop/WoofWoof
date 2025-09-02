@@ -6,7 +6,7 @@ export async function GET(req, { params }) {
   await connectDB();
 
   try {
-    const { id } = params;
+    const { id } = await params;
 
     const product = await Products.findById(id).populate("Category").lean();
 

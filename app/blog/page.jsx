@@ -25,7 +25,9 @@ export default function BlogPage() {
     fetchBlogData();
   }, []);
 
-  return (
+  return loading ? (
+    <p className="text-center text-gray-500">Loading blogs...</p>
+  ) : (
     <div className="w-full h-full relative overflow-hidden">
       {/* Background paws image */}
       <div className="absolute inset-0 opacity-60">
@@ -86,6 +88,7 @@ export default function BlogPage() {
             />
           </motion.div>
         </div>
+
         <div className="absolute bottom-1/2 right-0">
           <motion.div
             initial={{ x: -20, y: -30, scale: 1 }}
@@ -101,7 +104,7 @@ export default function BlogPage() {
           >
             <Image
               src="/images/testimonialBg.png"
-              alt="floatingVector1"
+              alt="floatingVector3"
               width={200}
               height={200}
               className="object-contain h-[100px] w-[100px] lg:h-[150px] lg:w-[150px]"
@@ -117,9 +120,7 @@ export default function BlogPage() {
             <h2 className="text-4xl font-semibold text-[#ff0047]">All Blogs</h2>
           </div>
 
-          {loading ? (
-            <p className="text-center text-gray-500">Loading blogs...</p>
-          ) : blogData.length === 0 ? (
+          {blogData.length === 0 ? (
             <p className="text-center text-gray-500">No blogs found.</p>
           ) : (
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -136,7 +137,7 @@ export default function BlogPage() {
 
                   return (
                     <div
-                      key={blog.id}
+                      key={blog._id}
                       className="bg-white z-20 shadow-md rounded-2xl overflow-hidden flex flex-col hover:shadow-lg transition-shadow"
                     >
                       {/* Blog Image */}

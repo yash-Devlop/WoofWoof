@@ -31,13 +31,15 @@ const NewsAndBlogs = () => {
           </div>
 
           <div className="relative w-full ">
-            <Image
-              src="/images/3dAnimatedDog.png"
-              alt="animatedDog"
-              width={350}
-              height={300}
-              className="hidden lg:block absolute z-10 -left-26.5 -top-38"
-            />
+            {!loading && (
+              <Image
+                src="/images/3dAnimatedDog.png"
+                alt="animatedDog"
+                width={350}
+                height={300}
+                className="hidden lg:block absolute z-10 -left-26.5 -top-38"
+              />
+            )}
 
             {loading ? (
               <p className="text-center text-gray-500">Loading blogs...</p>
@@ -54,7 +56,7 @@ const NewsAndBlogs = () => {
                     ).slice(-2)}`;
 
                     return (
-                      <div key={blog.id} className=" flex gap-4 py-2">
+                      <div key={blog._id} className=" flex gap-4 py-2">
                         <div className="w-[320px] h-[300px] gap-4 bg-white shadow-md rounded-2xl overflow-hidden flex flex-col">
                           {/* Image */}
                           <div className="w-full h-[220px] relative  z-5">
