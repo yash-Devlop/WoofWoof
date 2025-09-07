@@ -72,8 +72,6 @@ const Page = () => {
           Admin Portal Login
         </h2>
 
-        
-
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
             <label htmlFor="email" className="block mb-1 font-semibold">
@@ -105,7 +103,7 @@ const Page = () => {
 
           <button
             type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded cursor-pointer"
           >
             Login
           </button>

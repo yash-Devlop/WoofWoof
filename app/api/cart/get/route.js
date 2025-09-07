@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/connect";
 import { verifyToken } from "@/lib/jwt";
 import Cart from "@/model/Cart";
-import Product from "@/model/Products";
+import Product from "@/model/Product";
 
 export async function GET(req) {
   try {

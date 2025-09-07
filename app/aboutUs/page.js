@@ -21,7 +21,7 @@ const page = () => {
       <OurTeam />
       <Testimonial />
       <VideoSec />
-      <InstaPage />
+      {/* <InstaPage /> */}
       <Footer />
     </div>
   );

@@ -14,22 +14,22 @@ const Offer = () => {
         }}
       >
         <span>Special Offer! 50% Off on All Items</span>
-        <span>Free Shipping Above $99</span>
+        <span>Free Shipping Above ₹99</span>
         <span>Limited Time Deal! Grab Now</span>
         <span>Special Offer! 50% Off on All Items</span>
-        <span>Free Shipping Above $99</span>
+        <span>Free Shipping Above ₹99</span>
         <span>Limited Time Deal! Grab Now</span>
         <span>Special Offer! 50% Off on All Items</span>
-        <span>Free Shipping Above $99</span>
+        <span>Free Shipping Above ₹99</span>
         <span>Limited Time Deal! Grab Now</span>
         <span>Special Offer! 50% Off on All Items</span>
-        <span>Free Shipping Above $99</span>
+        <span>Free Shipping Above ₹99</span>
         <span>Limited Time Deal! Grab Now</span>
         <span>Special Offer! 50% Off on All Items</span>
-        <span>Free Shipping Above $99</span>
+        <span>Free Shipping Above ₹99</span>
         <span>Limited Time Deal! Grab Now</span>
         <span>Special Offer! 50% Off on All Items</span>
-        <span>Free Shipping Above $99</span>
+        <span>Free Shipping Above ₹99</span>
         <span>Limited Time Deal! Grab Now</span>
       </motion.div>
     </div>

@@ -28,6 +28,7 @@ const CheckoutPage = ({ onNext, onBack }) => {
   const addresses = useSelector((state) => state.address.addresses);
 
   useEffect(() => {
+    if (!Array.isArray(addresses) || addresses.length === 0) return;
     const defaultAddress = addresses.find((addr) => addr.isDefault === true);
     if (defaultAddress) {
       setFormData({
@@ -88,7 +89,9 @@ const CheckoutPage = ({ onNext, onBack }) => {
       return;
     }
 
-    const existingDefault = addresses.find((addr) => addr.isDefault);
+    const existingDefault = Array.isArray(addresses)
+      ? addresses.find((addr) => addr?.isDefault)
+      : null;
 
     const isSame =
       existingDefault &&
@@ -220,7 +223,7 @@ const CheckoutPage = ({ onNext, onBack }) => {
           {/* Right: Image */}
           <div className="w-full md:w-1/2 lg:p-6  flex items-center justify-center">
             <Image
-              src="/images/thanksShopping.png" // Replace with actual image path
+              src="/images/thanksShopping1.jpg" // Replace with actual image path
               width={500}
               height={500}
               alt="Thanks for shopping"

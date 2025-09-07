@@ -1,7 +1,7 @@
 import { connectDB } from "@/lib/connect";
 import Order from "@/model/Order";
 import User from "@/model/User"; // Optional if not already used elsewhere
-import Products from "@/model/Products";
+import Products from "@/model/Product";
 import { NextResponse } from "next/server";
 
 export async function GET() {

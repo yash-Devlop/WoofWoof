@@ -9,6 +9,7 @@ import InventoryIcon from "@mui/icons-material/Inventory";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import DashboardIcon from "@mui/icons-material/Dashboard";
+import RateReviewIcon from "@mui/icons-material/RateReview";
 
 import { usePathname } from "next/navigation";
 import Sidebar from "./Sidebar";
@@ -21,6 +22,7 @@ const AdminLayoutComponent = ({ children }) => {
     { href: "/admin", label: "Dashboard", icon: <DashboardIcon /> },
     { href: "/admin/users", label: "Users", icon: <PeopleIcon /> },
     { href: "/admin/blogs", label: "Blogs", icon: <ArticleIcon /> },
+    { href: "/admin/reviews", label: "Reviews", icon: <RateReviewIcon /> },
     { href: "/admin/categories", label: "Categories", icon: <CategoryIcon /> },
     // { href: "/admin/banners", label: "Banners", icon: <ImageIcon /> },
     { href: "/admin/products", label: "Products", icon: <InventoryIcon /> },
@@ -32,7 +34,6 @@ const AdminLayoutComponent = ({ children }) => {
     ? links.find((link) => pathname === link.href).label
     : links.find((link) => pathname.startsWith(link.href))?.label ||
       "Dashboard";
-
 
   return (
     <div className="flex min-h-screen">

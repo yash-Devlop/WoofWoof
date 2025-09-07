@@ -53,7 +53,17 @@ export async function POST(req) {
       }
     );
 
-    return NextResponse.json({ success: true, message: "Address saved" });
+    // Fetch the latest user data to get the newly added address
+    const updatedUser = await User.findById(user._id).select(
+      "deliveryAddresses"
+    );
+    const newAddress = updatedUser.deliveryAddresses.at(-1); // last pushed address
+
+    return NextResponse.json({
+      success: true,
+      message: "Address saved",
+      newAddress,
+    });
   } catch (error) {
     return NextResponse.json(
       { success: false, message: error.message },
