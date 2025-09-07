@@ -36,9 +36,10 @@ const SmartWay = () => {
                 The smarter way to shop for your pet
               </h2>
               <p className=" lg:text-[20px] tracking-wide font-normal text-gray-700">
-                Lorem ipsum dolor sit amet consectetur. At et vehicula sodales
-                est proin turpis pellentesque sinulla a aliquam amet rhoncus
-                quisque eget sit
+               {` Welcome to the Woof Woof shop! We've sniffed out the best dog
+                toys and accessories to make your pup's tail wag. Whether they
+                love to chew, fetch, or cuddle, you'll find their new favorite
+                thing right here.`}
               </p>
               <div className=" mt-6 flex justify-center lg:justify-start  gap-8">
                 <button

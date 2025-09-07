@@ -114,11 +114,12 @@ export default function SendOtp({ formData, setFormData }) {
             <div
               onClick={() => {
                 dispatch(resetAuthState());
-                router.back();
+                router.push("/");
               }}
-              className=" cursor-pointer "
+              className=" cursor-pointer gap-2 flex items-center mb-2"
             >
               <ArrowBackIcon fontSize="large" sx={{}} />
+              <span className=" text-2xl font-bold ">Back to home</span>
             </div>
             <div className=" flex items-center justify-center">
               <div className="flex flex-col justify-center"></div>
@@ -168,7 +169,7 @@ export default function SendOtp({ formData, setFormData }) {
                 {/* <h2 className="text-3xl font-black mb-6">Create Account</h2> */}
 
                 {/* Social Sign-ins */}
-                <div className="flex justify-between gap-4 mb-4">
+                {/* <div className="flex justify-between gap-4 mb-4">
                   <button className=" flex items-center gap-2 border-2 border-gray-300 rounded-md py-2 hover:bg-gray-100 transition cursor-pointer px-2 lg:px-8">
                     <Image
                       src="/images/google.png"
@@ -189,12 +190,12 @@ export default function SendOtp({ formData, setFormData }) {
                       Sign in Facebook
                     </span>
                   </button>
-                </div>
+                </div> */}
 
                 {/* Divider */}
-                <div className="text-center text-sm text-gray-400 my-4">
+                {/* <div className="text-center text-sm text-gray-400 my-4">
                   — OR —
-                </div>
+                </div> */}
 
                 {/* Form Fields */}
                 <div className="space-y-4">

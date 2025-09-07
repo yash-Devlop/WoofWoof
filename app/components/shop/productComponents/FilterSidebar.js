@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import SearchIcon from "@mui/icons-material/Search";
 import { setSort } from "@/store/slices/user/productSlice";
+import Link from "next/link";
 
 import {
   fetchProducts,
@@ -170,9 +171,21 @@ const FilterSidebar = () => {
       <div className=" hidden md:block">
         <h2 className="font-semibold mb-2">Popular Products</h2>
         <ul className="space-y-2 text-sm text-gray-800">
-          <li>🧸 Pink Star Pillow - ₹99</li>
-          <li>🍉 Watermelon Pillow - ₹220</li>
-          <li>🐶 Bone Pillow - ₹50</li>
+          <li>
+            <Link href="/shop/6828722bea10c7d7b8db0163" className="hover:underline">
+              Pink Star Pillow - ₹29.99
+            </Link>
+          </li>
+          <li>
+            <Link href="/shop/683ae02b292494f3b0373621" className="hover:underline">
+              Party Cap - ₹145
+            </Link>
+          </li>
+          <li>
+            <Link href="/shop/683ad89e292494f3b03734db" className="hover:underline">
+              Pink Pet Collar - ₹249
+            </Link>
+          </li>
         </ul>
       </div>
     </div>
