@@ -18,6 +18,7 @@ export default function WriteReviewModal({
   reviewText,
   setReviewText,
   onSubmit,
+  isLoading,
 }) {
   return (
     <Modal open={open} onClose={onClose}>
@@ -64,8 +65,9 @@ export default function WriteReviewModal({
             backgroundColor: "#F91F54",
             borderRadius: "18px",
           }}
+          disabled={isLoading}
         >
-          Submit Review
+          {isLoading ? "Submitting..." : "Submit Review"}
         </Button>
 
         <div className=" mt-4 text-sm">

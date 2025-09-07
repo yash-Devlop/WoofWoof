@@ -4,7 +4,7 @@ import fs from "fs";
 import { v4 as uuidv4 } from "uuid";
 import { connectDB } from "@/lib/connect";
 import Category from "@/model/Category";
-import Products from "@/model/Products";
+import Products from "@/model/Product";
 import { NextResponse } from "next/server";
 
 export const config = {

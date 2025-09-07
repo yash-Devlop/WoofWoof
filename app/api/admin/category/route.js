@@ -1,5 +1,6 @@
 import { connectDB } from "@/lib/connect";
 import Category from "@/model/Category";
+import Product from "@/model/Product";
 
 export async function POST(req) {
   const { name } = await req.json();
@@ -37,17 +38,45 @@ export async function POST(req) {
 export async function GET(req) {
   try {
     await connectDB();
-    const categories = await Category.find();
+
+    const categories = await Category.aggregate([
+      {
+        $lookup: {
+          from: "products", // MongoDB collection name, usually lowercase plural
+          localField: "_id",
+          foreignField: "Category", // Matches your schema field
+          as: "products",
+        },
+      },
+      {
+        $addFields: {
+          productCount: { $size: "$products" },
+        },
+      },
+      {
+        $project: {
+          name: 1,
+          productCount: 1,
+        },
+      },
+      {
+        $sort: { name: 1 },
+      },
+    ]);
+
     return Response.json({
       categories,
-      message: "Successfully fetched all categories.",
+      message: "Categories with product counts fetched successfully.",
       status: 200,
     });
   } catch (error) {
-    console.error(error);
-    return Response.json({
-      message: "Internal Server Error. Failed to fetch categories.",
-      status: 500,
-    });
+    console.error("Fetch categories with count error:", error);
+    return Response.json(
+      {
+        message: "Internal Server Error",
+        status: 500,
+      },
+      { status: 500 }
+    );
   }
 }

@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 import { verifyToken } from "@/lib/jwt";
 import { connectDB } from "@/lib/connect";
 import Cart from "@/model/Cart";
-import Products from "@/model/Products";
+import Products from "@/model/Product";
 
 export async function POST(req) {
   try {

@@ -4,7 +4,7 @@ import Order from "@/model/Order";
 import { NextResponse } from "next/server";
 import User from "@/model/User";
 import nodemailer from "nodemailer";
-import Product from "@/model/Products";
+import Product from "@/model/Product";
 
 export async function POST(req) {
   try {
