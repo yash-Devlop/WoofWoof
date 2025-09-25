@@ -27,7 +27,7 @@ const AdminLayoutComponent = ({ children }) => {
     // { href: "/admin/banners", label: "Banners", icon: <ImageIcon /> },
     { href: "/admin/products", label: "Products", icon: <InventoryIcon /> },
     { href: "/admin/orders", label: "Orders", icon: <AssignmentIcon /> },
-    { href: "/admin/payments", label: "Payments", icon: <CurrencyRupeeIcon /> },
+    // { href: "/admin/payments", label: "Payments", icon: <CurrencyRupeeIcon /> },
   ];
 
   const activeTab = links.find((link) => pathname === link.href) // Exact match

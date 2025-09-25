@@ -9,8 +9,14 @@ const CategorySchema = new mongoose.Schema(
       trim: true,
       lowercase: true,
     },
+    image: {
+      type: String,
+      required: true, // 👈 make it required if every category must have an image
+      trim: true,
+    },
   },
-  { timestamps: true }
-); // This adds 'createdAt' and 'updatedAt'
+  { timestamps: true } // adds 'createdAt' and 'updatedAt'
+);
+
 export default mongoose.models.Category ||
   mongoose.model("Category", CategorySchema);

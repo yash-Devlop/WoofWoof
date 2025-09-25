@@ -50,3 +50,7 @@
 .animate-float-fast {
   animation: float 6s ease-in-out infinite;
 }
+
+.swal2-container {
+  z-index: 20000 !important;
+}

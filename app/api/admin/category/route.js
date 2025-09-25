@@ -3,7 +3,8 @@ import Category from "@/model/Category";
 import Product from "@/model/Product";
 
 export async function POST(req) {
-  const { name } = await req.json();
+  const { name, coverImage } = await req.json();
+  console.log("Received category data:", { name, coverImage });
   await connectDB();
 
   try {
@@ -19,7 +20,7 @@ export async function POST(req) {
       );
     }
 
-    const category = await Category.create({ name });
+    const category = await Category.create({ name, image: coverImage });
     return Response.json({
       message: "New category created successfully.",
       category,

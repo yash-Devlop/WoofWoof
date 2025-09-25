@@ -4,8 +4,26 @@ import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts, setCategory } from "@/store/slices/user/productSlice";
+import axios from "axios";
 
 const ShopByCategory = () => {
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await axios.get("/api/user/category"); // 👈 adjust if your route is different
+        setCategories(res.data.categories);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+  console.log("Fetched categories:", categories);
   const categoryData = [
     {
       id: "1",
@@ -20,7 +38,7 @@ const ShopByCategory = () => {
     {
       id: "3",
       name: "Birthday Gift",
-      image: "/images/category/birthday.png",
+      image: "/images/category/accessories.png",
     },
   ];
   const dispatch = useDispatch();
@@ -28,7 +46,7 @@ const ShopByCategory = () => {
 
   useEffect(() => {
     if (selectedCategory) {
-      const selected = categoryData.find((cat) => cat.id === selectedCategory);
+      const selected = categories.find((cat) => cat._id === selectedCategory);
       if (selected) {
         dispatch(setCategory(selected.name));
         dispatch(fetchProducts());
@@ -56,26 +74,26 @@ const ShopByCategory = () => {
       </div>
 
       <div
-        className="relative grid grid-cols-3 gap-4"
+        className="relative flex overflow-y-hidden overflow-x-auto gap-4"
         style={{ position: "relative" }}
       >
-        {categoryData.map((category, index) => (
+        {categories.map((category, index) => (
           <motion.div
-            key={category.id}
+            key={category._id}
             onClick={() => {
-              setSelectedCategory(category.id);
+              setSelectedCategory(category._id);
             }}
             custom={index}
             variants={fadeDown}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, amount: 0.2 }}
-            className="relative cursor-pointer p-4 rounded-xl flex flex-col items-center transition-transform hover:scale-105 duration-300"
+            className="relative min-w-[80px] md:min-w-[170px] lg:min-w-[420px] cursor-pointer p-4 rounded-xl flex flex-col items-center transition-transform hover:scale-105 duration-300"
           >
-            {selectedCategory === category.id && (
+            {selectedCategory === category._id && (
               <motion.div
                 layoutId="categoryBg"
-                className="absolute top-0 left-0 w-full h-full z-0 rounded-xl overflow-hidden"
+                className="absolute top-0 left-0 w-full h-full z-0 rounded-xl overflow-y-hidden"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 0.7 }}
                 exit={{ opacity: 0 }}
