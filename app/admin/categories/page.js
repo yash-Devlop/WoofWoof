@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import Image from "next/image";
 
 import {
   clearSelectedCategory,
@@ -197,46 +198,80 @@ export default function AdminCategoriesPage() {
 }
 
 function AddCategoryModal({ open, onClose, onSuccess }) {
-  const [name, setName] = useState("");
+  const [formData, setFormData] = useState({ coverImage: "", name: "" });
   const [submitting, setSubmitting] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [preview, setPreview] = useState(null);
+
+  const uploadImage = async (file) => {
+    if (!file) return null;
+
+    const data = new FormData();
+    data.append("file", file);
+
+    try {
+      const response = await axios.post("/api/upload", data);
+      const result = response.data;
+      return result.url; // e.g. /uploads/16930012345-myimg.png
+    } catch (err) {
+      console.error("Image upload failed", err);
+      return null;
+    }
+  };
 
   const handleAddCategory = async () => {
-    if (!name.trim()) {
-      Swal.fire(
-        "Validation Error",
-        "Category name cannot be empty.",
-        "warning"
-      );
+    if (!formData.name.trim()) {
+      Swal.fire({
+        title: "Validation Error",
+        text: "Category name cannot be empty.",
+        icon: "warning",
+        target: document.body, // 👈 ensures it renders above your MUI Modal
+      });
+      return;
+    }
+
+    if (!formData.coverImage.trim()) {
+      Swal.fire({
+        title: "Validation Error",
+        text: "Cover image is required.",
+        icon: "warning",
+        target: document.body, // 👈 ensures it renders above your MUI Modal
+      });
       return;
     }
 
     setSubmitting(true);
 
     try {
-      const res = await axios.post("/api/admin/category", { name });
+      const res = await axios.post("/api/admin/category", formData);
 
       if (res.data.status === 200) {
-        Swal.fire("Success!", "Category added successfully.", "success");
-        setName("");
+        Swal.fire({
+          title: "Success!",
+          text: "Category added successfully.",
+          icon: "success",
+          target: document.body,
+        });
+        setFormData({ coverImage: "", name: "" });
         onSuccess();
         onClose();
       } else {
         onClose();
-        Swal.fire(
-          "Error!",
-          res.data.message || "Failed to add category.",
-          "error"
-        );
+        Swal.fire({
+          title: "Error!",
+          text: res.data.message || "Failed to add category.",
+          icon: "error",
+          target: document.body, // ✅ ensures it floats above the MUI modal
+        });
       }
     } catch (error) {
       onClose();
-      Swal.fire(
-        "Error!",
-        error.response?.data?.message ||
-          error.message ||
-          "Failed to add category.",
-        "error"
-      );
+      Swal.fire({
+        title: "Error!",
+        text: res.data.message || "Failed to add category.",
+        icon: "error",
+        target: document.body, // ✅ ensures it floats above the MUI modal
+      });
     } finally {
       setSubmitting(false);
     }
@@ -263,14 +298,59 @@ function AddCategoryModal({ open, onClose, onSuccess }) {
         <TextField
           fullWidth
           label="Category Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          value={formData.name}
+          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           margin="normal"
           disabled={submitting}
         />
         <FormHelperText sx={{ mb: 2 }}>
           Category name must be unique from the rest.
         </FormHelperText>
+        <div>
+          <p className="text-sm font-medium mb-1">Category Cover Image</p>
+
+          {/* Hidden file input */}
+          <input
+            type="file"
+            accept="image/*"
+            id="coverImageUpload"
+            style={{ display: "none" }}
+            onChange={async (e) => {
+              const file = e.target.files[0];
+              if (file) {
+                setSelectedFile(file);
+                setPreview(URL.createObjectURL(file));
+
+                // ✅ Upload immediately
+                const uploadedUrl = await uploadImage(file);
+                if (uploadedUrl) {
+                  setFormData((prev) => ({ ...prev, coverImage: uploadedUrl }));
+                }
+              }
+            }}
+          />
+
+          {/* Button to trigger file input */}
+          <label htmlFor="coverImageUpload">
+            <Button variant="outlined" component="span">
+              Upload Image
+            </Button>
+          </label>
+
+          {/* Preview */}
+          {preview && (
+            <div className="mt-3">
+              <p className="text-xs text-gray-500 mb-1">Preview:</p>
+              <Image
+                src={preview}
+                width={100}
+                height={100}
+                alt="Preview"
+                className="w-40 h-40 object-cover rounded-md border"
+              />
+            </div>
+          )}
+        </div>
         <Box mt={3} display="flex" justifyContent="flex-end" gap={1}>
           <Button variant="outlined" onClick={onClose} disabled={submitting}>
             Cancel

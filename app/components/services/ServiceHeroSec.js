@@ -92,7 +92,7 @@ const ServiceHeroSec = () => {
                   onClick={() => router.push("/register")}
                   className={` bg-black/97 gap-1 flex justify-center items-center pl-4 pr-1.5 py-1 group hover:scale-105 transition-all duration-300 text-white font-medium lg:text-lg  rounded-full uppercase cursor-pointer`}
                 >
-                  Add Your Pet
+                  Register Now
                   <motion.span className=" ">
                     <Image
                       src="/images/logo.png"

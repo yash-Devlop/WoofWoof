@@ -57,32 +57,34 @@ const NewsAndBlogs = () => {
 
                     return (
                       <div key={blog._id} className=" flex gap-4 py-2">
-                        <div className="w-[320px] h-[300px] gap-4 bg-white shadow-md rounded-2xl overflow-hidden flex flex-col">
-                          {/* Image */}
-                          <div className="w-full h-[220px] relative  z-5">
-                            <Image
-                              src={blog.coverImage}
-                              alt={blog.title}
-                              fill
-                              className="object-cover"
-                            />
-                          </div>
+                        <Link
+                          href={`/blog/${blog.slug}`}
+                          className="block text-base font-semibold text-blue-600 hover:text-blue-800 transition-colors line-clamp-2"
+                        >
+                          <div className="w-[320px] h-[300px] gap-4 bg-white shadow-md rounded-2xl overflow-hidden flex flex-col">
+                            {/* Image */}
+                            <div className="w-full h-[220px] relative  z-5">
+                              <Image
+                                src={blog.coverImage}
+                                alt={blog.title}
+                                fill
+                                className="object-cover"
+                              />
+                            </div>
 
-                          {/* Content */}
-                          <div className="flex-1 flex flex-col justify-between p-4">
-                            <div>
-                              <div className="text-gray-600 text-sm mb-2">
-                                {formattedDate}
+                            {/* Content */}
+
+                            <div className="flex-1 flex flex-col justify-between p-4">
+                              <div>
+                                <div className="text-gray-600 text-sm mb-2">
+                                  {formattedDate}
+                                </div>
+
+                                <div>{blog.title}</div>
                               </div>
-                              <Link
-                                href={`/blog/${blog.slug}`}
-                                className="block text-base font-semibold text-blue-600 hover:text-blue-800 transition-colors line-clamp-2"
-                              >
-                                {blog.title}
-                              </Link>
                             </div>
                           </div>
-                        </div>
+                        </Link>
                       </div>
                     );
                   })}
