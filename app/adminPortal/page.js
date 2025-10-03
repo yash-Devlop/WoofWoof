@@ -7,11 +7,15 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 const Page = () => {
-  const router = useRouter(); // ✅ initialized here
+  const router = useRouter();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+
+  let stored_id = process.env.ADMIN_USERNAME;
+  let stored_pass = process.env.ADMIN_PASS;
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,15 +27,17 @@ const Page = () => {
         toast.error(error);
         return;
       }
-      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailPattern.test(email)) {
-        setError("Please enter a valid email address.");
-        toast.error(error);
-        return;
-      }
+      // const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      // if (!emailPattern.test(email)) {
+      //   setError("Please enter a valid email address.");
+      //   toast.error(error);
+      //   return;
+      // }
+      console.log(`id: ${stored_id}, pass: ${stored_pass}`)
+
 
       const res = await axios.post(
-        "/api/auth/login",
+        "/api/auth/admin-login",
         { email, password },
         {
           withCredentials: true,
@@ -39,17 +45,19 @@ const Page = () => {
       );
 
       if (res.status !== 200) {
-        toast.error("Something went wrong!!");
+        toast.error("You are unauthorized to access this page");
         return;
       }
+      router.push("/admin");
+      toast.success("Loging successfull");
 
-      if (res?.data?.user?.role === "admin") {
-        router.push("/admin"); // ✅ better redirect to dashboard, not login page
-        toast.success("Loging successfull");
-      } else {
-        toast.success("You are unauthorized to access this page");
-        router.push("/"); // if you have a normal user dashboard
-      }
+      // if (res?.data?.user?.role === "admin") {
+      //   router.push("/admin"); // ✅ better redirect to dashboard, not login page
+      //   toast.success("Loging successfull");
+      // } else {
+      //   toast.success("You are unauthorized to access this page");
+      //   router.push("/"); // if you have a normal user dashboard
+      // }
 
       setEmail("");
       setPassword("");
@@ -79,7 +87,7 @@ const Page = () => {
             </label>
             <input
               id="email"
-              type="email"
+              type="text"
               className="w-full border rounded p-2"
               placeholder="admin@example.com"
               value={email}

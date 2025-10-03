@@ -1,159 +1,8 @@
-// "use client";
-// import { motion } from "framer-motion";
-// import Image from "next/image";
-// import React, { useState } from "react";
-
-// const ServicesSec = () => {
-//   const [isHovered, setIsHovered] = useState(false);
-
-//   const services = [
-//     {
-//       id: 1,
-//       image: "",
-//       title: "",
-//       button: "",
-//       description: "",
-//     },
-//     {
-//       id: 2,
-//       image: "/images/service/service1.png",
-//       title: "Pet Relocation",
-//       button: "Know More",
-//       description:
-//         "Looking to relocate your furry friend ? You’ve come to the right place",
-//     },
-//     {
-//       id: 3,
-//       image: "/images/service/service2.png",
-//       title: "Pet Training",
-//       button: "",
-//       description: "coming soon",
-//     },
-//     {
-//       id: 4,
-//       image: "/images/service/service3.png",
-//       title: "Pet Vet",
-//       button: "",
-//       description: "coming soon",
-//     },
-//   ];
-
-//   const slideInVariants = {
-//     hidden: (i) => ({
-//       opacity: 0,
-//       x: i % 2 === 0 ? 100 : -100,
-//     }),
-//     visible: (i) => ({
-//       opacity: 1,
-//       x: 0,
-//       transition: {
-//         duration: 0.8,
-//         ease: "easeOut",
-//       },
-//     }),
-//   };
-
-//   return (
-//     <div className="w-full">
-//       <div className="bg-white rounded-3xl m-4 md:mx-12  py-8 md:py-16">
-//         <div className=" relative px-4 md:px-30 flex flex-col items-center ">
-//           {/* <Image
-//             src="/images/pawsFlow.PNG"
-//             alt="pawsFlow"
-//             fill
-//             className=" absolute h-full w-full object-contain z-10 "
-//           /> */}
-//           {services.map((service, index) => {
-//             const orderChange = index % 2 === 0;
-//             return (
-//               <motion.div
-//                 key={service.id}
-//                 className={`grid relative z-20 grid-cols-1 gap-12 ${
-//                   orderChange
-//                     ? "lg:grid-cols-[40%_60%]"
-//                     : "lg:grid-cols-[60%_40%]"
-//                 }`}
-//                 variants={slideInVariants}
-//                 custom={index}
-//                 initial="hidden"
-//                 whileInView="visible"
-//                 viewport={{ once: false, amount: 0.3 }}
-//               >
-//                 <div
-//                   className={` ${orderChange ? "lg:order-1" : "lg:order-2"}`}
-//                 >
-//                   {service.image && (
-//                     <Image
-//                       alt={service.id}
-//                       src={service?.image}
-//                       width={500}
-//                       height={400}
-//                       className=" object-contain rounded-full"
-//                     />
-//                   )}
-//                 </div>
-//                 <div
-//                   className={`${
-//                     orderChange ? "lg:order-2" : "lg:order-1"
-//                   } flex flex-col justify-center items-center 2xl:px-40 space-y-4`}
-//                 >
-//                   {service.title && (
-//                     <div className=" flex w-full lg:justify-start justify-center text-3xl lg:text-4xl font-bold">
-//                       {service.title}
-//                     </div>
-//                   )}
-//                   <h1
-//                     className={`flex w-full text-2xl lg:leading-[3.75rem] tracking-wider text-justify justify-center lg:justify-start  `}
-//                   >
-//                     {service.description}
-//                   </h1>
-//                   {service.button && (
-//                     <button
-//                       onMouseEnter={() => setIsHovered(true)}
-//                       onMouseLeave={() => setIsHovered(false)}
-//                       className={` bg-black/97 gap-1 flex justify-start items-center px-4  py-1 group  transition-all duration-300 text-white font-medium lg:text-lg mb-8  rounded-full uppercase cursor-pointer`}
-//                     >
-//                       {service?.button}
-//                       {isHovered && (
-//                         <motion.span
-//                           className=" "
-//                           initial={{ x: -5, opacity: 0 }}
-//                           animate={{
-//                             x: isHovered ? 10 : 0,
-//                             opacity: isHovered ? 1 : 0,
-//                           }}
-//                           transition={{
-//                             type: "easeIn",
-//                             duration: 0.6,
-//                           }}
-//                         >
-//                           <Image
-//                             src="/images/logo.png"
-//                             width={33}
-//                             height={33}
-//                             alt="logo"
-//                             className="hidden  group-hover:block transition-all duration-300"
-//                           />
-//                         </motion.span>
-//                       )}
-//                     </button>
-//                   )}
-//                 </div>
-//               </motion.div>
-//             );
-//           })}
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default ServicesSec;
-
 "use client";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import React, { useState } from "react";
+import { toast, ToastContainer, ToastOptions, Slide } from "react-toastify"
 
 const ServicesSec = () => {
   const slideInVariants = {
@@ -172,8 +21,51 @@ const ServicesSec = () => {
   };
   const [isHovered, setIsHovered] = useState(false);
 
+  const defaultOptions = {
+    position: "top-right",
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    transition: Slide,
+  };
+
+const showToast = (message, type = "info", options = {}) => {
+  console.log('clicked');
+  const finalOptions = { ...defaultOptions, ...options };
+
+  switch (type) {
+    case "success":
+      toast.success(message, {
+        ...finalOptions
+      });
+      break;
+
+    case "error":
+      toast.error(message, {
+        ...finalOptions
+      });
+      break;
+
+    case "warning":
+      toast.warn(message, {
+        ...finalOptions
+      });
+      break;
+
+    default: // info
+      toast.info(message, {
+        ...finalOptions
+      });
+      break;
+  }
+};
+
+
   return (
     <div className="w-full">
+      <ToastContainer />
       <div className="bg-white rounded-3xl m-4 md:mx-12 py-8 md:py-16">
         <div className="relative h-[860px] lg:h-auto px-4 md:px-30 flex flex-col">
           <div className=" absolute inset-0 top-0 z-10 flex justify-center items-start">
@@ -201,7 +93,10 @@ const ServicesSec = () => {
                   Looking to relocate your furry friend? You’ve come to the
                   right place
                 </h1>
-                <button className="bg-black/97 gap-1 text-sm flex justify-start items-center pl-4 pr-1.5 py-1 group transition-all duration-300 text-white font-medium lg:text-lg lg:mb-8 rounded-full uppercase cursor-pointer">
+                <button
+                  className="bg-black/97 gap-1 text-sm flex justify-start items-center pl-4 pr-1.5 py-1 group transition-all duration-300 text-white font-medium lg:text-lg lg:mb-8 rounded-full uppercase cursor-pointer"
+                  onClick={() => showToast('Service coming soon.', 'error')}
+                >
                   Know More
                   <motion.span className="">
                     <Image

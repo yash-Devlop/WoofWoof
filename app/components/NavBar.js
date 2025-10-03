@@ -48,6 +48,11 @@ const NavBar = () => {
       href: "/aboutUs",
     },
     {
+      label: "Philanthrophy",
+      icon: <DescriptionOutlinedIcon fontSize="small" />,
+      href: "/philanthrophy",
+    },
+    {
       label: "Contact Us",
       icon: <ForwardToInboxOutlinedIcon fontSize="small" />,
       href: "/contactUs",
@@ -113,6 +118,7 @@ const NavBar = () => {
       shop: "Shop",
       about: "About Us",
       products: "Products",
+      philanthrophy: "Philanthrophy",
       services: "Services",
       contact: "Contact Us",
     };
@@ -175,7 +181,7 @@ const NavBar = () => {
         {/* Center - Nav Links */}
 
         <ul className="hidden xl:flex gap-6 text-black font-semibold">
-          {["Home", "Shop", "About Us", "Contact Us", "Services"].map(
+          {["Home", "Shop", "About Us", "Philanthrophy", "Contact Us", "Services"].map(
             (item, index) => {
               return (
                 <li
