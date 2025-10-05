@@ -2,17 +2,13 @@ import React from "react";
 
 const TermsAndConditions = () => {
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+    <div className="w-full px-4 py-8 sm:px-6 lg:px-8 pt-20">
       <div className="bg-white shadow-2xl rounded-lg overflow-hidden">
         {/* Header */}
         <div className="bg-[#ff3971e5] p-6 text-white">
           <h1 className="text-3xl font-bold flex items-center">
             <span className="mr-2">📄</span> Terms & Conditions
           </h1>
-          <p className="text-indigo-100  mt-2">
-            <strong>Effective Date:</strong> [Insert Date] |{" "}
-            <strong>Last Updated:</strong> [Insert Date]
-          </p>
         </div>
 
         <div className="p-6 space-y-8">
@@ -56,7 +52,7 @@ const TermsAndConditions = () => {
               3. Company Information
             </h2>
             <p className="text-gray-600">
-              {`We display our full legal name, address, and customer support contacts on the site as required by law indialaw.in. Our Grievance Officer’s name and contact are clearly listed, and we commit to acknowledging any complaint within 48 hours indialaw.in. This ensures transparency and compliance with the Consumer Protection (E-Commerce) Rules, 2020.`}
+              {`We display our full legal name, address, and customer support contacts on the site as required by law indialaw.in. Our Grievance Officer's name and contact are clearly listed, and we commit to acknowledging any complaint within 48 hours indialaw.in. This ensures transparency and compliance with the Consumer Protection (E-Commerce) Rules, 2020.`}
             </p>
           </div>
 

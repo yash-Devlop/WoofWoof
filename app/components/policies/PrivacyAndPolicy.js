@@ -2,17 +2,13 @@ import React from "react";
 
 const PrivacyAndPolicy = () => {
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+    <div className="w-full px-4 py-8 sm:px-6 lg:px-8">
       <div className="bg-white shadow-2xl rounded-lg overflow-hidden">
         {/* Header */}
         <div className="bg-[#ff3971e5] p-6 text-white">
           <h1 className="text-3xl font-bold flex items-center">
             <span className="mr-2">📄</span> Privacy & Policy
           </h1>
-          <p className="text-indigo-100  mt-2">
-            <strong>Effective Date:</strong> [Insert Date] |{" "}
-            <strong>Last Updated:</strong> [Insert Date]
-          </p>
         </div>
 
         <div className="p-6 space-y-8">
@@ -45,7 +41,7 @@ const PrivacyAndPolicy = () => {
               2. Fairness and Anti-Profit Manipulation
             </h2>
             <p className="text-gray-600">
-              {`We are committed to honest pricing. As per e-commerce regulations, prices are not manipulated to earn unfair profits indialaw.in. Any promotional offers or discounts will be clearly stated (e.g. “Sale Price”).`}
+              {`We are committed to honest pricing. As per e-commerce regulations, prices are not manipulated to earn unfair profits indialaw.in. Any promotional offers or discounts will be clearly stated (e.g. "Sale Price").`}
             </p>
           </div>
 

@@ -45,22 +45,18 @@ const AboutSec = () => {
             />
           </motion.div>
           <div className=" relative grid grid-cols-1 lg:grid-cols-2 gap-8 xl:gap-30 pb-10">
-            <div className=" relative">
+            <div className="relative inline-block">
               <Image
                 src="/images/dogCouple.png"
                 alt="dogCouple"
                 width={500}
                 height={600}
-                className=" rounded-[4rem] relative z-1"
-              />
-              <Image
-                src="/images/pinkRec.png"
-                alt="dogCouple"
-                width={500}
-                height={600}
-                className=" rounded-[4rem] absolute -bottom-5 md:-bottom-8 md:-right-8 xl:-bottom-15 xl:-right-6 -right-3"
+                className="rounded-[4rem] relative z-10 drop-shadow-[15px_20px_0_#FE97AF]"
               />
             </div>
+
+
+
             <div className=" space-y-2 lg:space-y-10 flex flex-col items-center">
               <h2 className=" text-3xl lg:text-5xl font-extrabold text-[#ff0047]">
                 ABOUT WOOf WOOf
@@ -83,8 +79,8 @@ const AboutSec = () => {
                   <motion.span className=" ">
                     <Image
                       src="/images/logo.png"
-                      width={33}
-                      height={33}
+                      width={40}
+                      height={40}
                       alt="logo"
                       className="  group-hover:block transition-all duration-300"
                     />

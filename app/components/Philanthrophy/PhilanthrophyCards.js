@@ -1,16 +1,13 @@
-"use client"
+"use client";
 import React, { useState } from 'react';
 
 const Card = ({ title, backContent, frontColor, backColor }) => {
   const [isFlipped, setIsFlipped] = useState(false);
 
-  // Determine text color based on background brightness
   const getTextColor = (bgColor) => {
-    // If it's a dark color (red shades), use white text
     if (bgColor.includes('#ff0047') || bgColor.includes('#B22222') || bgColor.includes('red')) {
       return 'text-white';
     }
-    // For light colors (beige), use dark text
     return 'text-gray-800';
   };
 
@@ -18,31 +15,32 @@ const Card = ({ title, backContent, frontColor, backColor }) => {
   const backTextColor = getTextColor(backColor);
 
   return (
-    <div
+    <div 
       className="w-full h-80 perspective-1000 cursor-pointer"
       onMouseEnter={() => setIsFlipped(true)}
       onMouseLeave={() => setIsFlipped(false)}
+      onClick={() => setIsFlipped(!isFlipped)}
     >
-      <div
+      <div 
         className={`relative w-full h-full transition-transform duration-700 transform-style-3d ${
           isFlipped ? 'rotate-x-180' : ''
         }`}
       >
         {/* Front Side */}
-        <div
-          className={`absolute w-full h-full ${frontColor} rounded-3xl flex items-center justify-center p-8 backface-hidden shadow-lg`}
+        <div 
+          className={`absolute w-full h-full ${frontColor} rounded-3xl flex items-center justify-center p-4 md:p-8 backface-hidden shadow-lg`}
         >
-          <h2 className={`text-3xl font-serif text-center ${frontTextColor}`}>
+          <h2 className={`text-lg md:text-3xl font-serif text-center ${frontTextColor}`}>
             {title}
           </h2>
         </div>
 
         {/* Back Side */}
-        <div
-          className={`absolute w-full h-full ${backColor} rounded-3xl flex items-center justify-center p-8 backface-hidden shadow-lg`}
+        <div 
+          className={`absolute w-full h-full ${backColor} rounded-3xl flex items-center justify-center p-4 md:p-8 backface-hidden shadow-lg`}
           style={{ transform: 'rotateX(180deg)' }}
         >
-          <p className={`text-lg font-serif text-center ${backTextColor} leading-relaxed`}>
+          <p className={`text-xs md:text-lg font-serif text-center ${backTextColor} leading-relaxed`}>
             {backContent}
           </p>
         </div>
@@ -97,7 +95,8 @@ export default function CardsPage() {
         <h1 className="text-5xl font-serif text-center mb-16 text-gray-800">
           Our Core Values
         </h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
           {cards.map((card, index) => (
             <Card
               key={index}
@@ -114,16 +113,13 @@ export default function CardsPage() {
         .perspective-1000 {
           perspective: 1000px;
         }
-        
         .transform-style-3d {
           transform-style: preserve-3d;
         }
-        
         .backface-hidden {
           backface-visibility: hidden;
           -webkit-backface-visibility: hidden;
         }
-        
         .rotate-x-180 {
           transform: rotateX(180deg);
         }

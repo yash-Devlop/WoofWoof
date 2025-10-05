@@ -70,7 +70,7 @@ const ShopByCategory = () => {
   return (
     <div className="relative">
       <div className="flex w-full justify-between mb-8">
-        <h2 className="text-2xl md:text-4xl font-semibold">Shop By Category</h2>
+        <h2 className="text-2xl mx-auto my-auto md:text-4xl font-semibold">Shop By Category</h2>
       </div>
 
       <div

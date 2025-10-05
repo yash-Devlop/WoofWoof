@@ -27,6 +27,7 @@ export async function POST(req) {
       return NextResponse.json({ message: "Invalid OTP" }, { status: 400 });
     }
 
+    // existingUser.isVerified = true;
     existingUser.otp = undefined;
     existingUser.otpExpiry = undefined;
     await existingUser.save();

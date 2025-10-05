@@ -68,6 +68,7 @@ const userSchema = new mongoose.Schema(
     phone: {
       type: String,
       required: true,
+      unique: true,
       match: [/^\d{10}$/, "Please enter a valid 10-digit phone number"],
     },
     role: {

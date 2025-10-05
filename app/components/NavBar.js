@@ -27,11 +27,11 @@ const NavBar = () => {
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
 
   const menuItems = [
-    {
-      label: "Edit Pet Profile",
-      icon: <AccountCircleIcon fontSize="small" />,
-      href: "/",
-    },
+    // {
+    //   label: "Edit Pet Profile",
+    //   icon: <AccountCircleIcon fontSize="small" />,
+    //   href: "/",
+    // },
     {
       label: "Shop",
       icon: <LocalGroceryStoreOutlinedIcon fontSize="small" />,
@@ -43,14 +43,14 @@ const NavBar = () => {
       href: "/services",
     },
     {
-      label: "About Us",
-      icon: <DescriptionOutlinedIcon fontSize="small" />,
-      href: "/aboutUs",
-    },
-    {
       label: "Philanthrophy",
       icon: <DescriptionOutlinedIcon fontSize="small" />,
       href: "/philanthrophy",
+    },
+    {
+      label: "About Us",
+      icon: <DescriptionOutlinedIcon fontSize="small" />,
+      href: "/aboutUs",
     },
     {
       label: "Contact Us",
@@ -62,11 +62,11 @@ const NavBar = () => {
       icon: <CreditCardOutlinedIcon fontSize="small" />,
       href: "/",
     },
-    {
-      label: "Track Orders",
-      icon: <LocalShippingOutlinedIcon fontSize="small" />,
-      href: "/",
-    },
+    // {
+    //   label: "Track Orders",
+    //   icon: <LocalShippingOutlinedIcon fontSize="small" />,
+    //   href: "/",
+    // },
     {
       label: "Cart",
       icon: <LocalMallOutlinedIcon fontSize="small" />,

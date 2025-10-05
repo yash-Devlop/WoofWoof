@@ -46,7 +46,14 @@ const ContactSec = () => {
                     </svg>
                   </span>
                   <span className="font-semibold text-lg">
-                    Faridabad, Haryana (India)
+                    BLUE OCEAN
+                    OMAXE WORLD STREET
+                    151(FIRST FLOOR) ABOVE AIRTEL
+                    SECTOR 79
+                    FARIDABAD
+                    HARYANA
+                    121004
+                    INDIA.
                   </span>
                 </div>
 

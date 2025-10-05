@@ -2,17 +2,13 @@ import React from "react";
 
 const PrivacyPolicy = () => {
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+    <div className="w-full px-4 py-8 pt-20 sm:px-6 lg:px-8">
       <div className="bg-white shadow-2xl rounded-lg overflow-hidden">
         {/* Header */}
         <div className="bg-[#ff3971e5] p-6 text-white">
           <h1 className="text-3xl font-bold flex items-center">
             <span className="mr-2">📄</span> Privacy & Policy
           </h1>
-          <p className="text-indigo-100  mt-2">
-            <strong>Effective Date:</strong> [Insert Date] |{" "}
-            <strong>Last Updated:</strong> [Insert Date]
-          </p>
         </div>
 
         <div className="p-6 space-y-8">
@@ -33,7 +29,7 @@ const PrivacyPolicy = () => {
               1. Data Collected
             </h2>
             <p className="text-gray-600">
-              {`We collect only what’s necessary: name, shipping address, email, and phone for processing orders and account functions. Optionally, you may provide pet details (species, size) to help us recommend products, but this is optional.`}
+              {`We collect only what's necessary: name, shipping address, email, and phone for processing orders and account functions. Optionally, you may provide pet details (species, size) to help us recommend products, but this is optional.`}
             </p>
           </div>
 
@@ -63,7 +59,7 @@ const PrivacyPolicy = () => {
               4. Data Security
             </h2>
             <p className="text-gray-600">
-              {`We implement “reasonable safeguards” to protect data (secure servers, SSL encryption). We limit how long we keep data: for example, shipping info is deleted after statutory financial record retention periods.`}
+              {`We implement "reasonable safeguards" to protect data (secure servers, SSL encryption). We limit how long we keep data: for example, shipping info is deleted after statutory financial record retention periods.`}
             </p>
           </div>
 
@@ -90,7 +86,7 @@ const PrivacyPolicy = () => {
           {/* Section 7 */}
           <div className="border-b border-gray-200 pb-6">
             <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-              {`3. Children’s Privacy`}
+              {`3. Children's Privacy`}
             </h2>
             <p className="text-gray-600">
               {`Our site is not for children under 13 (or under 18 in India). We do not knowingly collect data from minors.`}
@@ -103,7 +99,7 @@ const PrivacyPolicy = () => {
               3. Compliance Note
             </h2>
             <p className="text-gray-600">
-              {`We are preparing for India’s new Digital Personal Data Protection regime. The principles of lawful, fair, and transparent data use guide us dlapiperdataprotection.com. We commit to purpose limitation (using data only for stated reasons) and data minimization (collecting only what we need) dlapiperdataprotection.com.`}
+              {`We are preparing for India's new Digital Personal Data Protection regime. The principles of lawful, fair, and transparent data use guide us dlapiperdataprotection.com. We commit to purpose limitation (using data only for stated reasons) and data minimization (collecting only what we need) dlapiperdataprotection.com.`}
             </p>
           </div>
         </div>

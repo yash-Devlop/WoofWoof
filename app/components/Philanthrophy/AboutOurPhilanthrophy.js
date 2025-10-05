@@ -19,7 +19,7 @@ const AboutOurStore = () => {
                             // data-aos-duration="1200"
                             className=" lg:text-[17px] lg:max-w-[420px] text-gray-800"
                         >
-                            <p className=" ">
+                            <p className="text-2xl">
                                 At <span className="text-[#ff0047] font-semibold">Woof Woof</span>,  we believe that love for pets goes beyond our shelves. Our philanthropy program is dedicated to supporting animal shelters, rescuing stray pets, and contributing to the well-being of our community.. We are deeply committed to making a positive impact on the lives of those less privileged and actively seek opportunities to contribute to the well-being of our community.
                             </p>
                         </div>
@@ -28,7 +28,7 @@ const AboutOurStore = () => {
                             // data-aos-duration="1200"
                             className=" lg:text-[17px] lg:max-w-[420px] text-gray-800"
                         >
-                            <p>
+                            <p className="text-2xl">
                                 We Donate part of our earnings through our group companies to <span className="text-[#ff0047]">The Balaji Institute of Surgery, Research and Rehabilitation for the Disabled (BIRRD)</span> in Tirupati, India. BIRRD is a remarkable hospital specializing in orthopaedics and rehabilitation for the disabled, with a particular focus on providing free treatment to the poor, regardless of religion, caste, or creed.
                             </p>
                         </div>

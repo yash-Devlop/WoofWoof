@@ -2,7 +2,7 @@ import React from "react";
 
 const ReturnPolicy = () => {
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+    <div className="w-full px-4 pt-20 py-8 sm:px-6 lg:px-8">
       <div className="bg-white shadow-2xl rounded-lg overflow-hidden">
         {/* Header */}
         <div className="bg-[#ff3971e5] p-6 text-white">
@@ -43,7 +43,7 @@ const ReturnPolicy = () => {
               {`2. Exception Defective or Misdescribed Goods`}
             </h2>
             <p className="text-gray-600">
-              {`In accordance with Indian consumer law, we will address any genuine defect or misrepresentation. If a toy you received is defective or materially not as described, please contact us immediately. We will evaluate the issue and, at our discretion, offer a replacement or refund in line with the lawindialaw.in. Your satisfaction and pet’s safety are important to us.`}
+              {`In accordance with Indian consumer law, we will address any genuine defect or misrepresentation. If a toy you received is defective or materially not as described, please contact us immediately. We will evaluate the issue and, at our discretion, offer a replacement or refund in line with the lawindialaw.in. Your satisfaction and pet's safety are important to us.`}
             </p>
           </div>
 
