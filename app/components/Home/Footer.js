@@ -1,6 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
 
@@ -136,11 +137,8 @@ const Footer = () => {
                       About Us
                     </div>
 
-                    <div className="hover:underline cursor-pointer">Blog</div>
+                    <div className="hover:underline cursor-pointer"><Link href="/blog">Blog</Link></div>
 
-                    <div className="hover:underline cursor-pointer">
-                      Gift Card
-                    </div>
 
                     <div
                       onClick={scrollToTop}
@@ -157,7 +155,7 @@ const Footer = () => {
                       className="cursor-pointer hover:underline"
                       onClick={() => router.push("/shop")}
                     >
-                      New Product
+                      Shop
                     </div>
 
                     <div className="cursor-pointer hover:underline">
@@ -173,11 +171,10 @@ const Footer = () => {
                       Terms & Conditions
                     </div>
 
-                    <div className="cursor-pointer hover:underline">F.A.Q</div>
                   </div>
 
                   <div className="px-4 md:px-10 lg:space-y-2">
-                    <div className="font-semibold">Customer Services</div>
+                    <div className="font-semibold">Customer Support</div>
 
                     <div
                       className="cursor-pointer hover:underline"
@@ -198,16 +195,29 @@ const Footer = () => {
                     >
                       Returns
                     </div>
-                    <div className="cursor-pointer hover:underline">
-                      Order Tracking
-                    </div>
                   </div>
 
                   <div className="px-4 md:px-8 lg:space-y-2">
                     <div className=" font-semibold">Store</div>
-                    <div>Faridabad, Haryana (India)</div>
-                    <div>+91- 9999887030</div>
-                    <div>Contact@woofwoof.in</div>
+                    <div>BLUE OCEAN
+                      OMAXE WORLD STREET
+                      151(FIRST FLOOR) ABOVE AIRTEL
+                      SECTOR 79
+                      FARIDABAD
+                      HARYANA
+                      121004
+                      INDIA.
+                    </div>
+                    <div className="hover:underline cursor-pointer">
+                      <a href="tel:+919999887030">+91- 9999887030</a>
+                    </div>
+
+                    <a
+                      href="mailto:Contact@woofwoof.in"
+                      className="hover:underline cursor-pointer"
+                    >
+                      Contact@woofwoof.in
+                    </a>
                   </div>
                 </div>
               </div>

@@ -26,7 +26,12 @@ export default function BlogPage() {
   }, []);
 
   return loading ? (
-    <p className="text-center text-gray-500">Loading blogs...</p>
+    <div className="flex items-center justify-center min-h-[400px]">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#ff0047] mx-auto mb-4"></div>
+        <p className="text-gray-600 text-lg">Loading blogs...</p>
+      </div>
+    </div>
   ) : (
     <div className="w-full h-full relative overflow-hidden">
       {/* Background paws image */}
@@ -121,7 +126,37 @@ export default function BlogPage() {
           </div>
 
           {blogData.length === 0 ? (
-            <p className="text-center text-gray-500">No blogs found.</p>
+            <div className="flex flex-col items-center justify-center min-h-[500px] bg-white/90 backdrop-blur-sm rounded-3xl p-8 md:p-16 shadow-xl">
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                className="text-center space-y-6 max-w-2xl"
+              >
+                <div className="relative w-32 h-32 mx-auto mb-4">
+                  <Image
+                    src="/images/logo.png"
+                    alt="Woof Woof"
+                    fill
+                    className="object-contain opacity-50"
+                  />
+                </div>
+                <h3 className="text-3xl md:text-4xl font-bold text-gray-800">
+                  No Blogs Yet
+                </h3>
+                <p className="text-lg md:text-xl text-gray-600 leading-relaxed">
+                  We're working on creating amazing content for you. Check back soon for exciting pet care tips, stories, and updates!
+                </p>
+                <div className="pt-6">
+                  <Link
+                    href="/"
+                    className="inline-flex items-center gap-2 bg-[#ff0047] text-white px-8 py-3 rounded-full font-semibold hover:bg-[#e6003d] transition-colors"
+                  >
+                    Back to Home
+                  </Link>
+                </div>
+              </motion.div>
+            </div>
           ) : (
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {blogData
