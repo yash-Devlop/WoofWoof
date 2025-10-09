@@ -22,7 +22,7 @@ export const fetchAllProductsAdmin = createAsyncThunk(
   "admin/products/fetchAllProducts",
   async (_, { rejectWithValue }) => {
     try {
-      const res = await axios.get("/api/admin/products"); // Adjust to your route
+      const res = await axios.get("/api/admin/products");
       return res.data.products;
     } catch (err) {
       return rejectWithValue(err.response.data);

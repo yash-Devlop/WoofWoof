@@ -13,7 +13,6 @@ export async function GET(req) {
     const productName = searchParams.get("productName") || "";
     const userName = searchParams.get("userName") || "";
 
-    // Build filters
     const productFilter = productName
       ? { name: { $regex: productName, $options: "i" } }
       : {};
@@ -47,6 +46,49 @@ export async function GET(req) {
     return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }
+
+export async function POST(req) {
+  await connectDB();
+  try {
+    const { productId, userEmail, rating, comment } = await req.json();
+
+    // Validate fields
+    if (!productId || !userEmail || !rating) {
+      return NextResponse.json(
+        { error: "Missing required fields (productId, userEmail, rating)" },
+        { status: 400 }
+      );
+    }
+
+    // Find user
+    const user = await User.findOne({ email: userEmail });
+    if (!user) {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    // Create new review
+    const newReview = await Review.create({
+      user: user._id,
+      product: productId,
+      rating,
+      comment,
+    });
+
+    // Push review into product
+    await Product.findByIdAndUpdate(productId, {
+      $push: { reviews: newReview._id },
+    });
+
+    return NextResponse.json({
+      message: "Review added successfully",
+      review: newReview,
+    });
+  } catch (error) {
+    console.error("POST review error:", error);
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
+  }
+}
+
 
 export async function DELETE(req) {
   try {

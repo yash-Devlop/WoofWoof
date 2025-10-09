@@ -13,8 +13,8 @@ export default async function ProductDetail({ params }) {
     <div className=" bg-[#EEEEEE]">
       <ProductDescriptionHeader />
       <ProductDetailMain productId={productId} />
-      <SimilarProducts />
-      <ReviewSection />
+      <SimilarProducts productId={productId} />
+      <ReviewSection productId={productId}/>
       <Footer />
     </div>
   );

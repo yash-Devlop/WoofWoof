@@ -12,7 +12,7 @@ const FounderSec = () => {
               className=""
             >
               <Image
-                src="/images/sleeping-dog.jpg"
+                src="/images/BIRRD.webp"
                 alt="dog rescue"
                 width={500}
                 height={600}

@@ -1,4 +1,3 @@
-
 "use client";
 import React, { useState } from "react";
 import RegisterPage from "./RegisterPage";
@@ -22,7 +21,6 @@ const Page = () => {
       {otpSend && !otpVerified && <VerifyOtp email={formData.email} />}
       {otpVerified && <RegisterPage email={formData.email} />}
 
-      {/* <RegisterPage /> */}
     </div>
   );
 };

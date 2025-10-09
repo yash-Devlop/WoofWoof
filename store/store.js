@@ -7,6 +7,7 @@ import adminCategoryReducer from "./slices/admin/adminCategorySlice";
 import userCartReducer from "./slices/user/cartSlice";
 import addressReducer from "./slices/user/addressSlice";
 import adminOrderSlice from "./slices/admin/adminOrderSlice";
+import adminCouponsReducer from "./slices/admin/adminCouponSlice";
 
 export const store = configureStore({
   reducer: {
@@ -18,6 +19,7 @@ export const store = configureStore({
     userCart: userCartReducer,
     address: addressReducer,
     adminOrder: adminOrderSlice,
+    adminCoupons: adminCouponsReducer,
   },
 });
 

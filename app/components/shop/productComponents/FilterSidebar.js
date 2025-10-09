@@ -56,6 +56,33 @@ const FilterSidebar = () => {
     dispatch(fetchProducts());
   };
 
+  const allProducts = useSelector((state) => state.product.products);
+  const [bestSelling, setBestSelling] = useState([]);
+
+  // 🔹 Shuffle array helper
+  const shuffleArray = (arr) => {
+    return arr
+      .map((a) => [Math.random(), a])
+      .sort((a, b) => a[0] - b[0])
+      .map((a) => a[1]);
+  };
+
+  useEffect(() => {
+    // Fetch all products first
+    dispatch(fetchProducts());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (allProducts.length > 0) {
+      // Filter best-selling products
+      const best = allProducts.filter((p) => p.isBestSelling);
+      // Shuffle to get random order
+      const shuffled = shuffleArray(best);
+      setBestSelling(shuffled);
+    }
+  }, [allProducts]);
+
+
   useEffect(() => {
     return () => clearTimeout(debounceRef.current);
   }, []);
@@ -108,11 +135,10 @@ const FilterSidebar = () => {
                       dispatch(fetchProducts());
                     }, 300); // slight debounce for better UX
                   }}
-                  className={`text-sm px-3 py-1 rounded-lg cursor-pointer transition-transform hover:scale-105 ${
-                    isSelected
+                  className={`text-sm px-3 py-1 rounded-lg cursor-pointer transition-transform hover:scale-105 ${isSelected
                       ? "bg-[#ffcad7] font-semibold"
                       : "bg-white font-medium"
-                  }`}
+                    }`}
                 >
                   {tag}
                 </button>
@@ -171,21 +197,16 @@ const FilterSidebar = () => {
       <div className=" hidden md:block">
         <h2 className="font-semibold mb-2">Popular Products</h2>
         <ul className="space-y-2 text-sm text-gray-800">
-          <li>
-            <Link href="/shop/6828722bea10c7d7b8db0163" className="hover:underline">
-              Pink Star Pillow - ₹29.99
-            </Link>
-          </li>
-          <li>
-            <Link href="/shop/683ae02b292494f3b0373621" className="hover:underline">
-              Party Cap - ₹145
-            </Link>
-          </li>
-          <li>
-            <Link href="/shop/683ad89e292494f3b03734db" className="hover:underline">
-              Pink Pet Collar - ₹249
-            </Link>
-          </li>
+          {bestSelling.map((product) => (
+            <li key={product._id}>
+              <Link
+                href={`/shop/${product._id}`}
+                className="hover:underline"
+              >
+                {product.name} - ₹{product.price}
+              </Link>
+            </li>
+          ))}
         </ul>
       </div>
     </div>

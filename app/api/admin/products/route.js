@@ -26,7 +26,8 @@ export async function POST(req) {
   const tags = formData
     .get("tags")
     ?.split(",")
-    .map((tag) => tag.trim());
+    .map((tag) => tag.trim())
+    .filter(Boolean);
 
   const description = {
     coreInstruction: formData.get("description.coreInstruction") || "",
@@ -36,14 +37,43 @@ export async function POST(req) {
 
   const files = formData.getAll("images");
 
-  if (
-    !name ||
-    !price ||
-    !markedPrice ||
-    isNaN(rating) ||
-    !categoryName ||
-    files.length === 0
-  ) {
+  // Parse colors
+  const colors = [];
+  for (let key of formData.keys()) {
+    if (key.startsWith("colors")) {
+      const match = key.match(/colors\[(\d+)\]\[(name|code)\]/);
+      if (match) {
+        const index = parseInt(match[1]);
+        const field = match[2];
+        if (!colors[index]) colors[index] = {};
+        colors[index][field] = formData.get(key);
+      }
+    }
+  }
+  const finalColors = colors.filter((c) => c.name && c.code);
+
+  // ✅ Properly parse sizes
+  // Support both comma-separated string or multiple `sizes[]` fields
+  const sizes = [];
+  for (const key of formData.keys()) {
+    if (key === "sizes" || key === "sizes[]") {
+      const val = formData.getAll(key);
+      val.forEach((s) => {
+        try {
+          // If the value is a stringified array like '["S"]', parse it
+          const parsed = JSON.parse(s);
+          if (Array.isArray(parsed)) parsed.forEach((x) => sizes.push(x));
+          else sizes.push(s);
+        } catch {
+          sizes.push(s);
+        }
+      });
+    }
+  }
+  const finalSizes = [...new Set(sizes.map((s) => s.trim()).filter(Boolean))]; // remove duplicates & empty
+
+  // Validate required fields
+  if (!name || !price || !markedPrice || isNaN(rating) || !categoryName || files.length === 0) {
     return NextResponse.json(
       { message: "All fields and at least one image are required." },
       { status: 400 }
@@ -69,13 +99,11 @@ export async function POST(req) {
       );
     }
 
+    // Handle image uploads
     const uploadDir = path.join(process.cwd(), "public", "uploads");
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
-    }
+    if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
 
     const savedImages = [];
-
     for (const file of files) {
       if (!file.type.startsWith("image/")) continue;
 
@@ -100,6 +128,8 @@ export async function POST(req) {
       tags,
       images: savedImages,
       description,
+      colors: finalColors.length > 0 ? finalColors : undefined,
+      sizes: finalSizes.length > 0 ? finalSizes : undefined,
     });
 
     return NextResponse.json({
@@ -193,20 +223,38 @@ export async function PATCH(req) {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
     if (!id) {
-      return NextResponse.json(
-        { message: "Product ID is required." },
-        { status: 400 }
-      );
+      return NextResponse.json({ message: "Product ID is required.", status: 400 });
     }
 
     const contentType = req.headers.get("content-type");
-
     let updateData = {};
     let files = [];
 
     if (contentType?.includes("application/json")) {
       const body = await req.json();
-      updateData = body;
+      updateData = { ...body };
+
+      if (body.sizes) {
+        updateData.sizes = Array.isArray(body.sizes) ? body.sizes : JSON.parse(body.sizes || "[]");
+      }
+
+      if (body.inStock !== undefined) {
+        updateData.inStock = body.inStock === true || body.inStock === "true";
+      }
+
+      // Ensure isBestSelling logic
+      if (body.isBestSelling === true) {
+        const bestSellingCount = await Products.countDocuments({ isBestSelling: true });
+        const currentProduct = await Products.findById(id);
+        const alreadyBestSelling = currentProduct?.isBestSelling;
+
+        if (!alreadyBestSelling && bestSellingCount >= 8) {
+          return NextResponse.json({
+            message: "Cannot mark as Best Selling. Maximum of 8 products allowed.",
+            status: 400,
+          });
+        }
+      }
     } else if (contentType?.includes("multipart/form-data")) {
       const formData = await req.formData();
 
@@ -214,69 +262,105 @@ export async function PATCH(req) {
       updateData.price = Number(formData.get("price"));
       updateData.markedPrice = Number(formData.get("markedPrice"));
       updateData.rating = Number(formData.get("rating"));
-      const tags = formData.get("tags");
-      updateData.tags = tags?.split(",").map((tag) => tag.trim()) || [];
+      updateData.inStock = formData.get("inStock") === "true";
+      updateData.tags = formData.get("tags")?.split(",").map((t) => t.trim()).filter(Boolean) || [];
       updateData.description = {
-        coreInstruction: formData.get("description.coreInstruction"),
-        detailedInfo: formData.get("description.detailedInfo"),
-        additionalDetails: formData.get("description.additionalDetails"),
+        coreInstruction: formData.get("description.coreInstruction") || "",
+        detailedInfo: formData.get("description.detailedInfo") || "",
+        additionalDetails: formData.get("description.additionalDetails") || "",
       };
 
       const categoryName = formData.get("categoryName");
-      const category = await Category.findOne({ name: categoryName });
-      if (!category) {
-        return NextResponse.json(
-          { message: "Category not found." },
-          { status: 400 }
-        );
-      }
-      updateData.Category = category._id;
-      if (!updateData.name || !updateData.price || !updateData.markedPrice) {
-        return NextResponse.json(
-          { message: "Missing required fields." },
-          { status: 400 }
-        );
+      if (categoryName) {
+        const category = await Category.findOne({ name: { $regex: new RegExp(`^${categoryName.trim()}$`, "i") } });
+        if (!category) {
+          return NextResponse.json({ message: "Category not found.", status: 400 });
+        }
+        updateData.Category = category._id;
       }
 
-      files = formData.getAll("images");
-      if (files && files.length > 0) {
-        const imageUrls = [];
-
-        for (const file of files) {
-          const buffer = Buffer.from(await file.arrayBuffer());
-          const fileName = `${Date.now()}_${file.name}`;
-          const filePath = path.join(process.cwd(), "public/uploads", fileName);
-          await writeFile(filePath, buffer);
-          imageUrls.push({
-            url: `/uploads/${fileName}`,
-            altText: file.name || "Product Image",
+      // Sizes
+      const sizes = [];
+      for (const key of formData.keys()) {
+        if (key === "sizes" || key === "sizes[]") {
+          formData.getAll(key).forEach((s) => {
+            try {
+              const parsed = JSON.parse(s);
+              if (Array.isArray(parsed)) parsed.forEach((x) => sizes.push(x));
+              else sizes.push(s);
+            } catch {
+              sizes.push(s);
+            }
           });
         }
+      }
+      updateData.sizes = [...new Set(sizes.map((s) => s.trim()).filter(Boolean))];
 
+      // Images
+      files = formData.getAll("images");
+      if (files.length > 0) {
+        const imageUrls = [];
+        const uploadDir = path.join(process.cwd(), "public/uploads");
+        if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
+
+        for (const file of files) {
+          if (!file.type.startsWith("image/")) continue;
+          const buffer = Buffer.from(await file.arrayBuffer());
+          const fileName = `${Date.now()}_${file.name.replace(/\s+/g, "-")}`;
+          const filePath = path.join(uploadDir, fileName);
+          await writeFile(filePath, buffer);
+          imageUrls.push({ url: `/uploads/${fileName}`, altText: file.name || "Product Image" });
+        }
         updateData.images = imageUrls;
       }
+
+      // Colors
+      const colors = [];
+      for (let key of formData.keys()) {
+        const match = key.match(/colors\[(\d+)\]\[(name|code)\]/);
+        if (match) {
+          const index = parseInt(match[1]);
+          const field = match[2];
+          if (!colors[index]) colors[index] = {};
+          colors[index][field] = formData.get(key);
+        }
+      }
+      const finalColors = colors.filter((c) => c.name && c.code);
+      if (finalColors.length > 0) updateData.colors = finalColors;
+
+      // Check isBestSelling toggle
+      const isBestSelling = formData.get("isBestSelling") === "true";
+      if (isBestSelling) {
+        const bestSellingCount = await Products.countDocuments({ isBestSelling: true });
+        const currentProduct = await Products.findById(id);
+        const alreadyBestSelling = currentProduct?.isBestSelling;
+
+        if (!alreadyBestSelling && bestSellingCount >= 8) {
+          return NextResponse.json({
+            message: "Cannot mark as Best Selling. Maximum of 8 products allowed.",
+            status: 400,
+          });
+        }
+      }
+      updateData.isBestSelling = isBestSelling;
     }
 
-    const updatedProduct = await Products.findByIdAndUpdate(id, updateData, {
-      new: true,
-    }).populate("Category", "name");
+    const updatedProduct = await Products.findByIdAndUpdate(id, updateData, { new: true }).populate("Category", "name");
 
     if (!updatedProduct) {
-      return NextResponse.json(
-        { message: "Product not found." },
-        { status: 404 }
-      );
+      return NextResponse.json({ message: "Product not found.", status: 404 });
     }
 
-    return NextResponse.json(
-      { message: "Product updated successfully", product: updatedProduct },
-      { status: 200 }
-    );
+    return NextResponse.json({
+      message: "Product updated successfully",
+      product: updatedProduct,
+      status: 200,
+    });
   } catch (error) {
     console.error("Update Product Error:", error);
-    return NextResponse.json(
-      { message: "Internal Server Error. Failed to update product." },
-      { status: 500 }
-    );
+    return NextResponse.json({
+      message: "Internal Server Error. Failed to update product.",
+      status: 500,
+    });
   }
 }

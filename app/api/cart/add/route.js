@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { verifyToken } from "@/lib/jwt";
 import { connectDB } from "@/lib/connect";
-import Cart from "@/model/Cart";
+import { verifyToken } from "@/lib/jwt";
 import Products from "@/model/Product";
+import Cart from "@/model/Cart";
 
 export async function POST(req) {
   try {
@@ -18,7 +18,7 @@ export async function POST(req) {
 
     const decoded = verifyToken(token); // should return { id, email }
 
-    const { productId, quantity } = await req.json();
+    const { productId, quantity, size, color } = await req.json(); // ✅ include size, color
 
     const product = await Products.findById(productId);
     if (!product) {
@@ -31,21 +31,45 @@ export async function POST(req) {
     let cart = await Cart.findOne({ user: decoded.id });
 
     if (cart) {
-      const existingItemIndex = cart.items.findIndex(
-        (item) => item.product.toString() === productId
-      );
+      // ✅ Find by productId + size + color match (all optional)
+      const existingItemIndex = cart.items.findIndex((item) => {
+        const sameProduct = item.product.toString() === productId;
+        const sameSize = item.size === size || (!item.size && !size);
+        const sameColor =
+          (item.color?.code || null) === (color?.code || null) &&
+          (item.color?.name || null) === (color?.name || null);
+
+        return sameProduct && sameSize && sameColor;
+      });
 
       if (existingItemIndex !== -1) {
+        // ✅ If same variant exists, increase quantity
         cart.items[existingItemIndex].quantity += quantity;
       } else {
-        cart.items.push({ product: productId, quantity });
+        // ✅ Otherwise add new variant entry
+        cart.items.push({
+          product: productId,
+          quantity,
+          size: size || null,
+          color: color || null,
+          addedAt: new Date(),
+        });
       }
 
       await cart.save();
     } else {
+      // ✅ New cart
       await Cart.create({
         user: decoded.id,
-        items: [{ product: productId, quantity }],
+        items: [
+          {
+            product: productId,
+            quantity,
+            size: size || null,
+            color: color || null,
+            addedAt: new Date(),
+          },
+        ],
       });
     }
 

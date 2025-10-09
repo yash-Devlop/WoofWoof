@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 // Async thunk to add to cart
 export const addToCart = createAsyncThunk(
   "cart/addToCart",
-  async ({ productId, quantity }, { rejectWithValue }) => {
+  async ({ productId, quantity, size, color }, { rejectWithValue }) => {
     const userEmail = localStorage.getItem("WMPuser");
 
     if (!userEmail) {
@@ -19,13 +19,13 @@ export const addToCart = createAsyncThunk(
     try {
       const res = await axios.post(
         "/api/cart/add",
-        { productId, quantity },
+        { productId, quantity, size, color }, // ✅ added
         { withCredentials: true }
       );
 
       toast.dismiss(loadingToast);
       toast.success("Product added to cart!");
-      return res.data; // optionally return updated cart
+      return res.data;
     } catch (error) {
       toast.dismiss(loadingToast);
       if (error.response?.status === 401) {
@@ -37,6 +37,8 @@ export const addToCart = createAsyncThunk(
     }
   }
 );
+
+
 
 // fetch all the cart items
 export const fetchCart = createAsyncThunk(

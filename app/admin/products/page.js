@@ -125,6 +125,9 @@ export default function AdminProductsPage() {
                 <TableCell>
                   <strong>Stock</strong>
                 </TableCell>
+                <TableCell>
+                  <strong>Best Selling</strong>
+                </TableCell>
                 <TableCell align="center">
                   <strong>Actions</strong>
                 </TableCell>
@@ -136,7 +139,8 @@ export default function AdminProductsPage() {
                   <TableCell>{product.name}</TableCell>
                   <TableCell>{product.Category?.name || "N/A"}</TableCell>
                   <TableCell>₹{product.price}</TableCell>
-                  <TableCell>{product.popularity}</TableCell>
+                  <TableCell><p className={product.inStock? "text-green-600 font-bold": "text-red-400 font-bold"}>{product.inStock? "IN STOCK": "SOLD OUT"}</p></TableCell>
+                  <TableCell><p className={product.isBestSelling? "text-green-600 font-bold": "text-red-400 font-bold"}>{product.isBestSelling? "IN": "OUT"}</p></TableCell>
                   <TableCell align="center">
                     <Button
                       variant="contained"
@@ -172,7 +176,6 @@ export default function AdminProductsPage() {
                       <DeleteIcon />
                       Delete
                     </Button>
-                    {/* Add delete button later if needed */}
                   </TableCell>
                 </TableRow>
               ))}

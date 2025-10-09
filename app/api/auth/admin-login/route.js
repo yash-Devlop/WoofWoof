@@ -8,30 +8,32 @@ export async function POST(req) {
     const { email, password } = await req.json();
 
     if (!email || !password) {
+      console.log("failed")
       return NextResponse.json(
         { message: "Missing required fields" },
         { status: 400 }
       );
     }
+    console.log(process.env.ADMIN_USERNAME, process.env.ADMIN_PASS)
 
     // Validate against env admin credentials
     if (
       email !== process.env.ADMIN_USERNAME ||
-      password !== process.env.ADMIN_PASSWORD
+      password !== process.env.ADMIN_PASS
     ) {
+      console.log("not authorized")
       return NextResponse.json(
         { message: "Invalid admin credentials" },
         { status: 401 }
       );
     }
-
+    console.log("passed")
     // Generate token with role = admin
     const token = generateToken({
-      id: "admin",
+      _id: "admin",
       email: process.env.ADMIN_USERNAME,
       role: "admin",
     });
-
     const cookieStore = await cookies();
     cookieStore.set("auth-token", token, {
       httpOnly: true,
@@ -40,6 +42,7 @@ export async function POST(req) {
       maxAge: 86400, // 1 day
       path: "/",
     });
+    console.log("again passed")
 
     return NextResponse.json({
       message: "Admin login successful",

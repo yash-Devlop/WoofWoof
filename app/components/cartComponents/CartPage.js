@@ -1,3 +1,4 @@
+"use client"
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Image from "next/image";
@@ -21,6 +22,8 @@ const CartPage = ({ onNext }) => {
 
   useEffect(() => {
     dispatch(fetchCart());
+    console.log(cartItems);
+    
   }, [dispatch]);
 
   if (loading) return <p className="text-center mt-4">Loading...</p>;
@@ -40,13 +43,11 @@ const CartPage = ({ onNext }) => {
 
   return (
     <div className="relative bg-white flex justify-center items-center m-4 rounded-3xl md:mx-12">
-      {/* Background paw prints */}
-      {/* <div className="absolute inset-0 z-0 bg-[url('/paws-bg.png')] bg-no-repeat bg-contain md:bg-[length:200px_200px] opacity-10 pointer-events-none" /> */}
 
       <div className="relative z-10 container  p-4 md:px-8 rounded-3xl">
         {cartItems.map((item, index) => {
-          const { product, quantity } = item;
-          const { images, name, price, colors } = product;
+          const { product, quantity, size, color } = item;
+          const { images, name, price } = product;
 
           return (
             <div
@@ -67,25 +68,34 @@ const CartPage = ({ onNext }) => {
               {/* Details */}
               <div className="flex-1 w-full">
                 <h3 className="text-lg font-medium text-gray-800">{name}</h3>
-                <p className="text-base font-semibold text-gray-800 mt-1">
-                  ₹{price}
-                </p>
+                <p className="text-base font-semibold text-gray-800 mt-1">₹{price}</p>
 
-                {/* Colors */}
-                <div className="mt-3">
-                  <p className="text-sm text-gray-500 mb-1">Color</p>
-                  <div className="flex items-center gap-2">
-                    {colors?.map((color, i) => (
+                {/* Variant Info */}
+                <div className="flex items-center gap-4 mt-3">
+                  {color && (
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-gray-600">Color:</span>
                       <div
-                        key={i}
-                        className="w-5 h-5 rounded-full border border-gray-300 cursor-pointer"
-                        style={{ backgroundColor: color }}
+                        className="w-5 h-5 rounded-full border border-gray-400"
+                        style={{
+                          backgroundColor: color?.code || "#ccc",
+                        }}
+                        title={color?.name || "N/A"}
                       ></div>
-                    ))}
-                  </div>
+                      <span className="text-sm text-gray-700">{color?.name}</span>
+                    </div>
+                  )}
+                  {size && (
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-gray-600">Size:</span>
+                      <span className="px-2 py-0.5 bg-gray-100 rounded-md text-sm font-medium text-gray-800">
+                        {size}
+                      </span>
+                    </div>
+                  )}
                 </div>
 
-                {/* Quantity */}
+                {/* Quantity Controls */}
                 <div className="flex items-center gap-2 mt-4">
                   <button
                     className="px-2.5 border font-medium border-gray-300 rounded-2xl text-sm cursor-pointer"
@@ -116,6 +126,7 @@ const CartPage = ({ onNext }) => {
             </div>
           );
         })}
+
 
         <div className="flex items-center space-x-2 mt-4">
           <input

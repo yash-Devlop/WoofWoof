@@ -4,6 +4,7 @@ import React from "react";
 import PeopleIcon from "@mui/icons-material/People";
 import ArticleIcon from "@mui/icons-material/Article";
 import CategoryIcon from "@mui/icons-material/Category";
+import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import ImageIcon from "@mui/icons-material/Image";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import AssignmentIcon from "@mui/icons-material/Assignment";
@@ -23,6 +24,7 @@ const AdminLayoutComponent = ({ children }) => {
     { href: "/admin/users", label: "Users", icon: <PeopleIcon /> },
     { href: "/admin/blogs", label: "Blogs", icon: <ArticleIcon /> },
     { href: "/admin/reviews", label: "Reviews", icon: <RateReviewIcon /> },
+    { href: "/admin/coupons", label: "Coupons", icon: <LocalOfferIcon /> },
     { href: "/admin/categories", label: "Categories", icon: <CategoryIcon /> },
     // { href: "/admin/banners", label: "Banners", icon: <ImageIcon /> },
     { href: "/admin/products", label: "Products", icon: <InventoryIcon /> },
