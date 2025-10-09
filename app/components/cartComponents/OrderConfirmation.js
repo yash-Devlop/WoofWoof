@@ -1,4 +1,6 @@
+"use client";
 import React from 'react';
+import Image from 'next/image';
 import { Check, Package, Truck, MapPin, CreditCard, Calendar, Mail } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
@@ -40,13 +42,8 @@ const OrderConfirmation = ({ orderData }) => {
     });
   };
 
-  const handleContinueShopping = () => {
-    router.push('/');
-  };
-
-  const handleViewOrders = () => {
-    router.push('/orders');
-  };
+  const handleContinueShopping = () => router.push('/');
+  const handleViewOrders = () => router.push('/orders');
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-pink-50">
@@ -100,10 +97,12 @@ const OrderConfirmation = ({ orderData }) => {
                   order.items.map((item, index) => (
                     <div key={index} className="flex items-center gap-4 pb-4 border-b last:border-b-0">
                       <div className="w-20 h-20 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
-                        <img
+                        <Image
                           src={item?.product?.images?.[0]?.url || item?.image || '/placeholder.png'}
+                          width={80}
+                          height={80}
                           alt={item?.product?.name || item?.name}
-                          className="w-full h-full object-cover"
+                          className="object-cover rounded-lg"
                         />
                       </div>
                       <div className="flex-1 min-w-0">
@@ -186,7 +185,7 @@ const OrderConfirmation = ({ orderData }) => {
                   <span>Subtotal</span>
                   <span>₹{order.subtotal.toFixed(2)}</span>
                 </div>
-                
+
                 {order.discount > 0 && (
                   <div className="flex justify-between text-sm text-green-600 font-medium">
                     <span>Discount</span>
@@ -197,7 +196,7 @@ const OrderConfirmation = ({ orderData }) => {
                 {order.couponCode && (
                   <div className="flex items-center gap-2 text-xs text-green-700 bg-green-50 px-3 py-2 rounded-lg">
                     <Check className="w-4 h-4" />
-                    <span>Coupon "{order.couponCode}" applied</span>
+                    <span>Coupon &quot;{order.couponCode}&quot; applied</span>
                   </div>
                 )}
 
@@ -278,8 +277,9 @@ const OrderConfirmation = ({ orderData }) => {
             Need Help?
           </h3>
           <p className="text-sm text-gray-600 mb-4">
-            If you have any questions about your order, please contact our customer support.
+            If you have any questions about your order, please contact our customer support&apos;s team.
           </p>
+
           <div className="flex flex-wrap justify-center gap-4 text-sm">
             <a href="mailto:support@wedmypet.com" className="text-blue-600 hover:text-blue-700 font-medium">
               support@wedmypet.com
