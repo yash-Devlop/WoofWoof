@@ -166,7 +166,7 @@ const OrderConfirmation = ({ orderData }) => {
                     Your order will be delivered within 5-7 business days
                   </p>
                   <p className="text-xs text-gray-600">
-                    We'll send you a shipping confirmation email with tracking details once your order ships.
+                    We&apos;ll send you a shipping confirmation email with tracking details once your order ships.
                   </p>
                 </div>
               </div>

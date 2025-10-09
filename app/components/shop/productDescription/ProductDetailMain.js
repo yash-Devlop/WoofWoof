@@ -52,6 +52,7 @@ export default function ProductDetailMain({ productId }) {
         setSelectedSize(product.sizes[0]);
       }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [product]);
 
   const handleAddToCart = () => {
@@ -166,8 +167,8 @@ export default function ProductDetailMain({ productId }) {
                       title={color.name}
                       onClick={() => setSelectedColor(color)}
                       className={`w-7 h-7 rounded-full border-2 cursor-pointer transition-transform ${selectedColor?.code === color.code
-                          ? "scale-110 border-[#F91F54]"
-                          : "border-gray-300"
+                        ? "scale-110 border-[#F91F54]"
+                        : "border-gray-300"
                         }`}
                       style={{ backgroundColor: color.code }}
                     />
@@ -186,8 +187,8 @@ export default function ProductDetailMain({ productId }) {
                       key={size}
                       onClick={() => setSelectedSize(size)}
                       className={`border rounded px-2 py-1 text-sm hover:bg-[#F91F54] hover:text-white transition ${selectedSize === size
-                          ? "bg-[#F91F54] text-white"
-                          : "text-gray-700"
+                        ? "bg-[#F91F54] text-white"
+                        : "text-gray-700"
                         }`}
                     >
                       {size}

@@ -259,7 +259,8 @@ export default function ReviewSection() {
   const [totalPages, setTotalPages] = useState(1);
 
   // ✅ Fetch reviews
-  const fetchReviews = async (pageNum = 1) => {
+const fetchReviews = useCallback(
+  async (pageNum = 1) => {
     try {
       setLoadingReviews(true);
       const res = await axios.get(
@@ -273,7 +274,10 @@ export default function ReviewSection() {
     } finally {
       setLoadingReviews(false);
     }
-  };
+  },
+  [productId, limit] // dependencies that affect the function
+);
+
 
   useEffect(() => {
     if (productId) fetchReviews(page);
