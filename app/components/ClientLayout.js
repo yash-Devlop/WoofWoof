@@ -11,6 +11,7 @@ import Offers from "./Home/Offers";
 import IntroVideo from "./IntroVideo";
 import BackToTopIcon from "@/public/icons/BackToTopIcon";
 import Tooltip from "@mui/material/Tooltip";
+import AuthInitializer from "@/store/slices/user/AuthInitializer";
 
 const ClientLayout = ({ children }) => {
   const router = useRouter();
@@ -63,6 +64,7 @@ const ClientLayout = ({ children }) => {
         <IntroVideo onFinish={handleVideoFinish} />
       ) : (
         <Provider store={store}>
+          <AuthInitializer />
           <AOSWrapper />
           <Toaster position="top-right" reverseOrder={false} />
           {!isAdminRoute && !shouldHideNavAndOffers && <NavBar />}

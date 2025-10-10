@@ -13,9 +13,13 @@ import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
 import ForwardToInboxOutlinedIcon from "@mui/icons-material/ForwardToInboxOutlined";
 import CreditCardOutlinedIcon from "@mui/icons-material/CreditCardOutlined";
 import LocalShippingOutlinedIcon from "@mui/icons-material/LocalShippingOutlined";
+import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import LocalMallOutlinedIcon from "@mui/icons-material/LocalMallOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
+import VolunteerActivismOutlinedIcon from '@mui/icons-material/VolunteerActivismOutlined';
+import { useDispatch, useSelector } from "react-redux";
+import { logoutUser } from "@/store/slices/authSlice";
 
 const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -26,12 +30,31 @@ const NavBar = () => {
   const [lastScrollY, setLastScrollY] = useState(0);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
 
+  const dispatch = useDispatch();
+
+
+  const { isAuthenticated } = useSelector((state) => state.auth);
+
+  const handleLogin = () => {
+    router.push("/login")
+  }
+
+  const handleLogout = () => {
+    dispatch(logoutUser());
+    router.push("/")
+  };
+
   const menuItems = [
     // {
     //   label: "Edit Pet Profile",
     //   icon: <AccountCircleIcon fontSize="small" />,
     //   href: "/",
     // },
+    {
+      label: "Home",
+      icon: <HomeOutlinedIcon fontSize="small" />,
+      href: "/",
+    },
     {
       label: "Shop",
       icon: <LocalGroceryStoreOutlinedIcon fontSize="small" />,
@@ -44,7 +67,7 @@ const NavBar = () => {
     },
     {
       label: "Philanthrophy",
-      icon: <DescriptionOutlinedIcon fontSize="small" />,
+      icon: <VolunteerActivismOutlinedIcon fontSize="small" />,
       href: "/philanthrophy",
     },
     {
@@ -104,14 +127,14 @@ const NavBar = () => {
       pathname === "/"
         ? "Home"
         : pathname
-            .replace(/^\//, "") // Remove leading slash
-            .split(/(?=[A-Z])/) // Optional capital-split
-            .map((word, index) =>
-              index === 0
-                ? word.toLowerCase()
-                : word.charAt(0).toUpperCase() + word.slice(1)
-            )[0] // Take first segment
-            .split("/")[0]; // Extract first "folder" like "work"
+          .replace(/^\//, "") // Remove leading slash
+          .split(/(?=[A-Z])/) // Optional capital-split
+          .map((word, index) =>
+            index === 0
+              ? word.toLowerCase()
+              : word.charAt(0).toUpperCase() + word.slice(1)
+          )[0] // Take first segment
+          .split("/")[0]; // Extract first "folder" like "work"
 
     // Map route names to menu labels
     const tabMap = {
@@ -145,11 +168,10 @@ const NavBar = () => {
     <div className="w-full shadow-md mx-auto flex justify-center">
       {/* Main Nav Bar */}
       <nav
-        className={` fixed z-50 w-[90%] gap-28 ${
-          showNavbar
-            ? `${lastScrollY > 44 ? "top-2" : "top-8 md:top-11"} translate-y-0`
-            : "-translate-y-full"
-        } md:gap-[8rem] xl:gap-[10rem] transition-all duration-300 flex items-center justify-between px-4 py-1 md:px-6 bg-white shadow-lg rounded-full`}
+        className={` fixed z-50 w-[90%] gap-28 ${showNavbar
+          ? `${lastScrollY > 44 ? "top-2" : "top-8 md:top-11"} translate-y-0`
+          : "-translate-y-full"
+          } md:gap-[8rem] xl:gap-[10rem] transition-all duration-300 flex items-center justify-between px-4 py-1 md:px-6 bg-white shadow-lg rounded-full`}
       >
         {/* Left - Logo */}
         <div className="flex items-center lg:gap-6">
@@ -194,25 +216,24 @@ const NavBar = () => {
                       item === "Home"
                         ? "/"
                         : `/${item
-                            .split(" ") // Split into words
-                            .map(
-                              (word, index) =>
-                                index === 0
-                                  ? word.toLowerCase() // First word lowercase
-                                  : word.charAt(0).toUpperCase() +
-                                    word.slice(1).toLowerCase() // Capitalize following words
-                            )
-                            .join("")}`
+                          .split(" ") // Split into words
+                          .map(
+                            (word, index) =>
+                              index === 0
+                                ? word.toLowerCase() // First word lowercase
+                                : word.charAt(0).toUpperCase() +
+                                word.slice(1).toLowerCase() // Capitalize following words
+                          )
+                          .join("")}`
                     }
                     onClick={() => {
                       setActiveTab(item);
                       setIsOpen(false);
                     }}
-                    className={`  px-2 pb-1 ${
-                      item === activeTab
-                        ? " text-pink-600 border-b-2 font-semibold border-pink-600"
-                        : "font-normal"
-                    }`}
+                    className={`  px-2 pb-1 ${item === activeTab
+                      ? " text-pink-600 border-b-2 font-semibold border-pink-600"
+                      : "font-normal"
+                      }`}
                   >
                     {item}
                   </Link>
@@ -250,11 +271,10 @@ const NavBar = () => {
               autoFocus
               placeholder="Search products..."
               onBlur={() => setMobileSearchOpen(false)}
-              className={`absolute top-[0.75px] -right-[1px] h-6.5 transform transition-all duration-300 ease-in-out px-4 pr-10 rounded-full border bg-gray-100 shadow-md text-sm ${
-                mobileSearchOpen
-                  ? "translate-x-0 opacity-100 w-[140px]"
-                  : "translate-x-0 opacity-0 w-0"
-              }`}
+              className={`absolute top-[0.75px] -right-[1px] h-6.5 transform transition-all duration-300 ease-in-out px-4 pr-10 rounded-full border bg-gray-100 shadow-md text-sm ${mobileSearchOpen
+                ? "translate-x-0 opacity-100 w-[140px]"
+                : "translate-x-0 opacity-0 w-0"
+                }`}
             />
           </div>
 
@@ -315,9 +335,8 @@ const NavBar = () => {
         </div>
       </nav>
       <div
-        className={`fixed z-50 w-[70%] md:w-[50%] h-full bg-white top-0 right-0 rounded-l-2xl transition-transform duration-500 ease-in-out ${
-          isOpen ? "translate-x-0" : "translate-x-full"
-        }`}
+        className={`fixed z-50 w-[70%] md:w-[50%] h-full bg-white top-0 right-0 rounded-l-2xl transition-transform duration-500 ease-in-out ${isOpen ? "translate-x-0" : "translate-x-full"
+          }`}
       >
         <div className=" flex mt-3.5 justify-between p-4">
           <div className=" flex gap-4 justify-center items-center">
@@ -344,11 +363,10 @@ const NavBar = () => {
               return (
                 <li
                   key={index}
-                  className={` w-full flex py-0.5 justify-start items-center mx-8 pr-4 ${
-                    item.label === activeTab
-                      ? " text-black  border-2 border-[#FE0050] text-xl rounded-lg font-semibold"
-                      : "font-medium"
-                  }`}
+                  className={` w-full flex py-0.5 justify-start items-center mx-8 pr-4 ${item.label === activeTab
+                    ? " text-black  border-2 border-[#FE0050] text-xl rounded-lg font-semibold"
+                    : "font-medium"
+                    }`}
                 >
                   <Link
                     key={index}
@@ -370,22 +388,29 @@ const NavBar = () => {
           </ul>
         </div>
         <div className=" mx-4 mt-8 space-y-2 px-4">
-          <Link href="/login">
-            <div className=" flex items-center gap-4 text-[#FE0050]">
-              <div className=" ">
-                <PersonOutlineOutlinedIcon />
-              </div>
-              <span className=" font-medium text-xl">Login</span>
-            </div>
-          </Link>
-          <Link href="/login">
-            <div className=" flex items-center gap-4 text-[#FE0050]">
-              <div className=" ">
-                <DeleteOutlineOutlinedIcon />
-              </div>
-              <span className=" font-medium text-xl">Logout</span>
-            </div>
-          </Link>
+          {
+            isAuthenticated ?
+              (
+
+                <button onClick={handleLogout}>
+                  <div className=" flex items-center gap-4 text-[#FE0050]">
+                    <div className=" ">
+                      <DeleteOutlineOutlinedIcon />
+                    </div>
+                    <span className=" font-medium text-xl">Logout</span>
+                  </div>
+                </button>
+              ) : (
+                <button onClick={handleLogin}>
+                  <div className=" flex items-center gap-4 text-[#FE0050]">
+                    <div className=" ">
+                      <PersonOutlineOutlinedIcon />
+                    </div>
+                    <span className=" font-medium text-xl">Login</span>
+                  </div>
+                </button>
+              )
+          }
         </div>
       </div>
     </div>
