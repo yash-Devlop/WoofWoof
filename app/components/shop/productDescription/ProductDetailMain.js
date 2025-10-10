@@ -66,6 +66,16 @@ export default function ProductDetailMain({ productId }) {
           : null,
       })
     );
+    console.log(
+      {
+        productId,
+        quantity,
+        size: selectedSize || null,
+        color: selectedColor
+          ? { name: selectedColor.name, code: selectedColor.code }
+          : null,
+      }
+    )
   };
 
   const handleBuy = async () => {

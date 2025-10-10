@@ -8,7 +8,7 @@ export async function GET(req, { params }) {
   try {
     const { id } = await params;
 
-    const product = await Products.findById(id).populate("Category").lean();
+    const product = await Products.findById(id);
 
     if (!product) {
       return NextResponse.json({ error: "Product not found" }, { status: 404 });

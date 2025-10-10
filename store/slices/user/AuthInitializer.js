@@ -1,25 +1,24 @@
 "use client";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { loginUser, logoutUser } from "../authSlice";
-import { resetAuthState } from "../authSlice";
+import { loginUser, resetAuthState } from "../authSlice";
 
 export default function AuthInitializer() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // Check auth-token cookie
+    // Parse cookies safely
     const cookies = document.cookie.split("; ").reduce((acc, cookie) => {
-      const [name, value] = cookie.split("=");
-      acc[name] = value;
+      const [name, ...rest] = cookie.split("=");
+      acc[name.trim()] = rest.join("=");
       return acc;
     }, {});
 
     const token = cookies["auth-token"];
 
-    // Check localStorage for user
-    const storedUser = localStorage.getItem("WMPuser");
+    // Check localStorage
     let user = null;
+    const storedUser = localStorage.getItem("WMPuser");
     if (storedUser) {
       try {
         user = JSON.parse(storedUser);
@@ -29,7 +28,7 @@ export default function AuthInitializer() {
     }
 
     if (token && user) {
-      // User is logged in, update Redux manually
+      // Logged in
       dispatch({
         type: loginUser.fulfilled.type,
         payload: user,

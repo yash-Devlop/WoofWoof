@@ -1,6 +1,11 @@
 // models/Cart.js
 import mongoose from "mongoose";
 
+const cartColorSchema = new mongoose.Schema({
+  name: String,
+  code: String,
+});
+
 const cartItemSchema = new mongoose.Schema({
   product: {
     type: mongoose.Schema.Types.ObjectId,
@@ -12,6 +17,8 @@ const cartItemSchema = new mongoose.Schema({
     default: 1,
     min: 1,
   },
+  size: String,
+  color: cartColorSchema,
   addedAt: {
     type: Date,
     default: Date.now,

@@ -19,7 +19,7 @@ export const addToCart = createAsyncThunk(
     try {
       const res = await axios.post(
         "/api/cart/add",
-        { productId, quantity, size, color }, // ✅ added
+        { productId, quantity, size, color },
         { withCredentials: true }
       );
 

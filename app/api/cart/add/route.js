@@ -18,7 +18,7 @@ export async function POST(req) {
 
     const decoded = verifyToken(token); // should return { id, email }
 
-    const { productId, quantity, size, color } = await req.json(); // ✅ include size, color
+    const { productId, quantity, size, color } = await req.json();
 
     const product = await Products.findById(productId);
     if (!product) {
