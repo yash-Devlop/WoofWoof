@@ -4,7 +4,7 @@ import React, { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 
-const blueOceanHeroSection = () => {
+const BlueOceanHeroSection = () => {
     const router = useRouter();
     const woofTextRef = useRef(null);
     const ballRef = useRef(null);
@@ -163,4 +163,4 @@ const blueOceanHeroSection = () => {
     );
 };
 
-export default blueOceanHeroSection;
+export default BlueOceanHeroSection;
