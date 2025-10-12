@@ -79,7 +79,7 @@ const AboutHeroSection = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:pt-4">
             <div className="relative flex flex-col justify-center items-center lg:items-start lg:space-y-20">
               <div className="text-3xl lg:text-5xl font-bold text-center lg:text-start">
-                <span>If animals could talk, they'd talk </span>
+                <span>If animals could talk, they&apos;d talk</span>
                 <span className="text-[#ff0047]">about us!</span>
               </div>
             </div>
