@@ -58,6 +58,7 @@ const steps = ['Cart', 'Checkout', 'Payment', 'Order Placed'];
 const CheckoutStepper = () => {
   const [activeStep, setActiveStep] = useState(0);
   const [orderData, setOrderData] = useState(null);
+  const [guestAddress, setGuestAddress] = useState(null);
 
   const handleNext = () => setActiveStep((prev) => prev + 1);
   const handleBack = () => setActiveStep((prev) => prev - 1);
@@ -72,9 +73,9 @@ const CheckoutStepper = () => {
       case 0:
         return <CartPage onNext={handleNext} />;
       case 1:
-        return <CheckoutPage onNext={handleNext} onBack={handleBack} />;
+        return <CheckoutPage onNext={handleNext} onBack={handleBack} setGuestAddress={setGuestAddress} />;
       case 2:
-        return <PaymentPage onBack={handleBack} onOrderComplete={handleOrderComplete} />;
+        return <PaymentPage onBack={handleBack} onOrderComplete={handleOrderComplete} guestAddress={guestAddress}/>;
       case 3:
         return <OrderConfirmation orderData={orderData} />;
       default:

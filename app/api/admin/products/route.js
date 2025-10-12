@@ -29,6 +29,8 @@ export async function POST(req) {
     .map((tag) => tag.trim())
     .filter(Boolean);
 
+  const embeddedVideoLink = formData.get("embeddedVideoLink")?.trim() || "";
+
   const description = {
     coreInstruction: formData.get("description.coreInstruction") || "",
     detailedInfo: formData.get("description.detailedInfo") || "",
@@ -52,15 +54,13 @@ export async function POST(req) {
   }
   const finalColors = colors.filter((c) => c.name && c.code);
 
-  // ✅ Properly parse sizes
-  // Support both comma-separated string or multiple `sizes[]` fields
+  // Parse sizes
   const sizes = [];
   for (const key of formData.keys()) {
     if (key === "sizes" || key === "sizes[]") {
       const val = formData.getAll(key);
       val.forEach((s) => {
         try {
-          // If the value is a stringified array like '["S"]', parse it
           const parsed = JSON.parse(s);
           if (Array.isArray(parsed)) parsed.forEach((x) => sizes.push(x));
           else sizes.push(s);
@@ -70,7 +70,7 @@ export async function POST(req) {
       });
     }
   }
-  const finalSizes = [...new Set(sizes.map((s) => s.trim()).filter(Boolean))]; // remove duplicates & empty
+  const finalSizes = [...new Set(sizes.map((s) => s.trim()).filter(Boolean))];
 
   // Validate required fields
   if (!name || !price || !markedPrice || isNaN(rating) || !categoryName || files.length === 0) {
@@ -128,6 +128,7 @@ export async function POST(req) {
       tags,
       images: savedImages,
       description,
+      embeddedVideoLink: embeddedVideoLink || undefined,
       colors: finalColors.length > 0 ? finalColors : undefined,
       sizes: finalSizes.length > 0 ? finalSizes : undefined,
     });
@@ -145,6 +146,7 @@ export async function POST(req) {
     );
   }
 }
+
 
 export async function GET(req) {
   try {
@@ -242,6 +244,10 @@ export async function PATCH(req) {
         updateData.inStock = body.inStock === true || body.inStock === "true";
       }
 
+      if (body.embeddedVideoLink) {
+        updateData.embeddedVideoLink = body.embeddedVideoLink.trim() || undefined;
+      }
+
       // Ensure isBestSelling logic
       if (body.isBestSelling === true) {
         const bestSellingCount = await Products.countDocuments({ isBestSelling: true });
@@ -269,6 +275,10 @@ export async function PATCH(req) {
         detailedInfo: formData.get("description.detailedInfo") || "",
         additionalDetails: formData.get("description.additionalDetails") || "",
       };
+
+      // embeddedVideoLink
+      const embeddedVideoLink = formData.get("embeddedVideoLink")?.trim();
+      if (embeddedVideoLink) updateData.embeddedVideoLink = embeddedVideoLink;
 
       const categoryName = formData.get("categoryName");
       if (categoryName) {

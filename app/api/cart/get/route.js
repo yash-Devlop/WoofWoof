@@ -25,3 +25,28 @@ export async function GET(req) {
     return NextResponse.json({ message: "Server error" }, { status: 500 });
   }
 }
+
+export async function POST(req) {
+  try {
+    await connectDB();
+
+    const { ids } = await req.json();
+
+    if (!ids || !Array.isArray(ids) || ids.length === 0) {
+      return NextResponse.json(
+        { message: "Product IDs are required" },
+        { status: 400 }
+      );
+    }
+
+    const products = await Product.find({ _id: { $in: ids } });
+    console.log(products);
+    return NextResponse.json(products);
+  } catch (err) {
+    console.error("Get Many Products Error:", err);
+    return NextResponse.json(
+      { message: "Server error" },
+      { status: 500 }
+    );
+  }
+}

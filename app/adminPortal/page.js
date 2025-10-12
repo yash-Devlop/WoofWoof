@@ -33,7 +33,6 @@ const Page = () => {
       //   toast.error(error);
       //   return;
       // }
-      console.log(`id: ${stored_id}, pass: ${stored_pass}`)
 
 
       const res = await axios.post(

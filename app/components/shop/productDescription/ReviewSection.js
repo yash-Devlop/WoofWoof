@@ -5,6 +5,7 @@ import Image from "next/image";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { useParams } from "next/navigation";
+import { useSelector } from "react-redux";
 
 export default function ReviewSection() {
   const { productId } = useParams();
@@ -20,6 +21,8 @@ export default function ReviewSection() {
   const [page, setPage] = useState(1);
   const [limit] = useState(4);
   const [totalPages, setTotalPages] = useState(1);
+
+  const { isAuthenticated } = useSelector((state) => state.auth);
 
   // ✅ Fetch reviews
 const fetchReviews = useCallback(
@@ -48,8 +51,7 @@ const fetchReviews = useCallback(
 
   // ✅ Submit new review
   const handleSubmitReview = async () => {
-    const userEmail = localStorage.getItem("WMPuser");
-    if (!userEmail) {
+    if (!isAuthenticated) {
       toast.error("Please log in to submit a review.");
       return;
     }
@@ -69,7 +71,6 @@ const fetchReviews = useCallback(
       setIsLoading(true);
       const res = await axios.post("/api/admin/reviews", {
         productId,
-        userEmail,
         rating,
         comment: reviewText,
       });

@@ -29,11 +29,22 @@ export async function POST(req) {
     await connectDB();
     const body = await req.json();
 
-    // 🔎 Validation
-    const { title, slug, excerpt, content, coverImage } = body;
-    if (!title || !slug || !excerpt || !content || !coverImage) {
+    // 🔎 Extract fields
+    const { title, slug, excerpt, content, coverImage, type } = body;
+
+    // 🔎 Validate required fields
+    if (!title || !slug || !excerpt || !content || !coverImage || !type) {
       return Response.json(
-        { success: false, message: "All fields are required" },
+        { success: false, message: "All fields including type are required" },
+        { status: 400 }
+      );
+    }
+
+    // 🔎 Validate type
+    const allowedTypes = ["News", "Blogs"];
+    if (!allowedTypes.includes(type)) {
+      return Response.json(
+        { success: false, message: "Invalid type. Allowed types: News or Blogs" },
         { status: 400 }
       );
     }
@@ -47,8 +58,15 @@ export async function POST(req) {
       );
     }
 
-    // Create blog
-    const blog = await Blog.create(body);
+    // ✅ Create blog
+    const blog = await Blog.create({
+      title,
+      slug,
+      excerpt,
+      content,
+      coverImage,
+      type,
+    });
 
     return Response.json(
       { success: true, message: "Blog created successfully", data: blog },
@@ -65,3 +83,4 @@ export async function POST(req) {
     );
   }
 }
+

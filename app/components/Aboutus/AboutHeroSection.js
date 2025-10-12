@@ -9,19 +9,22 @@ const AboutHeroSection = () => {
 
   return (
     <div data-aos="fade-down" className="w-full relative pt-20 md:pt-0">
-      <div className=" absolute inset-0 opacity-30">
+      {/* Background Paws - Fixed for mobile, original for desktop */}
+      <div className="absolute inset-0 opacity-20 md:opacity-30">
         <Image
           src="/images/pinkPaws.png"
           alt="background paws"
           fill
-          className=" object-top w-full h-full"
+          className="object-cover object-center md:object-contain md:object-top"
+          priority
         />
       </div>
-      <div className=" px-4 md:px-16 xl:px-30">
+      
+      <div className="px-4 md:px-16 xl:px-30">
         <div className="relative w-full">
-          <div className=" absolute inset-0  ">
+          <div className="absolute inset-0">
             {/* Top Image */}
-            <div className="absolute  top-0 left-0">
+            <div className="absolute top-0 left-0">
               <motion.div
                 initial={{ x: 20, y: -10, scale: 1 }}
                 animate={{
@@ -71,37 +74,29 @@ const AboutHeroSection = () => {
             src="/images/Group1.png"
             alt="group"
             fill
-            className="hidden absolute w-full h-full  object-contain"
+            className="hidden absolute w-full h-full object-contain"
           />
-          <div className=" grid grid-cols-1 lg:grid-cols-2 gap-4 lg:pt-4 ">
-            <div className="relative flex flex-col justify-center items-center lg:items-start  lg:space-y-20">
-              <div
-                // data-aos="fade-right"
-                // data-aos-duration="1500"
-                className=" text-3xl lg:text-5xl font-bold text-center lg:text-start"
-              >
-                <span>If animals could talk, they’d talk </span>
-                <span className=" text-[#ff0047] ">about us!</span>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:pt-4">
+            <div className="relative flex flex-col justify-center items-center lg:items-start lg:space-y-20">
+              <div className="text-3xl lg:text-5xl font-bold text-center lg:text-start">
+                <span>If animals could talk, they'd talk </span>
+                <span className="text-[#ff0047]">about us!</span>
               </div>
             </div>
-            <div
-              // data-aos="fade-left"
-              // data-aos-duration="1500"
-              className="relative flex w-full h-full justify-start items-center"
-            >
+            <div className="relative flex w-full h-full justify-start items-center">
               <Image
                 src="/images/pinkBG.png"
                 alt="Background"
                 fill
-                className=" absolute inset-0 w-full h-full object-contain " // customize as needed
+                className="absolute inset-0 w-full h-full object-contain"
               />
-              <div className=" flex justify-center xl:pl-20 items-center">
+              <div className="flex justify-center xl:pl-20 items-center">
                 <Image
                   src="/images/aboutHeroImg.png"
                   alt="heroImage"
                   width={420}
                   height={400}
-                  className=" object-contain relative"
+                  className="object-contain relative"
                 />
               </div>
             </div>

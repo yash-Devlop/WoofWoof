@@ -16,27 +16,11 @@ export default function AuthInitializer() {
 
     const token = cookies["auth-token"];
 
-    // Check localStorage
-    let user = null;
-    const storedUser = localStorage.getItem("WMPuser");
-    if (storedUser) {
-      try {
-        user = JSON.parse(storedUser);
-      } catch (e) {
-        user = null;
-      }
-    }
-
-    if (token && user) {
-      // Logged in
-      dispatch({
-        type: loginUser.fulfilled.type,
-        payload: user,
-      });
+    if (token) {
+      dispatch(loginUser());
     } else {
       // Not logged in
       dispatch(resetAuthState());
-      localStorage.removeItem("WMPuser");
     }
   }, [dispatch]);
 

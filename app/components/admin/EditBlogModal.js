@@ -7,6 +7,10 @@ import {
   DialogTitle,
   TextField,
   Button,
+  MenuItem,
+  Select,
+  InputLabel,
+  FormControl,
 } from "@mui/material";
 import axios from "axios";
 import Image from "next/image";
@@ -26,9 +30,10 @@ export default function EditBlogModal({
     excerpt: "",
     content: "",
     coverImage: "",
+    type: "", // ✅ added type field
   });
 
-  // Pre-fill when modal opens
+  // Pre-fill form when modal opens
   useEffect(() => {
     if (blog) {
       setFormData({
@@ -37,6 +42,7 @@ export default function EditBlogModal({
         excerpt: blog.excerpt || "",
         content: blog.content || "",
         coverImage: blog.coverImage || "",
+        type: blog.type || "", // ✅ prefill type
       });
       setPreview(blog.coverImage || null);
     }
@@ -64,8 +70,16 @@ export default function EditBlogModal({
   };
 
   const onSubmit = async () => {
-    if (!formData.title || !formData.slug || !formData.content) {
-      alert("Please fill all required fields.");
+    // Validate required fields
+    if (
+      !formData.title.trim() ||
+      !formData.slug.trim() ||
+      !formData.content.trim() ||
+      !formData.excerpt.trim() ||
+      !formData.coverImage.trim() ||
+      !formData.type.trim()
+    ) {
+      alert("Please fill all required fields including Type.");
       return;
     }
 
@@ -86,8 +100,8 @@ export default function EditBlogModal({
       });
 
       if (res.data.success) {
-        alert("Blog updated successfully!");
-        handleUpdate(res.data.data); // Update parent state
+        alert("✅ Blog updated successfully!");
+        handleUpdate(res.data.data); // Update parent list
         handleClose();
       } else {
         alert("Failed to update blog: " + res.data.message);
@@ -139,6 +153,21 @@ export default function EditBlogModal({
           rows={6}
         />
 
+        {/* ✅ Select Type (Required) */}
+        <FormControl fullWidth required>
+          <InputLabel id="type-label">Type</InputLabel>
+          <Select
+            labelId="type-label"
+            name="type"
+            value={formData.type}
+            onChange={handleChange}
+            label="Type"
+          >
+            <MenuItem value="News">News</MenuItem>
+            <MenuItem value="Blogs">Blogs</MenuItem>
+          </Select>
+        </FormControl>
+
         <div>
           <p className="text-sm font-medium mb-1">Cover Image</p>
 
@@ -153,7 +182,6 @@ export default function EditBlogModal({
               if (file) {
                 setSelectedFile(file);
                 setPreview(URL.createObjectURL(file));
-
                 const uploadedUrl = await uploadImage(file);
                 if (uploadedUrl) {
                   setFormData((prev) => ({ ...prev, coverImage: uploadedUrl }));
@@ -162,7 +190,7 @@ export default function EditBlogModal({
             }}
           />
 
-          {/* Button to trigger file input */}
+          {/* Upload button */}
           <label htmlFor="editCoverImageUpload">
             <Button variant="outlined" component="span">
               Change Image

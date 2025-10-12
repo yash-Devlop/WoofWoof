@@ -7,6 +7,10 @@ import {
   DialogTitle,
   TextField,
   Button,
+  MenuItem,
+  Select,
+  InputLabel,
+  FormControl,
 } from "@mui/material";
 import axios from "axios";
 import Image from "next/image";
@@ -21,6 +25,7 @@ export default function AddBlogModal({ open, handleClose, handleSave }) {
     excerpt: "",
     content: "",
     coverImage: "",
+    type: "", // ✅ added
   });
 
   const handleChange = (e) => {
@@ -60,26 +65,25 @@ export default function AddBlogModal({ open, handleClose, handleSave }) {
       return;
     }
 
-    const blog = {
-      ...formData,
-    };
+    const blog = { ...formData };
 
     try {
       setLoading(true);
       const res = await axios.post("/api/admin/blogs", blog);
 
       if (res.data.success) {
-        alert("✅ Blog created successfully!");
-        handleSave(res.data.data); // optional: update state from API response
+        alert("Blog created successfully!");
+        handleSave(res.data.data);
         handleClose();
 
-        // reset state
+        // reset form
         setFormData({
           title: "",
           slug: "",
           excerpt: "",
           content: "",
           coverImage: "",
+          type: "",
         });
         setSelectedFile(null);
         setPreview(null);
@@ -132,10 +136,24 @@ export default function AddBlogModal({ open, handleClose, handleSave }) {
           multiline
           rows={6}
         />
+
+        <FormControl fullWidth required>
+          <InputLabel id="type-label">Type</InputLabel>
+          <Select
+            labelId="type-label"
+            name="type"
+            value={formData.type}
+            onChange={handleChange}
+            label="Type"
+            required
+          >
+            <MenuItem value="News">News</MenuItem>
+            <MenuItem value="Blogs">Blogs</MenuItem>
+          </Select>
+        </FormControl>
+
         <div>
           <p className="text-sm font-medium mb-1">Cover Image</p>
-
-          {/* Hidden file input */}
           <input
             type="file"
             accept="image/*"
@@ -146,8 +164,6 @@ export default function AddBlogModal({ open, handleClose, handleSave }) {
               if (file) {
                 setSelectedFile(file);
                 setPreview(URL.createObjectURL(file));
-
-                // ✅ Upload immediately
                 const uploadedUrl = await uploadImage(file);
                 if (uploadedUrl) {
                   setFormData((prev) => ({ ...prev, coverImage: uploadedUrl }));
@@ -155,15 +171,11 @@ export default function AddBlogModal({ open, handleClose, handleSave }) {
               }
             }}
           />
-
-          {/* Button to trigger file input */}
           <label htmlFor="coverImageUpload">
             <Button variant="outlined" component="span">
               Upload Image
             </Button>
           </label>
-
-          {/* Preview */}
           {preview && (
             <div className="mt-3">
               <p className="text-xs text-gray-500 mb-1">Preview:</p>
@@ -180,8 +192,8 @@ export default function AddBlogModal({ open, handleClose, handleSave }) {
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Cancel</Button>
-        <Button onClick={onSubmit} variant="contained" color="primary">
-          Save Blog
+        <Button onClick={onSubmit} variant="contained" color="primary" disabled={loading}>
+          {loading ? "Saving..." : "Save Blog"}
         </Button>
       </DialogActions>
     </Dialog>

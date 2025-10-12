@@ -27,6 +27,7 @@ const ProductSchema = new mongoose.Schema(
       detailedInfo: { type: String },
       additionalDetails: { type: String },
     },
+    embeddedVideoLink: {type: String},
     tags: [String],
     popularity: { type: Number, default: 0 },
     reviews: [{ type: mongoose.Schema.Types.ObjectId, ref: "Review" }],

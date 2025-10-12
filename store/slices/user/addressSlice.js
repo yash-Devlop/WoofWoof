@@ -41,8 +41,28 @@ export const editUserAddress = createAsyncThunk(
 // Fetch all addresses
 export const fetchUserAddresses = createAsyncThunk(
   "address/fetchAll",
-  async (_, { rejectWithValue }) => {
+  async (_, { rejectWithValue, getState }) => {
     try {
+      const state = getState();
+      const isAuthenticated = state.auth?.isAuthenticated;
+
+      // Guest user – return a single empty address
+      if (!isAuthenticated) {
+        return [
+          {
+            firstName: "",
+            lastName: "",
+            address: "",
+            state: "",
+            pincode: "",
+            city: "",
+            contact: "",
+            isDefault: true,
+          },
+        ];
+      }
+
+      // Authenticated user – fetch from API
       const res = await axios.get("/api/user/address", {
         withCredentials: true,
       });
@@ -52,6 +72,7 @@ export const fetchUserAddresses = createAsyncThunk(
     }
   }
 );
+
 
 const addressSlice = createSlice({
   name: "address",

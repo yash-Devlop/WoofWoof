@@ -64,7 +64,6 @@ export default function ContactForm() {
           confirmButtonColor: "#22c55e",
         });
 
-        // ✅ Reset form data after successful submission
         setFormData({
           firstName: "",
           lastName: "",

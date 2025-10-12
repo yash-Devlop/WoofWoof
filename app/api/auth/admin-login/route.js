@@ -27,7 +27,6 @@ export async function POST(req) {
         { status: 401 }
       );
     }
-    console.log("passed")
     // Generate token with role = admin
     const token = generateToken({
       _id: "admin",
@@ -42,7 +41,6 @@ export async function POST(req) {
       maxAge: 86400, // 1 day
       path: "/",
     });
-    console.log("again passed")
 
     return NextResponse.json({
       message: "Admin login successful",

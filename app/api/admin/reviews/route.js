@@ -3,6 +3,7 @@ import { connectDB } from "@/lib/connect";
 import Review from "@/model/Review";
 import Product from "@/model/Product";
 import User from "@/model/User";
+import jwt from "jsonwebtoken";
 
 export async function GET(req) {
   console.log("GET /api/admin/reviews called", req);
@@ -50,20 +51,76 @@ export async function GET(req) {
 export async function POST(req) {
   await connectDB();
   try {
-    const { productId, userEmail, rating, comment } = await req.json();
+    const token = req.cookies.get("auth-token")?.value;
+    if (!token) {
+      return NextResponse.json(
+        { error: "Unauthorized, please login" },
+        { status: 401 }
+      );
+    }
+
+    // Verify token and get email
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (err) {
+      console.log(err)
+      return NextResponse.json(
+        { error: "Invalid or expired token" },
+        { status: 401 }
+      );
+    }
+
+    const userEmail = decoded.email;
+    if (!userEmail) {
+      return NextResponse.json(
+        { error: "Invalid token payload" },
+        { status: 401 }
+      );
+    }
+
+    // Get data from request body
+    const { productId, rating, comment } = await req.json();
 
     // Validate fields
-    if (!productId || !userEmail || !rating) {
+    if (!productId || !rating) {
       return NextResponse.json(
-        { error: "Missing required fields (productId, userEmail, rating)" },
+        { error: "Missing required fields (productId, rating)" },
         { status: 400 }
       );
     }
 
-    // Find user
+    // Validate rating range
+    if (rating < 1 || rating > 5) {
+      return NextResponse.json(
+        { error: "Rating must be between 1 and 5" },
+        { status: 400 }
+      );
+    }
+
+    // Find user by email from token
     const user = await User.findOne({ email: userEmail });
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
+
+    // Check if product exists
+    const product = await Product.findById(productId);
+    if (!product) {
+      return NextResponse.json({ error: "Product not found" }, { status: 404 });
+    }
+
+    // Check if user already reviewed this product
+    const existingReview = await Review.findOne({
+      user: user._id,
+      product: productId,
+    });
+
+    if (existingReview) {
+      return NextResponse.json(
+        { error: "You have already reviewed this product" },
+        { status: 400 }
+      );
     }
 
     // Create new review
@@ -71,7 +128,7 @@ export async function POST(req) {
       user: user._id,
       product: productId,
       rating,
-      comment,
+      comment: comment || "",
     });
 
     // Push review into product
@@ -79,13 +136,21 @@ export async function POST(req) {
       $push: { reviews: newReview._id },
     });
 
+    // Populate user info in response
+    const populatedReview = await Review.findById(newReview._id)
+      .populate("user", "username email")
+      .populate("product", "name");
+
     return NextResponse.json({
       message: "Review added successfully",
-      review: newReview,
+      review: populatedReview,
     });
   } catch (error) {
     console.error("POST review error:", error);
-    return NextResponse.json({ error: "Server error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Server error", details: error.message },
+      { status: 500 }
+    );
   }
 }
 

@@ -9,22 +9,22 @@ import {
   updateCartQuantity,
 } from "@/store/slices/user/cartSlice";
 
+
 const CartPage = ({ onNext }) => {
   const dispatch = useDispatch();
+
   const handleRemove = (productId) => dispatch(removeFromCart(productId));
   const handleQtyChange = (productId, qty) =>
     dispatch(updateCartQuantity({ productId, quantity: qty }));
-  const {
-    items: cartItems,
-    loading,
-    error,
-  } = useSelector((state) => state.userCart);
+  const { cart, loading, error } = useSelector((state) => state.userCart);
+  const cartItems = Array.isArray(cart?.items) ? cart.items : [];
 
-  useEffect(() => {
-    dispatch(fetchCart());
-    console.log(cartItems);
-    
-  }, [dispatch]);
+
+useEffect(() => {
+  dispatch(fetchCart());
+}, [dispatch]);
+
+
 
   if (loading) return <p className="text-center mt-4">Loading...</p>;
   if (error) {

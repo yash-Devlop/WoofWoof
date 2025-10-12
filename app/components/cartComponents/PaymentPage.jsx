@@ -455,26 +455,15 @@
 // };
 
 // export default PaymentPage;
-
-
-
-
-"use client"
+"use client";
 import Button from "@mui/material/Button";
 import { useState } from "react";
-import {
-  Shield,
-  Check,
-  Truck,
-  CreditCard,
-  Tag,
-  X,
-} from "lucide-react";
+import { Shield, Check, Truck, CreditCard, Tag, X } from "lucide-react";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import useRazorpayLoader from "@/hooks/useRazorpayLoader";
 
-const PaymentPage = ({ onBack, onOrderComplete }) => {
+const PaymentPage = ({ onBack, onOrderComplete, guestAddress }) => {
   const isRazorpayLoaded = useRazorpayLoader();
   const [selectedPayment, setSelectedPayment] = useState("razorpay");
   const [couponCode, setCouponCode] = useState("");
@@ -483,188 +472,303 @@ const PaymentPage = ({ onBack, onOrderComplete }) => {
   const [isApplyingCoupon, setIsApplyingCoupon] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const items = useSelector((state) => state.userCart?.items);
-  const user = useSelector((state) => state.user?.user); // Get user data including email
-  const shippingAddress = useSelector((state) => state.checkout?.shippingAddress); // Get shipping address from checkout state
+  const items = useSelector((state) => state.userCart?.items || []);
+  const user = useSelector((state) => state.user?.user);
+  const { isAuthenticated } = useSelector((state) => state.auth);
+  const shippingAddress = useSelector((state) => state.checkout?.shippingAddress);
 
   const formattedItems = items.map((item) => ({
     productId: item.product._id,
+    name: item.product.name,
+    image: item.product.images?.[0]?.url || null,
     quantity: item.quantity,
     price: item.product.price,
-    product: item.product, // Include full product data for order confirmation
+    size: item.size || null,
+    color: item.color || { code: null, name: null },
   }));
 
   const subtotal = items.reduce(
-    (sum, item) => sum + item?.product?.price * item.quantity,
+    (sum, item) => sum + (item?.product?.price || 0) * item.quantity,
     0
   );
   const shipping = 0;
   const tax = 0;
-  
-  // Calculate discount based on applied coupon
-  const discount = appliedCoupon 
-    ? (subtotal * appliedCoupon.discount) / 100 
-    : 0;
+  const discount = appliedCoupon ? (subtotal * appliedCoupon.discount) / 100 : 0;
   const total = subtotal + shipping + tax - discount;
 
-  // Handle coupon validation (GET request)
   const handleApplyCoupon = async () => {
     if (!couponCode.trim()) {
       setCouponError("Please enter a coupon code");
       return;
     }
-
     setIsApplyingCoupon(true);
     setCouponError("");
 
     try {
       const { data } = await axios.get(`/api/user/couponCode/${couponCode.trim().toUpperCase()}`);
-
       if (data.coupon) {
         if (subtotal < data.coupon.thresholdAmount) {
-          setCouponError(`Minimum purchase of ₹${data.coupon.thresholdAmount} required to apply this coupon`);
-          setIsApplyingCoupon(false);
-          return;
+          setCouponError(`Minimum purchase of ₹${data.coupon.thresholdAmount} required`);
+        } else {
+          const discountAmount = (subtotal * data.coupon.discount) / 100;
+          setAppliedCoupon({
+            code: data.coupon.name,
+            discount: data.coupon.discount,
+            discountAmount,
+            thresholdAmount: data.coupon.thresholdAmount,
+            couponId: data.coupon._id,
+          });
+          setCouponCode("");
         }
-
-        const discountAmount = (subtotal * data.coupon.discount) / 100;
-
-        setAppliedCoupon({
-          code: data.coupon.name,
-          discount: data.coupon.discount,
-          discountAmount: discountAmount,
-          thresholdAmount: data.coupon.thresholdAmount,
-          couponId: data.coupon._id,
-        });
-        setCouponCode("");
-        setCouponError("");
       }
-    } catch (error) {
-      setCouponError(
-        error.response?.data?.error || "Invalid or expired coupon code"
-      );
+    } catch (err) {
+      setCouponError(err.response?.data?.error || "Invalid or expired coupon");
     } finally {
       setIsApplyingCoupon(false);
     }
   };
 
-  // Remove applied coupon
   const handleRemoveCoupon = () => {
     setAppliedCoupon(null);
     setCouponCode("");
     setCouponError("");
   };
 
-  // Send confirmation email
-  const sendConfirmationEmail = async (orderId, email) => {
-    try {
-      await axios.post('/api/email/send-confirmation', {
-        orderId,
-        email,
-      });
-      console.log('Confirmation email sent successfully');
-    } catch (error) {
-      console.error('Failed to send confirmation email:', error);
-      // Don't throw error - email failure shouldn't break the flow
-    }
-  };
-
-  // Handle Razorpay payment
-  const handleRazorpayPayment = async () => {
-    if (!isRazorpayLoaded || typeof window.Razorpay === "undefined") {
-      alert("Razorpay SDK is still loading. Please try again in a second.");
+  const sendConfirmationEmail = async (order) => {
+    if (!order.customerInfo?.email) {
+      console.warn("⚠️ No email address, skipping confirmation email");
       return;
     }
 
-    if (isProcessing) return;
+    try {
+      await axios.post("/api/email/send-order-confirmation", {
+        orderId: order._id,
+        orderNumber: order.orderNumber || `ORD-${order._id.slice(-8).toUpperCase()}`,
+        customerName: order.customerInfo.name,
+        customerEmail: order.customerInfo.email,
+        items: order.items,
+        amount: order.amount,
+        subtotal: order.subtotal,
+        shipping: order.shipping,
+        tax: order.tax,
+        discount: order.discount,
+        paymentMethod: order.paymentMethod,
+        paymentId: order.paymentId,
+        shippingAddress: order.shippingAddress,
+        status: order.status,
+      });
+      console.log("✅ Confirmation emails sent successfully");
+    } catch (err) {
+      console.error("⚠️ Failed to send confirmation emails:", err);
+    }
+  };
+
+  const createOrderInDB = async (paymentMethod, paymentId, isPaymentVerified) => {
+    // ✅ Use guestAddress as primary source (set for both auth and guest users)
+    const addressSource = guestAddress || shippingAddress;
+    console.log("adres source", guestAddress)
+    if (!addressSource) {
+      alert("⚠️ No shipping address found. Please go back and enter your delivery address.");
+      throw new Error("No shipping address provided.");
+    }
+
+    // ✅ Extract customer info
+    const customerName = `${addressSource.firstName || ''} ${addressSource.lastName || ''}`.trim() ||
+      addressSource.name ||
+      user?.username ||
+      user?.name ||
+      '';
+
+    let customerEmail = null
+    if (!isAuthenticated) {
+      customerEmail = addressSource.email || user?.email || '';
+    } else {
+      const resEmail = await axios.get("/api/email/getUserEmail", {
+        withCredentials: true,
+      });
+
+      const { email } = resEmail.data;
+      customerEmail = email;
+    }
+
+    const customerPhone = addressSource.contact || addressSource.phone || user?.phone || user?.mobile || '';
+
+    // ✅ Validate email is present
+    if (!customerEmail || !customerEmail.trim()) {
+      alert("⚠️ Email address is required for order confirmation. Please go back and enter your email.");
+      throw new Error("Email is required for order confirmation.");
+    }
+
+    // ✅ Format shipping address
+    const formattedShippingAddress = {
+      name: customerName,
+      phone: customerPhone,
+      addressLine1: addressSource.address || addressSource.addressLine1 || '',
+      addressLine2: addressSource.addressLine2 || '',
+      city: addressSource.city || '',
+      state: addressSource.state || '',
+      country: addressSource.country || 'India',
+      postalCode: addressSource.postalCode || addressSource.pincode || '',
+    };
+
+    const orderPayload = {
+      userId: user?._id || null,
+      items: formattedItems,
+      amount: parseFloat(total.toFixed(2)),
+      subtotal: parseFloat(subtotal.toFixed(2)),
+      shipping: parseFloat(shipping.toFixed(2)),
+      tax: parseFloat(tax.toFixed(2)),
+      discount: parseFloat(discount.toFixed(2)),
+      paymentMethod,
+      paymentId,
+      couponCode: appliedCoupon?.code || null,
+      shippingAddress: formattedShippingAddress,
+      customerInfo: {
+        name: customerName,
+        email: customerEmail,
+        phone: customerPhone,
+      },
+      isPaymentVerified,
+    };
+
+    // ✅ Final validation
+    if (!orderPayload.customerInfo.name?.trim()) {
+      alert("⚠️ Customer name is required. Please go back and enter your name.");
+      throw new Error("Customer name is required.");
+    }
+    if (!orderPayload.customerInfo.phone?.trim()) {
+      alert("⚠️ Phone number is required. Please go back and enter your phone number.");
+      throw new Error("Phone number is required.");
+    }
+
+    // ✅ Create order
+    const res = await axios.post("/api/orders/create", orderPayload);
+    const createdOrder = res.data.order;
+
+    console.log("✅ Order created successfully:", createdOrder);
+
+    // ✅ Update coupon usage (optional, don't fail if error)
+    if (appliedCoupon) {
+      try {
+        await axios.post(`/api/user/couponCode/${appliedCoupon.code}`, {
+          purchaseAmount: subtotal,
+        });
+      } catch (err) {
+        console.error("⚠️ Failed to update coupon usage:", err);
+      }
+    }
+
+    // ✅ Send confirmation email (optional, don't fail if error)
+    try {
+      await sendConfirmationEmail(createdOrder);
+    } catch (err) {
+      console.error("⚠️ Failed to send confirmation email:", err);
+    }
+
+    // ✅ Complete order
+    onOrderComplete({
+      orderNumber: createdOrder.orderNumber || `ORD-${createdOrder._id.slice(-8).toUpperCase()}`,
+      orderId: createdOrder._id,
+      date: createdOrder.createdAt || new Date().toISOString(),
+      items: formattedItems,
+      subtotal,
+      discount,
+      shipping,
+      tax,
+      total,
+      paymentMethod,
+      couponCode: appliedCoupon?.code,
+      shippingAddress: formattedShippingAddress,
+      email: createdOrder.customerInfo.email,
+    });
+  };
+
+  const handlePaymentSuccess = async (response) => {
+    try {
+      const verifyRes = await axios.post("/api/payment/verify", {
+        razorpay_order_id: response.razorpay_order_id,
+        razorpay_payment_id: response.razorpay_payment_id,
+        razorpay_signature: response.razorpay_signature,
+      });
+
+      if (!verifyRes.data.success) {
+        alert("Payment verification failed");
+        return;
+      }
+
+      await createOrderInDB("Razorpay", response.razorpay_payment_id, true);
+    } catch (err) {
+      console.error(err);
+      alert(err.response?.data?.message || err.message || "Payment processing error");
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  const handleRazorpayPayment = async () => {
+    if (!isRazorpayLoaded) return;
     setIsProcessing(true);
 
-    const amount = Math.round(total);
-    
     try {
-      const { data } = await axios.post("/api/payment/createOrder", { 
-        amount,
+      // ✅ Get customer email (same logic as COD order)
+      const addressSource = guestAddress || shippingAddress;
+
+      let customerEmail = null;
+      if (!isAuthenticated) {
+        customerEmail = addressSource?.email || user?.email || '';
+      } else {
+        try {
+          const resEmail = await axios.get("/api/email/getUserEmail", {
+            withCredentials: true,
+          });
+          customerEmail = resEmail.data.email;
+        } catch (emailErr) {
+          console.error("Failed to fetch email:", emailErr);
+          customerEmail = addressSource?.email || user?.email || '';
+        }
+      }
+
+      if (!customerEmail || !customerEmail.trim()) {
+        alert("⚠️ Email address is required for payment. Please go back and enter your email.");
+        setIsProcessing(false);
+        return;
+      }
+
+      // ✅ Create Razorpay order using new endpoint
+      const { data } = await axios.post("/api/payment/createOrder", {
+        amount: parseFloat(total.toFixed(2)),
+        email: customerEmail,
+      }, {
+        withCredentials: true,
       });
+
+      if (!data.success) {
+        throw new Error(data.message || "Failed to create payment order");
+      }
+
+      const customerName = `${addressSource?.firstName || ''} ${addressSource?.lastName || ''}`.trim() ||
+        addressSource?.name ||
+        user?.username ||
+        user?.name ||
+        '';
 
       const options = {
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
         amount: data.order.amount,
-        currency: "INR",
-        name: "Wed My Pet",
-        description: "Pet Purchase",
-        image: "/logo.png",
+        currency: data.order.currency,
+        name: "Woof Woof",
+        description: "Payment for your order",
         order_id: data.order.id,
-        handler: async function (response) {
-          try {
-            // Verify payment and create order
-            const verifyResponse = await axios.post("/api/payment/verifyPayment", {
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_signature: response.razorpay_signature,
-              items: formattedItems,
-              amount: total.toFixed(2),
-              subtotal: subtotal.toFixed(2),
-              shipping: shipping.toFixed(2),
-              tax: tax.toFixed(2),
-              discount: discount.toFixed(2),
-              userId: data.userId,
-              couponCode: appliedCoupon?.code,
-              purchaseAmount: subtotal,
-              paymentMethod: "Razorpay",
-              shippingAddress: shippingAddress,
-            });
-
-            const createdOrder = verifyResponse.data.order;
-
-            // If coupon was applied, decrement usage
-            if (appliedCoupon) {
-              await axios.post(`/api/user/couponCode/${appliedCoupon.code}`, {
-                purchaseAmount: subtotal,
-              });
-            }
-
-            // Send confirmation email
-            const userEmail = user?.email || shippingAddress?.email;
-            if (userEmail && createdOrder._id) {
-              await sendConfirmationEmail(createdOrder._id, userEmail);
-            }
-
-            // Prepare order data for confirmation page
-            const orderData = {
-              orderNumber: createdOrder.orderNumber || createdOrder._id,
-              orderId: createdOrder._id,
-              date: createdOrder.createdAt || new Date().toISOString(),
-              items: formattedItems,
-              subtotal: subtotal,
-              discount: discount,
-              shipping: shipping,
-              tax: tax,
-              total: total,
-              paymentMethod: "Razorpay",
-              couponCode: appliedCoupon?.code,
-              shippingAddress: shippingAddress,
-              email: userEmail,
-            };
-
-            // Move to order confirmation page
-            onOrderComplete(orderData);
-          } catch (error) {
-            console.error("Payment verification error:", error);
-            alert("Payment verification failed. Please contact support.");
-            setIsProcessing(false);
-          }
-        },
+        handler: handlePaymentSuccess,
         prefill: {
-          name: shippingAddress?.firstName + " " + shippingAddress?.lastName || "Customer",
-          email: user?.email || shippingAddress?.email || "test@example.com",
-          contact: shippingAddress?.phone || "9999999999",
+          name: customerName,
+          email: customerEmail,
+          contact: addressSource?.contact || addressSource?.phone || user?.phone || '',
         },
-        theme: {
-          color: "#F37254",
-        },
+        theme: { color: "#121212" },
         modal: {
-          ondismiss: function() {
-            console.log("Payment cancelled");
+          ondismiss: () => {
+            console.log("Payment cancelled by user");
             setIsProcessing(false);
           }
         }
@@ -672,70 +776,22 @@ const PaymentPage = ({ onBack, onOrderComplete }) => {
 
       const rzp = new window.Razorpay(options);
       rzp.open();
-    } catch (error) {
-      console.error("Razorpay order creation error:", error);
-      alert("Failed to initiate payment. Please try again.");
+    } catch (err) {
+      console.error("Payment initialization error:", err);
+      alert(err.response?.data?.message || err.message || "Failed to initialize payment. Please try again.");
       setIsProcessing(false);
     }
   };
 
-  // Handle COD order
   const handleCODOrder = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
 
     try {
-      // Create order with COD
-      const orderResponse = await axios.post("/api/orders/create", {
-        items: formattedItems,
-        amount: total.toFixed(2),
-        subtotal: subtotal.toFixed(2),
-        shipping: shipping.toFixed(2),
-        tax: tax.toFixed(2),
-        discount: discount.toFixed(2),
-        paymentMethod: "COD",
-        couponCode: appliedCoupon?.code,
-        purchaseAmount: subtotal,
-        shippingAddress: shippingAddress,
-      });
-
-      const createdOrder = orderResponse.data.order;
-
-      // If coupon was applied, decrement usage
-      if (appliedCoupon) {
-        await axios.post(`/api/user/couponCode/${appliedCoupon.code}`, {
-          purchaseAmount: subtotal,
-        });
-      }
-
-      // Send confirmation email
-      const userEmail = user?.email || shippingAddress?.email;
-      if (userEmail && createdOrder._id) {
-        await sendConfirmationEmail(createdOrder._id, userEmail);
-      }
-
-      // Prepare order data for confirmation page
-      const orderData = {
-        orderNumber: createdOrder.orderNumber || createdOrder._id,
-        orderId: createdOrder._id,
-        date: createdOrder.createdAt || new Date().toISOString(),
-        items: formattedItems,
-        subtotal: subtotal,
-        discount: discount,
-        shipping: shipping,
-        tax: tax,
-        total: total,
-        paymentMethod: "COD",
-        couponCode: appliedCoupon?.code,
-        shippingAddress: shippingAddress,
-        email: userEmail,
-      };
-
-      // Move to order confirmation page
-      onOrderComplete(orderData);
-    } catch (error) {
-      console.error("COD order error:", error);
-      alert("Failed to place order. Please try again.");
+      await createOrderInDB("COD", null, false);
+    } catch (err) {
+      console.error(err);
+      alert(err.response?.data?.message || err.message || "Failed to place COD order");
       setIsProcessing(false);
     }
   };
@@ -749,7 +805,7 @@ const PaymentPage = ({ onBack, onOrderComplete }) => {
   };
 
   return (
-    <div className="">
+    <div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Payment Form */}
@@ -764,18 +820,15 @@ const PaymentPage = ({ onBack, onOrderComplete }) => {
                 <button
                   onClick={() => setSelectedPayment("razorpay")}
                   disabled={isProcessing}
-                  className={`p-4 rounded-xl border-2 transition-all duration-200 ${
-                    selectedPayment === "razorpay"
-                      ? "border-pink-500 ring-2 shadow-lg ring-pink-200"
-                      : "border-gray-200 hover:border-gray-300"
-                  } ${isProcessing ? "opacity-50 cursor-not-allowed" : ""}`}
+                  className={`p-4 rounded-xl border-2 transition-all duration-200 ${selectedPayment === "razorpay"
+                    ? "border-pink-500 ring-2 shadow-lg ring-pink-200"
+                    : "border-gray-200 hover:border-gray-300"
+                    } ${isProcessing ? "opacity-50 cursor-not-allowed" : ""}`}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
                       <CreditCard className="w-6 h-6 text-blue-600" />
-                      <span className="font-medium text-gray-900">
-                        Razorpay
-                      </span>
+                      <span className="font-medium text-gray-900">Razorpay</span>
                     </div>
                     <div className="flex space-x-1">
                       <div className="w-8 h-5 bg-blue-600 rounded-sm"></div>
@@ -788,17 +841,14 @@ const PaymentPage = ({ onBack, onOrderComplete }) => {
                 <button
                   onClick={() => setSelectedPayment("cod")}
                   disabled={isProcessing}
-                  className={`p-4 rounded-xl border-2 transition-all duration-200 ${
-                    selectedPayment === "cod"
-                      ? "border-pink-500 ring-2 shadow-lg ring-pink-200"
-                      : "border-gray-200 hover:border-gray-300"
-                  } ${isProcessing ? "opacity-50 cursor-not-allowed" : ""}`}
+                  className={`p-4 rounded-xl border-2 transition-all duration-200 ${selectedPayment === "cod"
+                    ? "border-pink-500 ring-2 shadow-lg ring-pink-200"
+                    : "border-gray-200 hover:border-gray-300"
+                    } ${isProcessing ? "opacity-50 cursor-not-allowed" : ""}`}
                 >
                   <div className="flex items-center space-x-3">
                     <Truck className="w-6 h-6 text-green-600" />
-                    <span className="font-medium text-gray-900">
-                      Cash on Delivery
-                    </span>
+                    <span className="font-medium text-gray-900">Cash on Delivery</span>
                   </div>
                 </button>
               </div>
@@ -970,15 +1020,16 @@ const PaymentPage = ({ onBack, onOrderComplete }) => {
                 {isProcessing
                   ? "Processing..."
                   : selectedPayment === "razorpay"
-                  ? isRazorpayLoaded
-                    ? "Pay with Razorpay"
-                    : "Loading..."
-                  : "Place Order (COD)"}
+                    ? isRazorpayLoaded
+                      ? "Pay with Razorpay"
+                      : "Loading..."
+                    : "Place Order (COD)"}
               </button>
             </div>
           </div>
         </div>
       </div>
+
       <div className="w-full flex justify-end items-center lg:px-8 px-4 pb-8">
         <Button onClick={onBack} disabled={isProcessing}>Back to Checkout</Button>
       </div>

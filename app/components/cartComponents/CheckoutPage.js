@@ -9,15 +9,20 @@ import {
 } from "@/store/slices/user/addressSlice";
 import toast from "react-hot-toast";
 
-const CheckoutPage = ({ onNext, onBack }) => {
+const CheckoutPage = ({ onNext, onBack, setGuestAddress }) => {
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchUserAddresses());
-  }, [dispatch]);
+    if (isAuthenticated) {
+      dispatch(fetchUserAddresses());
+    }
+  }, [dispatch, isAuthenticated]);
+
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
+    email: "", // ✅ Added email field
     address: "",
     state: "",
     pincode: "",
@@ -34,6 +39,7 @@ const CheckoutPage = ({ onNext, onBack }) => {
       setFormData({
         firstName: defaultAddress.firstName || "",
         lastName: defaultAddress.lastName || "",
+        email: defaultAddress.email || "", // ✅ Load email if saved
         address: defaultAddress.address || "",
         city: defaultAddress.city || "",
         state: defaultAddress.state || "",
@@ -48,11 +54,11 @@ const CheckoutPage = ({ onNext, onBack }) => {
 
     // Restrict input for specific fields
     if (name === "pincode") {
-      if (!/^\d{0,6}$/.test(value)) return; // Only allow up to 6 digits
+      if (!/^\d{0,6}$/.test(value)) return;
     }
 
     if (name === "contact") {
-      if (!/^\d{0,10}$/.test(value)) return; // Only allow up to 10 digits
+      if (!/^\d{0,10}$/.test(value)) return;
     }
 
     setFormData((prev) => ({
@@ -63,19 +69,22 @@ const CheckoutPage = ({ onNext, onBack }) => {
 
   const handleSaveAndContinue = (e) => {
     e.preventDefault();
-    const { firstName, lastName, address, state, pincode, city, contact } =
-      formData;
+    const { firstName, lastName, email, address, state, pincode, city, contact } = formData;
 
-    if (
-      !firstName ||
-      !lastName ||
-      !address ||
-      !state ||
-      !pincode ||
-      !city ||
-      !contact
-    ) {
+    // ✅ Validation
+    if (!firstName || !lastName || !address || !state || !pincode || !city || !contact) {
       toast.error("Please fill in all fields.");
+      return;
+    }
+
+    // ✅ Email validation for guest users
+    if (!isAuthenticated && !email) {
+      toast.error("Please enter your email address.");
+      return;
+    }
+
+    if (!isAuthenticated && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      toast.error("Please enter a valid email address.");
       return;
     }
 
@@ -89,6 +98,17 @@ const CheckoutPage = ({ onNext, onBack }) => {
       return;
     }
 
+    // ✅ Guest user logic - include email
+    // if (!isAuthenticated) {
+      setGuestAddress({
+        ...formData,
+        phone: contact, // ✅ Also map contact to phone for consistency
+      });
+      onNext();
+      return;
+    // }
+
+    // ✅ Authenticated user logic
     const existingDefault = Array.isArray(addresses)
       ? addresses.find((addr) => addr?.isDefault)
       : null;
@@ -104,12 +124,11 @@ const CheckoutPage = ({ onNext, onBack }) => {
       existingDefault.contact === contact;
 
     if (isSame) {
-      // ✅ Same address – just continue without adding
       onNext();
       return;
     }
 
-    // 🆕 Address is new or changed – call API
+    // Add or update address via API
     dispatch(addUserAddress(formData)).then((res) => {
       if (!res.error) {
         onNext();
@@ -120,7 +139,7 @@ const CheckoutPage = ({ onNext, onBack }) => {
   return (
     <div>
       {/* Address Form */}
-      <div className=" bg-white px-4 py-10 md:px-10 lg:px-20 flex items-center justify-center">
+      <div className="bg-white px-4 py-10 md:px-10 lg:px-20 flex items-center justify-center">
         <div className="w-full max-w-7xl bg-white shadow-2xl rounded-3xl overflow-hidden flex flex-col md:flex-row lg:gap-6">
           {/* Left: Form */}
           <div className="w-full md:w-1/2 p-6 lg:p-10">
@@ -139,6 +158,7 @@ const CheckoutPage = ({ onNext, onBack }) => {
                   onChange={handleChange}
                   placeholder="First Name"
                   className="w-1/2 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+                  required
                 />
                 <input
                   type="text"
@@ -147,8 +167,23 @@ const CheckoutPage = ({ onNext, onBack }) => {
                   onChange={handleChange}
                   placeholder="Last Name"
                   className="w-1/2 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+                  required
                 />
               </div>
+
+              {/* ✅ Email Field - Show for all users, but only required for guests */}
+              {!isAuthenticated && (
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="Email Address"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+                  required
+                />
+              )}
+
               <input
                 type="text"
                 name="address"
@@ -156,6 +191,7 @@ const CheckoutPage = ({ onNext, onBack }) => {
                 onChange={handleChange}
                 placeholder="Address"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+                required
               />
               <input
                 type="text"
@@ -164,6 +200,7 @@ const CheckoutPage = ({ onNext, onBack }) => {
                 onChange={handleChange}
                 placeholder="State"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+                required
               />
               <div className="flex gap-4">
                 <input
@@ -173,6 +210,7 @@ const CheckoutPage = ({ onNext, onBack }) => {
                   onChange={handleChange}
                   placeholder="Pincode"
                   className="w-1/2 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+                  required
                 />
                 <input
                   type="text"
@@ -181,6 +219,7 @@ const CheckoutPage = ({ onNext, onBack }) => {
                   onChange={handleChange}
                   placeholder="City"
                   className="w-1/2 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+                  required
                 />
               </div>
               <input
@@ -190,11 +229,13 @@ const CheckoutPage = ({ onNext, onBack }) => {
                 onChange={handleChange}
                 placeholder="Contact Number"
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
+                required
               />
 
               {/* Buttons */}
               <div className="flex items-center justify-between pt-6">
                 <button
+                  type="button"
                   onClick={onBack}
                   className="text-lg text-gray-600 flex items-center gap-1 hover:text-pink-600 cursor-pointer"
                 >
@@ -203,7 +244,7 @@ const CheckoutPage = ({ onNext, onBack }) => {
                 </button>
                 <button
                   type="submit"
-                  className={` bg-[#F91F54] gap-4 flex justify-center items-center px-1.5 pl-4   py-1 group scale-95 hover:scale-100 transition-all duration-300 text-white font-medium text-sm lg:text-lg  rounded-full uppercase cursor-pointer`}
+                  className="bg-[#F91F54] gap-4 flex justify-center items-center px-1.5 pl-4 py-1 group scale-95 hover:scale-100 transition-all duration-300 text-white font-medium text-sm lg:text-lg rounded-full uppercase cursor-pointer"
                 >
                   Save & Continue
                   <span>
@@ -212,7 +253,7 @@ const CheckoutPage = ({ onNext, onBack }) => {
                       width={33}
                       height={33}
                       alt="logo"
-                      className=" transition-all duration-300"
+                      className="transition-all duration-300"
                     />
                   </span>
                 </button>
@@ -221,9 +262,9 @@ const CheckoutPage = ({ onNext, onBack }) => {
           </div>
 
           {/* Right: Image */}
-          <div className="w-full md:w-1/2 lg:p-6  flex items-center justify-center">
+          <div className="w-full md:w-1/2 lg:p-6 flex items-center justify-center">
             <Image
-              src="/images/thanksShopping1.jpg" // Replace with actual image path
+              src="/images/thanksShopping1.jpg"
               width={500}
               height={500}
               alt="Thanks for shopping"
@@ -232,11 +273,6 @@ const CheckoutPage = ({ onNext, onBack }) => {
           </div>
         </div>
       </div>
-
-      {/* <Button onClick={onBack}>Back to Cart</Button>
-    <Button variant="contained" onClick={onNext}>
-      Save and Continue
-    </Button> */}
     </div>
   );
 };

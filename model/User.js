@@ -96,6 +96,11 @@ const userSchema = new mongoose.Schema(
       type: [addressSchema],
       default: [],
     },
+    wishlist: {
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: "Product",
+      default: [],
+    },
   },
   { timestamps: true }
 );

@@ -6,7 +6,7 @@ export async function GET(req, context) {
   await connectDB();
 
   try {
-    const { id } = context.params; // this will be the coupon code (e.g., "A-150")
+    const { id } = context.params;
 
     if (!id) {
       return NextResponse.json({ error: "Coupon code is required" }, { status: 400 });
@@ -24,13 +24,11 @@ export async function GET(req, context) {
       return NextResponse.json({ error: "Coupon is inactive" }, { status: 400 });
     }
 
-    // Check validity period
     const now = new Date();
     if (now < coupon.validFrom || now > coupon.validTill) {
       return NextResponse.json({ error: "Coupon is expired or not yet valid" }, { status: 400 });
     }
 
-    // ✅ Coupon valid
     return NextResponse.json({
       message: "Coupon is valid",
       coupon,
@@ -89,7 +87,6 @@ export async function POST(req, context) {
       );
     }
 
-    // ✅ All checks passed → decrement usageLimit by 1
     coupon.usageLimit -= 1;
     await coupon.save();
 

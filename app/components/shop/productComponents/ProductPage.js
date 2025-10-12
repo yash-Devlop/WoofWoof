@@ -93,7 +93,7 @@ export default function ProductPage({ innerRef }) {
                     placeholder="Search products..."
                     className="px-3 py-1.5 rounded-full border bg-gray-300 border-none"
                   />
-                  <div className="  absolute top-1 right-1.5 bg-black px-0.5 text-white rounded-full">
+                  <div className="  absolute top-1 right-1.5 bg-[#ff3971e5] px-0.5 text-white rounded-full">
                     <SearchIcon className=" cursor-pointer" />
                   </div>
                 </div>

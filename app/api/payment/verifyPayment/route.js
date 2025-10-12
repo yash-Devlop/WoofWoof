@@ -12,9 +12,16 @@ export async function POST(req) {
       razorpay_order_id,
       razorpay_payment_id,
       razorpay_signature,
-      userId,
+      userId,             // optional for guest
       items,
       amount,
+      customerInfo,       // required for guests
+      shippingAddress,    // required
+      tax = 0,
+      shipping = 0,
+      discount = 0,
+      couponCode = null,
+      paymentMethod = "COD",
     } = await req.json();
 
     // ✅ Verify Razorpay Signature
@@ -24,45 +31,82 @@ export async function POST(req) {
       .update(body.toString())
       .digest("hex");
 
-    const isValid = expectedSignature === razorpay_signature;
-
-    if (!isValid) {
+    if (expectedSignature !== razorpay_signature) {
       return NextResponse.json(
         { success: false, message: "Invalid signature" },
         { status: 400 }
       );
     }
 
-    // ✅ Fetch user details from DB
-    const userObjectId = new mongoose.Types.ObjectId(userId);
-    const user = await User.findById(userObjectId);
+    let user = null;
+    let userObjectId = null;
 
-    if (!user) {
+    // ✅ If userId exists, fetch user
+    if (userId) {
+      userObjectId = new mongoose.Types.ObjectId(userId);
+      user = await User.findById(userObjectId);
+      if (!user) {
+        return NextResponse.json(
+          { success: false, message: "User not found" },
+          { status: 404 }
+        );
+      }
+    } else {
+      // ✅ Guest must provide customerInfo
+      if (!customerInfo || !customerInfo.name || !customerInfo.email || !customerInfo.phone) {
+        return NextResponse.json(
+          { success: false, message: "Customer info required for guest orders" },
+          { status: 400 }
+        );
+      }
+    }
+
+    // ✅ shippingAddress validation (required)
+    if (
+      !shippingAddress ||
+      !shippingAddress.name ||
+      !shippingAddress.phone ||
+      !shippingAddress.addressLine1 ||
+      !shippingAddress.city ||
+      !shippingAddress.state ||
+      !shippingAddress.country ||
+      !shippingAddress.postalCode
+    ) {
       return NextResponse.json(
-        { success: false, message: "User not found" },
-        { status: 404 }
+        { success: false, message: "Complete shipping address is required" },
+        { status: 400 }
       );
     }
 
     // ✅ Save Order
     const newOrder = new Order({
-      user: userObjectId,
+      user: userObjectId || undefined,
+      customerInfo: user
+        ? { name: user.username, email: user.email, phone: user.phone }
+        : customerInfo,
       items,
       amount,
+      subtotal: amount - shipping - tax + discount,
+      shipping,
+      tax,
+      discount,
+      couponCode,
       paymentId: razorpay_payment_id,
+      paymentMethod,
+      shippingAddress,
       status: "Paid",
+      isVerifiedUser: !!user,
+      isPaymentVerified: true,
     });
+
     await newOrder.save();
 
-    // ✅ Configure Nodemailer Transporter
+    // ✅ Configure Nodemailer
     const transporter = nodemailer.createTransport({
-      host: process.env.EMAIL_HOST, // smtp.gmail.com
-      port: process.env.EMAIL_PORT, // 465
+      host: process.env.EMAIL_HOST,
+      port: process.env.EMAIL_PORT,
       secure: true,
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
+      auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
     });
 
     const detailedItems = await Promise.all(
@@ -76,13 +120,10 @@ export async function POST(req) {
       })
     );
 
-    // ✅ Build Items List HTML
     const itemsList = detailedItems
       .map(
         (item) =>
-          `<li>${item?.name} (x${item?.quantity}) - ₹${
-            item?.price * item?.quantity
-          }</li>`
+          `<li>${item.name} (x${item.quantity}) - ₹${item.price * item.quantity}</li>`
       )
       .join("");
 
@@ -93,30 +134,35 @@ export async function POST(req) {
       subject: `🛒 New Order Received - ₹${amount}`,
       html: `
         <h2>New Order Notification</h2>
-        <p><b>Customer:</b> ${user?.username || "N/A"} (${user?.email})</p>
+        <p><b>Customer:</b> ${user?.username || customerInfo?.name} (${user?.email || customerInfo?.email})</p>
         <p><b>Payment ID:</b> ${razorpay_payment_id}</p>
         <p><b>Total Amount:</b> ₹${amount}</p>
+        <p><b>Shipping Address:</b> ${shippingAddress.addressLine1}, ${shippingAddress.addressLine2 || ''}, ${shippingAddress.city}, ${shippingAddress.state}, ${shippingAddress.country} - ${shippingAddress.postalCode}</p>
         <h3>Items:</h3>
         <ul>${itemsList}</ul>
         <p><b>Status:</b> Paid ✅</p>
       `,
     });
 
-    // ✅ (Optional) Customer Confirmation Email
-    await transporter.sendMail({
-      from: `"Woof-Woof Orders" <${process.env.EMAIL_USER}>`,
-      to: user.email,
-      subject: `✅ Order Confirmation - ₹${amount}`,
-      html: `
-        <h2>Thank you for your order, ${user?.username || "Customer"}! 🎉</h2>
-        <p>Your payment has been received successfully.</p>
-        <p><b>Payment ID:</b> ${razorpay_payment_id}</p>
-        <p><b>Total Amount:</b> ₹${amount}</p>
-        <h3>Items Ordered:</h3>
-        <ul>${itemsList}</ul>
-        <p>We'll notify you once your order is processed. 💌</p>
-      `,
-    });
+    // ✅ Customer Confirmation Email (if email exists)
+    const customerEmail = user?.email || customerInfo?.email;
+    if (customerEmail) {
+      await transporter.sendMail({
+        from: `"Woof-Woof Orders" <${process.env.EMAIL_USER}>`,
+        to: customerEmail,
+        subject: `✅ Order Confirmation - ₹${amount}`,
+        html: `
+          <h2>Thank you for your order, ${user?.username || customerInfo?.name}! 🎉</h2>
+          <p>Your payment has been received successfully.</p>
+          <p><b>Payment ID:</b> ${razorpay_payment_id}</p>
+          <p><b>Total Amount:</b> ₹${amount}</p>
+          <p><b>Shipping Address:</b> ${shippingAddress.addressLine1}, ${shippingAddress.addressLine2 || ''}, ${shippingAddress.city}, ${shippingAddress.state}, ${shippingAddress.country} - ${shippingAddress.postalCode}</p>
+          <h3>Items Ordered:</h3>
+          <ul>${itemsList}</ul>
+          <p>We'll notify you once your order is processed. 💌</p>
+        `,
+      });
+    }
 
     return NextResponse.json({ success: true });
   } catch (error) {

@@ -43,7 +43,6 @@ export async function POST(req) {
       });
 
       if (existingItemIndex !== -1) {
-        // ✅ If same variant exists, increase quantity
         cart.items[existingItemIndex].quantity += quantity;
       } else {
         // ✅ Otherwise add new variant entry

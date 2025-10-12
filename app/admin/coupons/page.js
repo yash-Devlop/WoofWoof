@@ -67,8 +67,6 @@ export default function AdminCouponsPage() {
   };
 
   const handleOpenEditModal = (coupon) => {
-    console.log("Opening modal for coupon:", coupon._id); // debug
-    console.log(coupon)
     setSelectedCoupon(coupon);
     setEditModalOpen(true);
   };

@@ -21,11 +21,20 @@ import toast from "react-hot-toast";
 import { fetchCategories } from "@/store/slices/admin/adminCategorySlice";
 import ColorPicker from "./colorPicker";
 
+// Helper function to validate URL
+const isValidURL = (string) => {
+  try {
+    const url = new URL(string);
+    return url.protocol === "http:" || url.protocol === "https:";
+  } catch (_) {
+    return false;
+  }
+};
+
 const AdminAddProductModal = ({ open, onClose }) => {
   const [images, setImages] = useState([]);
   const [colors, setColors] = useState([]);
   const dispatch = useDispatch();
-
   const categories = useSelector((state) => state.adminCategory.categories);
 
   useEffect(() => {
@@ -39,6 +48,7 @@ const AdminAddProductModal = ({ open, onClose }) => {
     rating: "",
     categoryName: "",
     tags: "",
+    embeddedVideoLink: "", // <-- added
     description: {
       coreInstruction: "",
       detailedInfo: "",
@@ -55,6 +65,7 @@ const AdminAddProductModal = ({ open, onClose }) => {
       rating: "",
       categoryName: "",
       tags: "",
+      embeddedVideoLink: "",
       description: {
         coreInstruction: "",
         detailedInfo: "",
@@ -90,7 +101,6 @@ const AdminAddProductModal = ({ open, onClose }) => {
         setProductData((prev) => ({ ...prev, rating: "" }));
         return;
       }
-
       const num = Number(value);
       if (!isNaN(num) && num >= 0 && num <= 5) {
         setProductData((prev) => ({ ...prev, rating: value }));
@@ -107,18 +117,16 @@ const AdminAddProductModal = ({ open, onClose }) => {
   };
 
   const handleSubmit = async () => {
-    const { name, price, markedPrice, rating, categoryName, tags } =
+    const { name, price, markedPrice, rating, categoryName, tags, embeddedVideoLink } =
       productData;
 
-    if (
-      !name ||
-      !price ||
-      !markedPrice ||
-      rating === "" ||
-      !categoryName ||
-      images.length === 0
-    ) {
+    if (!name || !price || !markedPrice || rating === "" || !categoryName || images.length === 0) {
       toast.error("All fields including rating and images are required.");
+      return;
+    }
+
+    if (embeddedVideoLink && !isValidURL(embeddedVideoLink)) {
+      toast.error("Please enter a valid URL for the embedded video link.");
       return;
     }
 
@@ -129,26 +137,16 @@ const AdminAddProductModal = ({ open, onClose }) => {
     formData.append("rating", rating);
     formData.append("categoryName", categoryName);
     formData.append("tags", tags);
+    if (embeddedVideoLink) formData.append("embeddedVideoLink", embeddedVideoLink); // <-- added
 
-    productData.sizes.forEach((size) => {
-      formData.append("sizes[]", size);
-    });
+    productData.sizes.forEach((size) => formData.append("sizes[]", size));
 
-
-    formData.append(
-      "description.coreInstruction",
-      productData.description.coreInstruction
-    );
-    formData.append(
-      "description.detailedInfo",
-      productData.description.detailedInfo
-    );
-    formData.append(
-      "description.additionalDetails",
-      productData.description.additionalDetails
-    );
+    formData.append("description.coreInstruction", productData.description.coreInstruction);
+    formData.append("description.detailedInfo", productData.description.detailedInfo);
+    formData.append("description.additionalDetails", productData.description.additionalDetails);
 
     images.forEach((image) => formData.append("images", image));
+
     colors.forEach((color, index) => {
       formData.append(`colors[${index}][name]`, color.name);
       formData.append(`colors[${index}][code]`, color.code);
@@ -190,7 +188,7 @@ const AdminAddProductModal = ({ open, onClose }) => {
           left: "50%",
           transform: "translate(-50%, -50%)",
           width: 500,
-          height: 600,
+          height: 700,
           overflowY: "auto",
           bgcolor: "background.paper",
           borderRadius: 4,
@@ -272,14 +270,22 @@ const AdminAddProductModal = ({ open, onClose }) => {
           margin="normal"
         />
 
+        {/* Embedded Video Link */}
+        <TextField
+          fullWidth
+          label="Embedded Video Link (Optional)"
+          name="embeddedVideoLink"
+          value={productData.embeddedVideoLink}
+          onChange={handleInputChange}
+          variant="outlined"
+          margin="normal"
+        />
+
         {/* Colors */}
         <ColorPicker onAddColor={handleAddColor} />
-
         <div className="mt-3">
           <p className="font-semibold mb-2">Selected Colors:</p>
-          {colors.length === 0 && (
-            <p className="text-sm text-gray-500">No colors added yet.</p>
-          )}
+          {colors.length === 0 && <p className="text-sm text-gray-500">No colors added yet.</p>}
           <div className="flex flex-wrap gap-3">
             {colors.map((color, index) => (
               <div
@@ -328,10 +334,11 @@ const AdminAddProductModal = ({ open, onClose }) => {
                 key={size}
                 type="button"
                 onClick={() => handleAddSize(size)}
-                className={`px-3 py-1 border rounded ${productData.sizes.includes(size)
-                  ? "bg-[#ff0047] text-white"
-                  : "bg-gray-100"
-                  }`}
+                className={`px-3 py-1 border rounded ${
+                  productData.sizes.includes(size)
+                    ? "bg-[#ff0047] text-white"
+                    : "bg-gray-100"
+                }`}
               >
                 {size}
               </button>

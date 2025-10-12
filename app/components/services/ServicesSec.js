@@ -32,7 +32,6 @@ const ServicesSec = () => {
   };
 
 const showToast = (message, type = "info", options = {}) => {
-  console.log('clicked');
   const finalOptions = { ...defaultOptions, ...options };
 
   switch (type) {

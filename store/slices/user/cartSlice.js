@@ -1,28 +1,73 @@
-// /store/slices/user/cartSlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import toast from "react-hot-toast";
 
-// Async thunk to add to cart
+// -------------------- ADD TO CART --------------------
+// -------------------- ADD TO CART --------------------
 export const addToCart = createAsyncThunk(
   "cart/addToCart",
-  async ({ productId, quantity, size, color }, { rejectWithValue }) => {
-    const userEmail = localStorage.getItem("WMPuser");
+  async ({ productId, quantity, size, color }, { rejectWithValue, getState }) => {
+    const state = getState();
+    const isAuthenticated = state.auth?.isAuthenticated;
 
-    if (!userEmail) {
-      toast.error("Please login to add this product to your cart.");
-      return rejectWithValue("Not logged in");
+    // 🧩 GUEST USER LOGIC
+    if (!isAuthenticated) {
+      try {
+        let guestCart = localStorage.getItem("guestCart");
+        guestCart = guestCart ? JSON.parse(guestCart) : [];
+
+        // 🧮 Calculate total quantity already in cart
+        const totalQuantity = guestCart.reduce(
+          (sum, item) => sum + (item.quantity || 0),
+          0
+        );
+
+        // If adding this item exceeds total limit of 5
+        if (totalQuantity + quantity > 5) {
+          toast.error("You can only have up to 5 total items in your cart as a guest.");
+          return rejectWithValue("Guest cart total quantity limit reached");
+        }
+
+        // 🔍 Check if same product already exists
+        const existingIndex = guestCart.findIndex((item) => {
+          const sameProduct = item.productId === productId;
+          const sameSize = item.size === size || (!item.size && !size);
+          const sameColor =
+            (item.color?.code || null) === (color?.code || null) &&
+            (item.color?.name || null) === (color?.name || null);
+          return sameProduct && sameSize && sameColor;
+        });
+
+        if (existingIndex !== -1) {
+          guestCart[existingIndex].quantity += quantity;
+        } else {
+          guestCart.push({
+            productId,
+            quantity,
+            size: size || null,
+            color: color || null,
+            addedAt: new Date().toISOString(),
+          });
+        }
+
+        localStorage.setItem("guestCart", JSON.stringify(guestCart));
+        toast.success("Product added to cart!");
+        return { guestCart };
+      } catch (err) {
+        console.error("Guest cart error:", err);
+        toast.error("Failed to add product to cart");
+        return rejectWithValue("Guest cart error");
+      }
     }
 
+    // 🧩 AUTHENTICATED USER LOGIC
     const loadingToast = toast.loading("Adding to cart...");
-
     try {
       const res = await axios.post(
         "/api/cart/add",
         { productId, quantity, size, color },
         { withCredentials: true }
       );
-
       toast.dismiss(loadingToast);
       toast.success("Product added to cart!");
       return res.data;
@@ -39,34 +84,83 @@ export const addToCart = createAsyncThunk(
 );
 
 
-
-// fetch all the cart items
+// -------------------- FETCH CART --------------------
 export const fetchCart = createAsyncThunk(
   "cart/fetchCart",
   async (_, thunkAPI) => {
     try {
+      const state = thunkAPI.getState();
+      const isAuthenticated = state.auth?.isAuthenticated;
+
+      // 🧩 Guest user
+      if (!isAuthenticated) {
+        let guestCart = JSON.parse(localStorage.getItem("guestCart") || "[]");
+
+        if (guestCart.length === 0) {
+          return {
+            _id: null,
+            user: null,
+            items: [],
+            createdAt: null,
+            updatedAt: null,
+            __v: 0,
+          };
+        }
+
+        const ids = [...new Set(guestCart.map((i) => i.productId))];
+        const res = await axios.post("/api/cart/get", { ids }, { withCredentials: true });
+        const products = Array.isArray(res.data) ? res.data : [];
+
+        const items = guestCart.map((item) => ({
+          ...item,
+          product: products.find((p) => p._id === item.productId) || null,
+        }));
+
+        return {
+          _id: null,
+          user: null,
+          items,
+          createdAt: null,
+          updatedAt: new Date().toISOString(),
+          __v: items.length,
+        };
+      }
+
+      // 🧩 Authenticated user
       const res = await axios.get("/api/cart/get", { withCredentials: true });
-      console.log(res.data.items);
-      return res?.data?.items;
+      return res?.data || { items: [] };
     } catch (error) {
-      return thunkAPI.rejectWithValue(
-        error.response.data.message || "Failed to load cart."
-      );
+      console.error("FetchCart Error:", error);
+      return thunkAPI.rejectWithValue(error.response?.data?.message || "Failed to load cart.");
     }
   }
 );
 
-//remove product from the cart
+// -------------------- REMOVE FROM CART --------------------
 export const removeFromCart = createAsyncThunk(
   "cart/removeFromCart",
   async (productId, thunkAPI) => {
-    console.log("productId", productId);
+    const state = thunkAPI.getState();
+    const isAuthenticated = state.auth?.isAuthenticated;
+
+    // 🧩 Guest user
+    if (!isAuthenticated) {
+      try {
+        let guestCart = JSON.parse(localStorage.getItem("guestCart") || "[]");
+        guestCart = guestCart.filter((item) => item.productId !== productId);
+        localStorage.setItem("guestCart", JSON.stringify(guestCart));
+        toast.success("Item removed from cart.");
+        thunkAPI.dispatch(fetchCart());
+        return { guestCart };
+      } catch (err) {
+        toast.error("Error removing item.");
+        return thunkAPI.rejectWithValue(err.message);
+      }
+    }
+
+    // 🧩 Authenticated user
     try {
-      await axios.post(
-        "/api/cart/remove",
-        { productId },
-        { withCredentials: true }
-      );
+      await axios.post("/api/cart/remove", { productId }, { withCredentials: true });
       toast.success("Item removed from cart.");
       thunkAPI.dispatch(fetchCart());
     } catch (err) {
@@ -76,16 +170,48 @@ export const removeFromCart = createAsyncThunk(
   }
 );
 
-//update the quantity of the product in the cart
+// -------------------- UPDATE CART QUANTITY --------------------
+// -------------------- UPDATE CART QUANTITY --------------------
 export const updateCartQuantity = createAsyncThunk(
   "cart/updateQuantity",
   async ({ productId, quantity }, thunkAPI) => {
+    const state = thunkAPI.getState();
+    const isAuthenticated = state.auth?.isAuthenticated;
+
+    // 🧩 Guest user
+    if (!isAuthenticated) {
+      try {
+        let guestCart = JSON.parse(localStorage.getItem("guestCart") || "[]");
+
+        // Calculate total quantity if this update is applied
+        const totalQuantity = guestCart.reduce((sum, item) => {
+          if (item.productId === productId) return sum + quantity;
+          return sum + item.quantity;
+        }, 0);
+
+        if (totalQuantity > 5) {
+          toast.error("You can only have up to 5 items in your cart as a guest.");
+          return rejectWithValue("Guest cart limit reached");
+        }
+
+        const index = guestCart.findIndex((item) => item.productId === productId);
+        if (index !== -1) {
+          guestCart[index].quantity = quantity;
+          localStorage.setItem("guestCart", JSON.stringify(guestCart));
+          toast.success("Cart updated.");
+          thunkAPI.dispatch(fetchCart());
+          return { guestCart };
+        }
+      } catch (err) {
+        toast.error("Error updating cart.");
+        return rejectWithValue(err.message);
+      }
+    }
+
+
+    // 🧩 Authenticated user
     try {
-      await axios.post(
-        "/api/cart/update",
-        { productId, quantity },
-        { withCredentials: true }
-      );
+      await axios.post("/api/cart/update", { productId, quantity }, { withCredentials: true });
       thunkAPI.dispatch(fetchCart());
     } catch (err) {
       toast.error("Error updating quantity.");
@@ -94,9 +220,12 @@ export const updateCartQuantity = createAsyncThunk(
   }
 );
 
+
+// -------------------- SLICE --------------------
 const cartSlice = createSlice({
   name: "cart",
   initialState: {
+    cart: null,
     items: [],
     loading: false,
     error: null,
@@ -110,7 +239,14 @@ const cartSlice = createSlice({
       })
       .addCase(addToCart.fulfilled, (state, action) => {
         state.loading = false;
-        state.items = action.payload.cartItems || state.items;
+        if (action.payload?.guestCart) {
+          const guestCart = action.payload.guestCart;
+          state.cart = { ...state.cart, items: guestCart };
+          state.items = guestCart;
+        } else {
+          state.cart = action.payload;
+          state.items = action.payload.items || [];
+        }
       })
       .addCase(addToCart.rejected, (state, action) => {
         state.loading = false;
@@ -120,37 +256,24 @@ const cartSlice = createSlice({
       // Fetch Cart
       .addCase(fetchCart.pending, (state) => {
         state.loading = true;
-        state.error = null;
       })
       .addCase(fetchCart.fulfilled, (state, action) => {
         state.loading = false;
-        state.items = action.payload;
+        state.cart = action.payload;
+        state.items = action.payload.items || [];
       })
       .addCase(fetchCart.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(removeFromCart.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(removeFromCart.fulfilled, (state) => {
-        state.loading = false;
-      })
-      .addCase(removeFromCart.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
 
-      .addCase(updateCartQuantity.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(updateCartQuantity.fulfilled, (state) => {
-        state.loading = false;
-      })
-      .addCase(updateCartQuantity.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      });
+      // Remove / Update
+      .addCase(removeFromCart.pending, (state) => { state.loading = true; })
+      .addCase(removeFromCart.fulfilled, (state) => { state.loading = false; })
+      .addCase(removeFromCart.rejected, (state, action) => { state.loading = false; state.error = action.payload; })
+      .addCase(updateCartQuantity.pending, (state) => { state.loading = true; })
+      .addCase(updateCartQuantity.fulfilled, (state) => { state.loading = false; })
+      .addCase(updateCartQuantity.rejected, (state, action) => { state.loading = false; state.error = action.payload; });
   },
 });
 

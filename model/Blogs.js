@@ -27,16 +27,17 @@ const BlogSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    // author: {
-    //   type: String,
-    //   required: true,
-    //   trim: true,
-    // },
+    type: {
+      type: String,
+      required: true,
+      enum: ["News", "Blogs"],
+      default: "Blogs",
+      require: true,
+    },
   },
   {
-    timestamps: true, // ✅ auto-adds createdAt & updatedAt
+    timestamps: true,
   }
 );
 
-// Avoid recompiling model during hot reloads in Next.js
 export default mongoose.models.Blog || mongoose.model("Blog", BlogSchema);

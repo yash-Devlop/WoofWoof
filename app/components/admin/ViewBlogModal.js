@@ -9,6 +9,7 @@ import {
   Button,
   Box,
   Divider,
+  Chip,
 } from "@mui/material";
 import Image from "next/image";
 
@@ -46,6 +47,20 @@ export default function ViewBlogModal({ open, handleClose, blog }) {
         <Typography variant="body2" color="text.secondary" gutterBottom>
           <strong>Slug:</strong> {blog.slug}
         </Typography>
+
+        {/* ✅ Type Section */}
+        {blog.type && (
+          <Box my={1}>
+            <Typography variant="body2" color="text.secondary" gutterBottom>
+              <strong>Type:</strong>{" "}
+              <Chip
+                label={blog.type}
+                color={blog.type === "News" ? "info" : "success"}
+                size="small"
+              />
+            </Typography>
+          </Box>
+        )}
 
         <Divider sx={{ my: 2 }} />
 
