@@ -282,11 +282,11 @@ const OrderConfirmation = ({ orderData }) => {
 
           <div className="flex flex-wrap justify-center gap-4 text-sm">
             <a href="mailto:support@wedmypet.com" className="text-blue-600 hover:text-blue-700 font-medium">
-              support@wedmypet.com
+              contact@woofwoof.in
             </a>
             <span className="text-gray-300">|</span>
             <a href="tel:+911234567890" className="text-blue-600 hover:text-blue-700 font-medium">
-              +91 123 456 7890
+              +91 93184 93050
             </a>
           </div>
         </div>

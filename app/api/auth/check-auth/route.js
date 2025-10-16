@@ -1,3 +1,5 @@
+// /api/auth/check-auth
+
 export const runtime = "nodejs";
 import { verifyToken } from "@/lib/jwt";
 import { NextResponse } from "next/server";
@@ -16,6 +18,8 @@ export async function GET() {
     if (!decoded) {
       return NextResponse.json({ isAuthenticated: false }, { status: 401 });
     }
+
+    
 
     return NextResponse.json({
       isAuthenticated: true,

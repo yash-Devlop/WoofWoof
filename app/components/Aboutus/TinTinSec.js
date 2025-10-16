@@ -24,11 +24,10 @@ const TinTinSec = () => {
       <h2 className="text-2xl font-bold text-center mb-6">Meet Tin Tin</h2>
 
       <div
-        className={`flex ${
-          isMobile
+        className={`flex ${isMobile
             ? "overflow-x-auto gap-4 scroll-smooth px-4"
             : "flex-wrap justify-center gap-6"
-        }`}
+          }`}
       >
         {dummyImages.map((src, idx) => (
           <motion.div
@@ -38,17 +37,23 @@ const TinTinSec = () => {
             whileInView={isMobile ? { scale: 1.05 } : {}}
             transition={{ duration: 0.5 }}
             viewport={{ once: false, amount: 0.6 }}
-            className={`rounded-3xl overflow-hidden shadow-lg ${
-              isMobile ? "flex-shrink-0 w-[250px]" : "w-[300px] h-[300px]"
-            }`}
+            className={`rounded-3xl overflow-hidden shadow-lg relative ${isMobile ? "flex-shrink-0 w-[250px]" : "w-[300px] h-[300px]"
+              }`}
           >
-            <Image
-              src={src}
-              alt={`Puppy ${idx + 1}`}
-              width={400}
-              height={400}
-              className="w-full h-auto object-cover rounded-xl"
-            />
+            <motion.div
+              initial={{ filter: "blur(6px)" }}
+              whileHover={{ filter: "blur(0px)" }}
+              transition={{ duration: 0.5 }}
+              className="w-full h-full"
+            >
+              <Image
+                src={src}
+                alt={`Puppy ${idx + 1}`}
+                width={400}
+                height={400}
+                className="w-full h-auto object-cover rounded-xl"
+              />
+            </motion.div>
           </motion.div>
         ))}
       </div>

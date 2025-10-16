@@ -18,7 +18,7 @@ export async function GET(req) {
     const cart = await Cart.findOne({ user: decoded.id }).populate(
       "items.product"
     );
-
+    console.log(cart)
     return NextResponse.json(cart || { items: [] });
   } catch (err) {
     console.error("Fetch Cart Error:", err);

@@ -13,10 +13,14 @@ export async function POST(req) {
   const { productId, quantity } = await req.json();
   const user = verifyToken(token);
 
-  await Cart.findOneAndUpdate(
-    { user: user.id, "items.product": productId },
-    { $set: { "items.$.quantity": quantity } }
-  );
+  try {
+    await Cart.findOneAndUpdate(
+      { user: user.id, "items.product": productId },
+      { $set: { "items.$.quantity": quantity } }
+    );
 
-  return NextResponse.json({ message: "Quantity updated" });
+    return NextResponse.json({ message: "Quantity updated" });
+  }catch(err) {
+    console.log(err)
+  }
 }

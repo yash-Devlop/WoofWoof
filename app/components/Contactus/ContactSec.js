@@ -45,7 +45,7 @@ const ContactSec = () => {
                       />
                     </svg>
                   </span>
-                  <span className="font-semibold text-lg">
+                  <span className="font-semibold text-lg inline-block max-w-xs md:max-w-sm">
                     BLUE OCEAN
                     OMAXE WORLD STREET
                     151(FIRST FLOOR) ABOVE AIRTEL
@@ -84,7 +84,7 @@ const ContactSec = () => {
                     </svg>
                   </span>
                   <span className="font-semibold text-lg">
-                    info@woofwoof.com
+                    contact@woofwoof.com
                   </span>
                 </div>
 
@@ -107,7 +107,7 @@ const ContactSec = () => {
                       />
                     </svg>
                   </span>
-                  <span className="font-semibold text-lg">+91- 9999887030</span>
+                  <span className="font-semibold text-lg">+91- 9318493050</span>
                 </div>
 
                 <div className="flex items-center space-x-4">

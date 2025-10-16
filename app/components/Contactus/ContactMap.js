@@ -28,10 +28,8 @@
 import React from "react";
 
 const ContactMap = () => {
-  const latitude = 27.7076499;
-  const longitude = 85.3176790;
 
-  const mapSrc = `https://www.google.com/maps?q=${latitude},${longitude}&hl=es;z=14&output=embed`;
+  const mapSrc = `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3509.4895421!2d77.3549342!3d28.3873227!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390cdda36bdf15af%3A0x6533d319787c348d!2sAirtel%20Store%20-%20Sec%2079%20Faridabad!5e0!3m2!1sen!2sin!4v1234567890`;
 
   return (
     <div className="w-full relative">

@@ -1,3 +1,4 @@
+// /api/user/product
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/connect";
 import Products from "@/model/Product";

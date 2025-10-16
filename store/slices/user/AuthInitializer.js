@@ -1,27 +1,46 @@
 "use client";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { loginUser, resetAuthState } from "../authSlice";
+import { resetAuthState } from "../authSlice";
 
 export default function AuthInitializer() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // Parse cookies safely
-    const cookies = document.cookie.split("; ").reduce((acc, cookie) => {
-      const [name, ...rest] = cookie.split("=");
-      acc[name.trim()] = rest.join("=");
-      return acc;
-    }, {});
+    const checkAuth = async () => {
+      try {
+        const res = await fetch("/api/auth/check-auth", {
+          method: "GET",
+          credentials: "include", // ✅ send cookies with request
+          cache: "no-store", // avoid stale cached responses
+        });
 
-    const token = cookies["auth-token"];
+        if (!res.ok) {
+          throw new Error("Unauthorized");
+        }
 
-    if (token) {
-      dispatch(loginUser());
-    } else {
-      // Not logged in
-      dispatch(resetAuthState());
-    }
+        const data = await res.json();
+
+        if (data.isAuthenticated) {
+          // ✅ Dispatch to Redux store
+          dispatch({
+            type: "auth/setAuthenticated",
+            payload: {
+              isAuthenticated: true,
+              user: data.user, // includes id, email, role
+            },
+          })
+        } else {
+          dispatch(resetAuthState());
+          console.log("❌ Not authenticated");
+        }
+      } catch (error) {
+        console.warn("Auth check failed:", error.message);
+        dispatch(resetAuthState());
+      }
+    };
+
+    checkAuth();
   }, [dispatch]);
 
   return null;

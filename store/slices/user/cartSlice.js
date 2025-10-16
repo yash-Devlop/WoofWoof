@@ -177,6 +177,7 @@ export const updateCartQuantity = createAsyncThunk(
   async ({ productId, quantity }, thunkAPI) => {
     const state = thunkAPI.getState();
     const isAuthenticated = state.auth?.isAuthenticated;
+    console.log("thunk reached");
 
     // 🧩 Guest user
     if (!isAuthenticated) {
@@ -191,7 +192,7 @@ export const updateCartQuantity = createAsyncThunk(
 
         if (totalQuantity > 5) {
           toast.error("You can only have up to 5 items in your cart as a guest.");
-          return rejectWithValue("Guest cart limit reached");
+          return thunkAPI.rejectWithValue("Guest cart limit reached");
         }
 
         const index = guestCart.findIndex((item) => item.productId === productId);
@@ -204,21 +205,22 @@ export const updateCartQuantity = createAsyncThunk(
         }
       } catch (err) {
         toast.error("Error updating cart.");
-        return rejectWithValue(err.message);
+        return thunkAPI.rejectWithValue(err.message);
       }
     }
-
 
     // 🧩 Authenticated user
     try {
       await axios.post("/api/cart/update", { productId, quantity }, { withCredentials: true });
-      thunkAPI.dispatch(fetchCart());
+      // thunkAPI.dispatch(fetchCart());
+      return { productId, quantity };
     } catch (err) {
       toast.error("Error updating quantity.");
       return thunkAPI.rejectWithValue(err.message);
     }
   }
 );
+
 
 
 // -------------------- SLICE --------------------
@@ -230,7 +232,15 @@ const cartSlice = createSlice({
     loading: false,
     error: null,
   },
-  reducers: {},
+  reducers: {
+    updateLocalQuantity: (state, action) => {
+      const { productId, quantity } = action.payload;
+      const item = state.cart.items.find((i) => i.product._id === productId);
+      if (item) item.quantity = quantity;
+      const guestItem = state.items.find((i) => i.productId === productId);
+      if (guestItem) guestItem.quantity = quantity;
+    },
+  },
   extraReducers: (builder) => {
     builder
       // Add to Cart
@@ -271,8 +281,8 @@ const cartSlice = createSlice({
       .addCase(removeFromCart.pending, (state) => { state.loading = true; })
       .addCase(removeFromCart.fulfilled, (state) => { state.loading = false; })
       .addCase(removeFromCart.rejected, (state, action) => { state.loading = false; state.error = action.payload; })
-      .addCase(updateCartQuantity.pending, (state) => { state.loading = true; })
-      .addCase(updateCartQuantity.fulfilled, (state) => { state.loading = false; })
+      .addCase(updateCartQuantity.pending, (state) => { })
+      .addCase(updateCartQuantity.fulfilled, (state) => { })
       .addCase(updateCartQuantity.rejected, (state, action) => { state.loading = false; state.error = action.payload; });
   },
 });

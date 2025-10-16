@@ -2,8 +2,7 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import React, { useState } from "react";
-import { toast, ToastContainer, ToastOptions, Slide } from "react-toastify"
-
+import { toast } from "react-hot-toast";
 const ServicesSec = () => {
   const slideInVariants = {
     hidden: (i) => ({
@@ -28,43 +27,33 @@ const ServicesSec = () => {
     closeOnClick: true,
     pauseOnHover: true,
     draggable: true,
-    transition: Slide,
   };
 
-const showToast = (message, type = "info", options = {}) => {
-  const finalOptions = { ...defaultOptions, ...options };
+  const showToast = (message, type = "info", options = {}) => {
+    const finalOptions = { ...defaultOptions, ...options };
 
-  switch (type) {
-    case "success":
-      toast.success(message, {
-        ...finalOptions
-      });
-      break;
+    switch (type) {
+      case "success":
+        toast.success(message, { ...finalOptions });
+        break;
 
-    case "error":
-      toast.error(message, {
-        ...finalOptions
-      });
-      break;
+      case "error":
+        toast.error(message, { ...finalOptions });
+        break;
 
-    case "warning":
-      toast.warn(message, {
-        ...finalOptions
-      });
-      break;
+      case "warning":
+        toast(message, { ...finalOptions, icon: "⚠️" });
+        break;
 
-    default: // info
-      toast.info(message, {
-        ...finalOptions
-      });
-      break;
-  }
-};
+      default: // info
+        toast(message, { ...finalOptions });
+        break;
+    }
+  };
 
 
   return (
     <div className="w-full">
-      <ToastContainer />
       <div className="bg-white rounded-3xl m-4 md:mx-12 py-8 md:py-16">
         <div className="relative h-[860px] lg:h-auto px-4 md:px-30 flex flex-col">
           <div className=" absolute inset-0 top-0 z-10 flex justify-center items-start">

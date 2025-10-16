@@ -11,14 +11,14 @@ import LocalGroceryStoreOutlinedIcon from "@mui/icons-material/LocalGroceryStore
 import MiscellaneousServicesOutlinedIcon from "@mui/icons-material/MiscellaneousServicesOutlined";
 import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
 import ForwardToInboxOutlinedIcon from "@mui/icons-material/ForwardToInboxOutlined";
-import CreditCardOutlinedIcon from "@mui/icons-material/CreditCardOutlined";
-import LocalShippingOutlinedIcon from "@mui/icons-material/LocalShippingOutlined";
+import LoginIcon from "@mui/icons-material/Login";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import LocalMallOutlinedIcon from "@mui/icons-material/LocalMallOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import VolunteerActivismOutlinedIcon from '@mui/icons-material/VolunteerActivismOutlined';
+import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "@/store/slices/authSlice";
 
@@ -30,18 +30,65 @@ const NavBar = () => {
   const [showNavbar, setShowNavbar] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const [allProducts, setAllProducts] = useState([]);
+  const [loadingSearch, setLoadingSearch] = useState(false);
 
   const dispatch = useDispatch();
-
   const { isAuthenticated } = useSelector((state) => state.auth);
 
+  // Fetch all products on mount
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch("/api/user/product?limit=1000&page=1");
+        const data = await response.json();
+        setAllProducts(data.products || []);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+    fetchProducts();
+  }, []);
+
   const handleLogin = () => {
-    router.push("/login")
-  }
+    router.push("/login");
+  };
 
   const handleLogout = () => {
     dispatch(logoutUser());
-    router.push("/")
+    router.push("/");
+    setIsProfileOpen(false);
+  };
+
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    
+    // Clear results immediately if query is empty
+    if (!query.trim()) {
+      setSearchResults([]);
+      setLoadingSearch(false);
+      return;
+    }
+    
+    setLoadingSearch(true);
+    setTimeout(() => {
+      const results = allProducts.filter((product) =>
+        product.name.toLowerCase().includes(query.toLowerCase()) ||
+        product.tags?.some(tag => tag.toLowerCase().includes(query.toLowerCase()))
+      );
+      setSearchResults(results.slice(0, 8));
+      setLoadingSearch(false);
+    }, 300);
+  };
+
+  const handleProductClick = (productId) => {
+    router.push(`/shop/${productId}`);
+    setSearchQuery("");
+    setSearchResults([]);
+    setMobileSearchOpen(false);
   };
 
   const menuItems = [
@@ -151,6 +198,17 @@ const NavBar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
 
+  // Close profile menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (isProfileOpen && !e.target.closest("[data-profile-menu]")) {
+        setIsProfileOpen(false);
+      }
+    };
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
+  }, [isProfileOpen]);
+
   return (
     <div className="w-full shadow-md mx-auto flex justify-center">
       {/* Main Nav Bar */}
@@ -217,15 +275,47 @@ const NavBar = () => {
 
         {/* Right - Search and Icons */}
         <div className="flex items-center gap-2 flex-shrink-0">
+          {/* Desktop Search */}
           <div className="relative hidden md:block">
             <input
               type="text"
-              placeholder={displayedText}
-              className="px-3 py-1.5 rounded-full border bg-gray-300 border-none"
+              value={searchQuery}
+              onChange={(e) => handleSearch(e.target.value)}
+              placeholder={displayedText || "Search products..."}
+              className="px-3 py-1.5 rounded-full border bg-gray-100 border-gray-300 w-48 focus:outline-none focus:bg-white transition-all"
             />
-            <div className="absolute top-1 right-1 bg-[#ff3971e5] py-0.5 px-0.75 text-white rounded-full">
-              <SearchIcon className="cursor-pointer" />
+            <div className="absolute top-1 right-1 bg-[#ff3971e5] py-0.5 px-0.75 text-white rounded-full cursor-pointer">
+              <SearchIcon fontSize="small" />
             </div>
+
+            {/* Search Results Dropdown */}
+            {searchResults.length > 0 && (
+              <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg max-h-64 overflow-y-auto z-50">
+                {searchResults.map((product) => (
+                  <div
+                    key={product._id}
+                    onClick={() => handleProductClick(product._id)}
+                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer border-b last:border-b-0 flex items-center gap-3"
+                  >
+                    {product.images && product.images[0] && (
+                      <img
+                        src={product.images[0].url}
+                        alt={product.images[0].altText || product.name}
+                        className="w-8 h-8 object-cover rounded"
+                      />
+                    )}
+                    <div className="flex flex-col flex-1">
+                      <span className="text-sm text-gray-700 truncate font-medium">
+                        {product.name}
+                      </span>
+                      <span className="text-xs text-gray-500">
+                        ₹{product.price}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Mobile Search Icon */}
@@ -237,16 +327,94 @@ const NavBar = () => {
 
             <input
               type="text"
-              autoFocus
+              autoFocus={mobileSearchOpen}
               placeholder="Search products..."
-              onBlur={() => setMobileSearchOpen(false)}
+              value={searchQuery}
+              onChange={(e) => handleSearch(e.target.value)}
+              onBlur={() => {
+                if (!searchQuery) setMobileSearchOpen(false);
+              }}
               className={`absolute top-[0.75px] -right-[1px] h-6.5 transform transition-all duration-300 ease-in-out px-4 pr-10 rounded-full border bg-gray-100 shadow-md text-sm ${mobileSearchOpen
                 ? "translate-x-0 opacity-100 w-[140px]"
                 : "translate-x-0 opacity-0 w-0"
                 }`}
             />
+
+            {/* Mobile Search Results */}
+            {mobileSearchOpen && searchResults.length > 0 && (
+              <div className="absolute top-full right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg max-h-48 overflow-y-auto z-50 w-48">
+                {searchResults.map((product) => (
+                  <div
+                    key={product._id}
+                    onClick={() => handleProductClick(product._id)}
+                    className="px-3 py-2 hover:bg-gray-100 cursor-pointer border-b last:border-b-0 text-sm text-gray-700 truncate font-medium"
+                  >
+                    {product.name}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
+          {/* Profile Icon */}
+          <div data-profile-menu className="relative">
+            {isAuthenticated ? (
+              <button
+                onClick={() => setIsProfileOpen(!isProfileOpen)}
+                className="text-gray-600 hover:text-pink-600 transition-colors"
+              >
+                <AccountCircleIcon fontSize="large" />
+              </button>
+            ) : (
+              <button
+                onClick={handleLogin}
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700 text-white rounded-full transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 font-medium text-sm"
+              >
+                <LoginIcon fontSize="small" />
+                <span className="hidden sm:inline">Login</span>
+              </button>
+            )}
+
+            {/* Profile Dropdown Menu */}
+            {isAuthenticated && (
+              <div
+                className={`absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg overflow-hidden transition-all duration-300 origin-top-right ${isProfileOpen
+                  ? "opacity-100 scale-100 visible"
+                  : "opacity-0 scale-95 invisible"
+                  }`}
+              >
+                <div className="py-2">
+                  <Link
+                    href="/wishlist"
+                    onClick={() => setIsProfileOpen(false)}
+                    className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-pink-50 hover:text-pink-600 transition-colors"
+                  >
+                    <FavoriteBorderOutlinedIcon fontSize="small" />
+                    <span className="font-medium">Wishlist</span>
+                  </Link>
+
+                  <Link
+                    href="/orders"
+                    onClick={() => setIsProfileOpen(false)}
+                    className="flex items-center gap-3 px-4 py-2 text-gray-700 hover:bg-pink-50 hover:text-pink-600 transition-colors"
+                  >
+                    <ShoppingBagOutlinedIcon fontSize="small" />
+                    <span className="font-medium">My Orders</span>
+                  </Link>
+
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-left px-4 py-2 text-gray-700 hover:bg-pink-50 hover:text-pink-600 transition-colors flex items-center gap-3"
+                  >
+                    <DeleteOutlineOutlinedIcon fontSize="small" />
+                    <span className="font-medium">Logout</span>
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Hamburger Menu */}
           <button
             className="xl:hidden text-black focus:outline-none ml-auto cursor-pointer"
             onClick={() => setIsOpen(!isOpen)}
@@ -276,10 +444,10 @@ const NavBar = () => {
       >
         <div className="flex mt-3.5 justify-between p-4">
           <div className="flex gap-4 justify-center items-center">
-            <Image 
-              src="/images/woof.png" 
-              alt="logo" 
-              width={80} 
+            <Image
+              src="/images/woof.png"
+              alt="logo"
+              width={80}
               height={32}
               className="h-8 w-auto object-contain"
             />

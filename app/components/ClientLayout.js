@@ -59,50 +59,54 @@ const ClientLayout = ({ children }) => {
   };
 
   return (
-    <>
+    <Provider store={store}>
+      <AuthInitializer />
+      <AOSWrapper />
+      <Toaster position="top-right" reverseOrder={false} />
+
       {showIntro ? (
         <IntroVideo onFinish={handleVideoFinish} />
       ) : (
-        <Provider store={store}>
-          <AuthInitializer />
-          <AOSWrapper />
-          <Toaster position="top-right" reverseOrder={false} />
+        <>
           {!isAdminRoute && !shouldHideNavAndOffers && <NavBar />}
           {!isAdminRoute && !shouldHideNavAndOffers && <Offers />}
           {children}
+
           {!isAdminRoute && !shouldHideNavAndOffers && (
             <div>
               {showButton && (
                 <Tooltip title="Back to top">
                   <div
                     onClick={scrollToTop}
-                    className=" z-40 fixed bottom-33 right-7 cursor-pointer "
+                    className="z-40 fixed bottom-33 right-7 cursor-pointer"
                   >
                     <BackToTopIcon />
                   </div>
                 </Tooltip>
               )}
+
               <Image
                 onClick={() => router.push("/cart")}
                 src="/images/trolley.png"
-                alt="whatsapp"
+                alt="cart"
                 width={40}
                 height={40}
-                className=" z-40 fixed bottom-20 right-7 cursor-pointer"
+                className="z-40 fixed bottom-20 right-7 cursor-pointer"
               />
               <Image
                 src="/images/whatsapp.png"
                 alt="whatsapp"
                 width={35}
                 height={35}
-                className=" z-40 fixed bottom-7 right-7 cursor-pointer"
+                className="z-40 fixed bottom-7 right-7 cursor-pointer"
               />
             </div>
           )}
-        </Provider>
+        </>
       )}
-    </>
+    </Provider>
   );
+
 };
 
 export default ClientLayout;
