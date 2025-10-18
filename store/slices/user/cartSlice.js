@@ -200,7 +200,6 @@ export const updateCartQuantity = createAsyncThunk(
           guestCart[index].quantity = quantity;
           localStorage.setItem("guestCart", JSON.stringify(guestCart));
           toast.success("Cart updated.");
-          thunkAPI.dispatch(fetchCart());
           return { guestCart };
         }
       } catch (err) {

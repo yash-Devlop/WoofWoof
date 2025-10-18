@@ -40,7 +40,6 @@ export async function POST(req) {
     }
 
     const products = await Product.find({ _id: { $in: ids } });
-    console.log(products);
     return NextResponse.json(products);
   } catch (err) {
     console.error("Get Many Products Error:", err);

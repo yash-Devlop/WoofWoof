@@ -12,7 +12,7 @@ const orderItemSchema = new mongoose.Schema({
     required: true,
   },
   image: {
-    type: String, // ✅ Added image URL
+    type: String,
     default: null,
   },
   size: {

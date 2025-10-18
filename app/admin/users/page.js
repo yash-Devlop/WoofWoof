@@ -81,7 +81,7 @@ export default function AdminUsersPage() {
                     >
                       View
                     </Button>
-                    <Button
+                    {/* <Button
                       variant="outlined"
                       size="small"
                       color="error"
@@ -90,7 +90,7 @@ export default function AdminUsersPage() {
                       }}
                     >
                       Delete
-                    </Button>
+                    </Button> */}
                   </TableCell>
                 </TableRow>
               ))}

@@ -11,7 +11,7 @@ export async function GET() {
     const orders = await Order.find()
       .populate({
         path: "user",
-        select: "username email phone", // ✅ adjust according to your User schema
+        select: "username email phone",
       })
       .populate({
         path: "items.productId",

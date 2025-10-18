@@ -37,14 +37,6 @@ export async function POST(req) {
       status,
     } = body;
 
-    console.log("📥 Received order request:", {
-      userId,
-      hasCustomerInfo: !!customerInfo,
-      itemCount: items?.length,
-      amount,
-      shippingAddress,
-    });
-
     // ✅ Read token from cookies
     const cookieHeader = req.headers.get("cookie") || "";
     const match = cookieHeader.match(/auth-token=([^;]+)/);
@@ -119,6 +111,7 @@ export async function POST(req) {
       return {
         productId: item.productId,
         name: item.name || "",
+        image: item.image || null,
         size: item.size || null,
         color: item.color || { code: null, name: null },
         quantity: item.quantity,

@@ -22,7 +22,7 @@ const CheckoutPage = ({ onNext, onBack, setGuestAddress }) => {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
-    email: "", // ✅ Added email field
+    email: "",
     address: "",
     state: "",
     pincode: "",

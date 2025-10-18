@@ -1,7 +1,7 @@
 
 "use client";
 import Button from "@mui/material/Button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Shield, Check, Truck, CreditCard, Tag, X } from "lucide-react";
 import { useSelector } from "react-redux";
 import axios from "axios";
@@ -24,7 +24,7 @@ const PaymentPage = ({ onBack, onOrderComplete, guestAddress }) => {
   const formattedItems = items.map((item) => ({
     productId: item.product._id,
     name: item.product.name,
-    image: item.product.images?.[0]?.url || null,
+    image: item.product?.images?.[0].url || null,
     quantity: item.quantity,
     price: item.product.price,
     size: item.size || null,
@@ -110,7 +110,6 @@ const PaymentPage = ({ onBack, onOrderComplete, guestAddress }) => {
   const createOrderInDB = async (paymentMethod, paymentId, isPaymentVerified) => {
     // ✅ Use guestAddress as primary source (set for both auth and guest users)
     const addressSource = guestAddress || shippingAddress;
-    console.log("adres source", guestAddress)
     if (!addressSource) {
       alert("⚠️ No shipping address found. Please go back and enter your delivery address.");
       throw new Error("No shipping address provided.");
