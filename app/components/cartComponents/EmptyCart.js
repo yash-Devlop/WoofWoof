@@ -32,7 +32,7 @@ const EmptyCart = () => {
           Your Cart is Empty
         </h2>
         <p className="text-gray-600 mb-8 max-w-md mx-auto">
-          Looks like you haven't added anything to your cart yet. Start shopping to find amazing products!
+          Looks like you haven&apos;t added anything to your cart yet. Start shopping to find amazing products!
         </p>
 
         {/* CTA Button */}
