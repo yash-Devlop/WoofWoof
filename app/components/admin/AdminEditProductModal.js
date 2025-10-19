@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import Image from "next/image";
 import ColorPicker from "./colorPicker";
 import {
   Modal,
@@ -299,7 +300,7 @@ const AdminEditProductModal = ({ open, onClose, product }) => {
             <Box display="flex" gap={2} flexWrap="wrap" mb={2}>
               {product.images.map((img, idx) => (
                 <Box key={idx} sx={{ width: 80, height: 80, borderRadius: 2, overflow: "hidden", border: "1px solid #ccc" }}>
-                  <img src={img.url.startsWith("/uploads") ? img.url : `/${img.url}`} alt={img.altText || `image-${idx}`} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  <Image src={img.url.startsWith("/uploads") ? img.url : `/${img.url}`} alt={img.altText || `image-${idx}`} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                 </Box>
               ))}
             </Box>

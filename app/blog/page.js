@@ -135,7 +135,7 @@ export default function BlogPage() {
                 No {activeType !== "All" ? activeType : "Blogs"} Yet
               </h3>
               <p className="text-lg text-gray-600 text-center max-w-md mb-8">
-                We're working on creating amazing content for you. Check back soon!
+                We&apos;re working on creating amazing content for you. Check back soon!
               </p>
               <button
                 onClick={() => router.push("/")}

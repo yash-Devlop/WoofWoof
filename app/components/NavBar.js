@@ -298,7 +298,7 @@ const NavBar = () => {
                     className="px-4 py-2 hover:bg-gray-100 cursor-pointer border-b last:border-b-0 flex items-center gap-3"
                   >
                     {product.images && product.images[0] && (
-                      <img
+                      <Image
                         src={product.images[0].url}
                         alt={product.images[0].altText || product.name}
                         className="w-8 h-8 object-cover rounded"

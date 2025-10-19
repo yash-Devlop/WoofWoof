@@ -10,6 +10,7 @@ import {
   Box,
 } from "@mui/material";
 import { useState } from "react";
+import Image from "next/image";
 
 export default function AdminProductViewModal({ open, onClose, product }) {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -148,7 +149,7 @@ export default function AdminProductViewModal({ open, onClose, product }) {
               </Typography>
               <Box display="flex" flexWrap="wrap" gap={1} mt={1}>
                 {product.images.map((img, idx) => (
-                  <img
+                  <Image
                     key={idx}
                     src={img.url}
                     alt={img.altText || "Product Image"}
@@ -184,7 +185,7 @@ export default function AdminProductViewModal({ open, onClose, product }) {
       >
         <DialogTitle>Image Preview</DialogTitle>
         <DialogContent dividers sx={{ textAlign: "center" }}>
-          <img
+          <Image
             src={selectedImage}
             alt="Preview"
             style={{
