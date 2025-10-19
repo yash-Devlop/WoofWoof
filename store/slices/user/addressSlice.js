@@ -1,3 +1,4 @@
+// store/slices/user/addressSlice.js
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -10,7 +11,6 @@ export const addUserAddress = createAsyncThunk(
       const res = await axios.post("/api/user/address", addressData, {
         withCredentials: true,
       });
-      toast.success("Address added successfully!");
       return res.data;
     } catch (error) {
       toast.error("Failed to add address.");
@@ -19,7 +19,7 @@ export const addUserAddress = createAsyncThunk(
   }
 );
 
-// Edit existing address (you'll need to handle it in the API)
+// Edit existing address
 export const editUserAddress = createAsyncThunk(
   "address/edit",
   async ({ addressId, updatedData }, { rejectWithValue }) => {
@@ -29,10 +29,26 @@ export const editUserAddress = createAsyncThunk(
         updatedData,
         { withCredentials: true }
       );
-      toast.success("Address updated successfully!");
-      return res.data;
+      return { ...res.data, addressId };
     } catch (error) {
       toast.error("Failed to update address.");
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
+  }
+);
+
+// Delete address
+export const deleteUserAddress = createAsyncThunk(
+  "address/delete",
+  async (addressId, { rejectWithValue }) => {
+    try {
+      const res = await axios.delete(`/api/user/address/${addressId}`, {
+        withCredentials: true,
+      });
+      toast.success("Address deleted successfully!");
+      return { addressId };
+    } catch (error) {
+      toast.error("Failed to delete address.");
       return rejectWithValue(error.response?.data?.message || error.message);
     }
   }
@@ -46,33 +62,21 @@ export const fetchUserAddresses = createAsyncThunk(
       const state = getState();
       const isAuthenticated = state.auth?.isAuthenticated;
 
-      // Guest user – return a single empty address
+      // Guest user – return empty array
       if (!isAuthenticated) {
-        return [
-          {
-            firstName: "",
-            lastName: "",
-            address: "",
-            state: "",
-            pincode: "",
-            city: "",
-            contact: "",
-            isDefault: true,
-          },
-        ];
+        return [];
       }
 
       // Authenticated user – fetch from API
       const res = await axios.get("/api/user/address", {
         withCredentials: true,
       });
-      return res.data.addresses;
+      return res.data.addresses || [];
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || error.message);
     }
   }
 );
-
 
 const addressSlice = createSlice({
   name: "address",
@@ -81,11 +85,18 @@ const addressSlice = createSlice({
     loading: false,
     error: null,
   },
-  reducers: {},
+  reducers: {
+    clearAddresses: (state) => {
+      state.addresses = [];
+      state.error = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
+      // Add Address
       .addCase(addUserAddress.pending, (state) => {
         state.loading = true;
+        state.error = null;
       })
       .addCase(addUserAddress.fulfilled, (state, action) => {
         state.loading = false;
@@ -98,23 +109,58 @@ const addressSlice = createSlice({
         state.error = action.payload;
       })
 
+      // Edit Address
       .addCase(editUserAddress.pending, (state) => {
         state.loading = true;
+        state.error = null;
       })
       .addCase(editUserAddress.fulfilled, (state, action) => {
         state.loading = false;
-        const updated = action.payload.updatedAddress;
-        state.addresses = state.addresses.map((addr) =>
-          addr._id === updated._id ? updated : addr
-        );
+        const { addressId, updatedAddress } = action.payload;
+        if (updatedAddress && addressId !== undefined) {
+          state.addresses[addressId] = updatedAddress;
+          
+          // If this address is now default, unset others
+          if (updatedAddress.isDefault) {
+            state.addresses = state.addresses.map((addr, idx) => ({
+              ...addr,
+              isDefault: idx === addressId,
+            }));
+          }
+        }
       })
       .addCase(editUserAddress.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
 
+      // Delete Address
+      .addCase(deleteUserAddress.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteUserAddress.fulfilled, (state, action) => {
+        state.loading = false;
+        const { addressId } = action.payload;
+        state.addresses.splice(addressId, 1);
+        
+        // If no addresses left, or if we deleted the default, make first one default
+        if (state.addresses.length > 0) {
+          const hasDefault = state.addresses.some((addr) => addr.isDefault);
+          if (!hasDefault) {
+            state.addresses[0].isDefault = true;
+          }
+        }
+      })
+      .addCase(deleteUserAddress.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      // Fetch Addresses
       .addCase(fetchUserAddresses.pending, (state) => {
         state.loading = true;
+        state.error = null;
       })
       .addCase(fetchUserAddresses.fulfilled, (state, action) => {
         state.loading = false;
@@ -127,4 +173,5 @@ const addressSlice = createSlice({
   },
 });
 
+export const { clearAddresses } = addressSlice.actions;
 export default addressSlice.reducer;

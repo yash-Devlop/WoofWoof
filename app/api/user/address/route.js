@@ -1,10 +1,11 @@
-// /app/api/user/address/route.js
+// app/api/user/address/route.js
 import { NextResponse } from "next/server";
 import User from "@/model/User";
 import { connectDB } from "@/lib/connect";
 import { verifyToken } from "@/lib/jwt";
 import { cookies } from "next/headers";
 
+// POST - Add new address
 export async function POST(req) {
   try {
     await connectDB();
@@ -31,18 +32,23 @@ export async function POST(req) {
       state: body.state,
       pincode: body.pincode,
       contact: body.contact,
-      label: "Home",
-      isDefault: true,
+      label: body.label || "Home",
+      isDefault: body.isDefault || false,
     };
 
-    // Unset previous default if any addresses exist
-    if (user.deliveryAddresses?.length > 0) {
+    // If this address is set as default, unset all others
+    if (address.isDefault && user.deliveryAddresses?.length > 0) {
       await User.updateOne(
-        { _id: user._id, "deliveryAddresses.isDefault": true },
+        { _id: user._id },
         {
-          $set: { "deliveryAddresses.$.isDefault": false },
+          $set: { "deliveryAddresses.$[].isDefault": false },
         }
       );
+    }
+
+    // If this is the first address, make it default
+    if (!user.deliveryAddresses || user.deliveryAddresses.length === 0) {
+      address.isDefault = true;
     }
 
     // Push the new address
@@ -57,7 +63,7 @@ export async function POST(req) {
     const updatedUser = await User.findById(user._id).select(
       "deliveryAddresses"
     );
-    const newAddress = updatedUser.deliveryAddresses.at(-1); // last pushed address
+    const newAddress = updatedUser.deliveryAddresses.at(-1);
 
     return NextResponse.json({
       success: true,
@@ -65,6 +71,7 @@ export async function POST(req) {
       newAddress,
     });
   } catch (error) {
+    console.error("Add address error:", error);
     return NextResponse.json(
       { success: false, message: error.message },
       { status: 500 }
@@ -72,6 +79,7 @@ export async function POST(req) {
   }
 }
 
+// GET - Fetch all addresses
 export async function GET() {
   try {
     await connectDB();
@@ -83,7 +91,7 @@ export async function GET() {
       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
-    const decoded = verifyToken(token.value); // e.g., decoded.id = userId
+    const decoded = verifyToken(token.value);
     const user = await User.findById(decoded.id).select("deliveryAddresses");
 
     if (!user) {
@@ -91,7 +99,7 @@ export async function GET() {
     }
 
     return NextResponse.json(
-      { addresses: user.deliveryAddresses },
+      { addresses: user.deliveryAddresses || [] },
       { status: 200 }
     );
   } catch (error) {

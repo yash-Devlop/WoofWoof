@@ -1,72 +1,90 @@
 "use client";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const Testimonial = () => {
-  const testimonials = [
-    {
-      name: "Varun",
-      role: "Customer",
-      message:
-        "Absolutely loved the experience! Super fast delivery and great product quality.",
-      image: "/images/team1.png",
-      stars: 5,
-    },
-    {
-      name: "Sneha",
-      role: "Pet Parent",
-      message:
-        "Great platform for pet products. The variety and prices are unbeatable!",
-      image: "/images/team2.png",
-      stars: 4,
-    },
-    {
-      name: "Akash",
-      role: "Pet Groomer",
-      message:
-        "I found everything I needed for my grooming setup. Highly recommended!",
-      image: "/images/team3.png",
-      stars: 5,
-    },
-    // {
-    //   name: "Meera",
-    //   role: "Dog Trainer",
-    //   message:
-    //     "The platform is user-friendly and customer support is top-notch!",
-    //   image: "/images/team4.png",
-    //   stars: 3,
-    // },
-  ];
-  const [current, setCurrent] = useState(1);
+  const [testimonials, setTestimonials] = useState([]);
+  const [current, setCurrent] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchTestimonials();
+  }, []);
+
+  const fetchTestimonials = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch("/api/admin/testimonial");
+      if (!response.ok) throw new Error("Failed to fetch testimonials");
+      const data = await response.json();
+      setTestimonials(data.testimonials || []);
+      setError(null);
+    } catch (err) {
+      console.error("Error fetching testimonials:", err);
+      setError(err.message);
+      setTestimonials([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const total = testimonials.length;
 
   const handleNext = () => {
-    setCurrent((prev) => (prev + 1) % total); // loops to 0 after last
+    setCurrent((prev) => (prev + 1) % total);
   };
 
   const handlePrev = () => {
-    setCurrent((prev) => (prev - 1 + total) % total); // loops to last on first
+    setCurrent((prev) => (prev - 1 + total) % total);
   };
 
+  if (loading) {
+    return (
+      <div className="w-full">
+        <div className="bg-white rounded-3xl m-4 md:m-12 py-6">
+          <div className="px-4 md:px-24 xl:px-40">
+            <div className="animate-pulse space-y-4">
+              <div className="h-6 w-32 bg-gray-200 rounded"></div>
+              <div className="h-12 w-72 bg-gray-200 rounded"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || testimonials.length === 0) {
+    return (
+      <div className="w-full">
+        <div className="bg-white rounded-3xl m-4 md:m-12 py-6">
+          <div className="px-4 md:px-24 xl:px-40">
+            <p className="text-gray-500">
+              {error || "No testimonials available"}
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="w-full relative ">
+    <div className="w-full relative">
       <div className="bg-white rounded-3xl m-4 md:m-12 py-6">
-        <div 
-        // data-aos="zoom-in" 
-        className=" px-4 md:px-24 xl:px-40">
+        <div className="px-4 md:px-24 xl:px-40">
           <div>
-            <h4 className=" text-xl font-semibold text-[#F31C51]">
+            <h4 className="text-xl font-semibold text-[#F31C51]">
               Testimonials
             </h4>
-            <h2 className=" text-5xl font-semibold">
+            <h2 className="text-5xl font-semibold">
               What people say about us
             </h2>
           </div>
 
-          <div className=" grid grid-cols-1 lg:grid-cols-[60%_40%]  lg:gap-2">
-            <div className=" flex flex-col justify-between  mt-6">
+          <div className="grid grid-cols-1 lg:grid-cols-[60%_40%] lg:gap-2">
+            <div className="flex flex-col justify-between mt-6">
               <div>
-                <div className=" flex gap-3 mb-3">
+                <div className="flex gap-3 mb-3">
                   {[...Array(5)].map((_, i) => (
                     <span className="" key={i}>
                       {i < testimonials[current].stars ? (
@@ -104,22 +122,22 @@ const Testimonial = () => {
                   ))}
                 </div>
                 <div>
-                  <h4 className=" text-gray-700 text-lg font-medium italic">
+                  <h4 className="text-gray-700 text-lg font-medium italic">
                     {testimonials[current].message}
                   </h4>
                 </div>
               </div>
-              <div className=" flex justify-between items-center lg:mb-16">
+              <div className="flex justify-between items-center lg:mb-16">
                 <div>
-                  <h2 className=" text-2xl font-semibold tracking-wider">
+                  <h2 className="text-2xl font-semibold tracking-wider">
                     {testimonials[current].name}
                   </h2>
-                  <h4 className=" text-lg text-gray-700 font-medium">
+                  <h4 className="text-lg text-gray-700 font-medium">
                     {testimonials[current].role}
                   </h4>
                 </div>
-                <div className=" flex  gap-6">
-                  <div className=" cursor-pointer" onClick={() => handlePrev()}>
+                <div className="flex gap-6">
+                  <div className="cursor-pointer" onClick={handlePrev}>
                     <svg
                       width="35"
                       height="35"
@@ -143,11 +161,7 @@ const Testimonial = () => {
                       />
                     </svg>
                   </div>
-                  <div
-                    className=" cursor-pointer
-            "
-                    onClick={() => handleNext()}
-                  >
+                  <div className="cursor-pointer" onClick={handleNext}>
                     <svg
                       width="35"
                       height="35"
@@ -168,21 +182,23 @@ const Testimonial = () => {
                 </div>
               </div>
             </div>
-            <div className="relative w-full h-[200px] md:h-[400px] flex justify-center items-center">
+            <div className="relative w-full h-[200px] md:h-[400px] flex justify-center items-center overflow-hidden">
               <Image
                 src="/images/testimonialBg.png"
                 alt="testimonialBG"
-                width={600}
-                height={600}
-                className=" absolute w-full h-full object-contain"
-              />
-              <Image
-                src={testimonials[current].image}
-                alt={testimonials[current].name}
                 width={300}
-                height={300}
-                className=" h-[150px] w-[150px] md:h-[220px] md:w-[220px] xl:h-auto xl:w-auto rounded-full  relative "
+                height={400}
+                className="w-full h-full object-cover"
               />
+              <div className="absolute w-[150px] h-[150px] md:w-[220px] md:h-[220px] xl:w-[280px] xl:h-[280px]">
+                <Image
+                  src={testimonials[current].image}
+                  alt={testimonials[current].name}
+                  width={280}
+                  height={280}
+                  className="w-full h-full rounded-full object-cover"
+                />
+              </div>
             </div>
           </div>
         </div>

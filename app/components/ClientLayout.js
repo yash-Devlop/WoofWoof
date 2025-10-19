@@ -93,13 +93,19 @@ const ClientLayout = ({ children }) => {
                 height={40}
                 className="z-40 fixed bottom-20 right-7 cursor-pointer"
               />
-              <Image
-                src="/images/whatsapp.png"
-                alt="whatsapp"
-                width={35}
-                height={35}
-                className="z-40 fixed bottom-7 right-7 cursor-pointer"
-              />
+              <a
+                href="https://wa.me/+9193184 93050"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Image
+                  src="/images/whatsapp.png"
+                  alt="whatsapp"
+                  width={35}
+                  height={35}
+                  className="z-40 fixed bottom-7 right-7 cursor-pointer"
+                />
+              </a>
             </div>
           )}
         </>

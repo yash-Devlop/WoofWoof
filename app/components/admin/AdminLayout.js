@@ -11,6 +11,7 @@ import AssignmentIcon from "@mui/icons-material/Assignment";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import RateReviewIcon from "@mui/icons-material/RateReview";
+import FeedbackIcon from '@mui/icons-material/Feedback';
 
 import { usePathname } from "next/navigation";
 import Sidebar from "./Sidebar";
@@ -23,6 +24,7 @@ const AdminLayoutComponent = ({ children }) => {
     { href: "/admin", label: "Dashboard", icon: <DashboardIcon /> },
     { href: "/admin/users", label: "Users", icon: <PeopleIcon /> },
     { href: "/admin/blogs", label: "Blogs", icon: <ArticleIcon /> },
+    { href: "/admin/testimonials", label: "Testimonials", icon: <FeedbackIcon /> },
     { href: "/admin/reviews", label: "Reviews", icon: <RateReviewIcon /> },
     { href: "/admin/coupons", label: "Coupons", icon: <LocalOfferIcon /> },
     { href: "/admin/categories", label: "Categories", icon: <CategoryIcon /> },
