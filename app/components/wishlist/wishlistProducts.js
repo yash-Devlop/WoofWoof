@@ -11,6 +11,7 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { useDispatch } from "react-redux";
 import { addToCart } from "@/store/slices/user/cartSlice";
 import { useRouter } from "next/navigation";
+import Spinner from "../loader/Spinner";
 
 export default function WishlistPage() {
   const [wishlistProducts, setWishlistProducts] = useState([]);
@@ -21,7 +22,6 @@ export default function WishlistPage() {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  // Fetch user email
   useEffect(() => {
     const fetchUserEmail = async () => {
       try {
@@ -131,7 +131,7 @@ export default function WishlistPage() {
   if (loading) {
     return (
       <div className="relative bg-white m-4 rounded-3xl md:m-12 md:py-20 min-h-screen">
-        <Image
+        {/* <Image
           src="/images/bgPaws1.png"
           alt="bgpaws"
           fill
@@ -139,13 +139,20 @@ export default function WishlistPage() {
         />
         <div className="relative z-10 container mx-auto px-4 py-20">
           <p className="text-center text-gray-500 text-xl">Loading your wishlist...</p>
-        </div>
+        </div> */}
+        <Image
+        src="/images/bgPaws1.png"
+        alt="bgpaws"
+        fill
+        className="h-full w-full absolute inset-0 opacity-30"
+      />
+        <Spinner />
       </div>
     );
   }
 
   return (
-    <div className="relative bg-white m-4 rounded-3xl md:m-12 md:py-20 min-h-screen">
+    <div className="relative bg-white m-4 rounded-3xl md:m-12 py-16 min-h-screen">
       <Image
         src="/images/bgPaws1.png"
         alt="bgpaws"

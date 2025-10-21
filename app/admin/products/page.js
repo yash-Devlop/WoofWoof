@@ -26,6 +26,7 @@ import AdminAddProductModal from "@/app/components/admin/adminAddProductModal";
 import { deleteProduct } from "@/store/slices/admin/adminProductSlice";
 import Swal from "sweetalert2";
 import AdminEditProductModal from "@/app/components/admin/AdminEditProductModal";
+import Spinner from "@/app/components/loader/Spinner";
 
 export default function AdminProductsPage() {
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -107,7 +108,7 @@ export default function AdminProductsPage() {
         </Button>
       </div>
       {loading ? (
-        <p>Loading...</p>
+        <Spinner />
       ) : (
         <TableContainer component={Paper}>
           <Table>

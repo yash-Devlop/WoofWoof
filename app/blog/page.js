@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import NavBar from "../components/NavBar";
+import Spinner from "../components/loader/Spinner";
 
 export default function BlogPage() {
   const [loading, setLoading] = useState(true);
@@ -66,10 +67,11 @@ export default function BlogPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-pink-50 to-purple-50">
-        <div className="text-center">
+        {/* <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-[#F91F54] mx-auto mb-4"></div>
           <p className="text-gray-600 text-lg font-medium">Loading blogs...</p>
-        </div>
+        </div> */}
+        <Spinner />
       </div>
     );
   }

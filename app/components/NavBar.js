@@ -65,14 +65,14 @@ const NavBar = () => {
 
   const handleSearch = (query) => {
     setSearchQuery(query);
-    
+
     // Clear results immediately if query is empty
     if (!query.trim()) {
       setSearchResults([]);
       setLoadingSearch(false);
       return;
     }
-    
+
     setLoadingSearch(true);
     setTimeout(() => {
       const results = allProducts.filter((product) =>
@@ -301,6 +301,8 @@ const NavBar = () => {
                       <Image
                         src={product.images[0].url}
                         alt={product.images[0].altText || product.name}
+                        width={32}
+                        height={32}
                         className="w-8 h-8 object-cover rounded"
                       />
                     )}

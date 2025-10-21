@@ -15,6 +15,7 @@ import {
   Typography,
   TextField,
 } from "@mui/material";
+import Spinner from "@/app/components/loader/Spinner";
 
 export default function AdminReviewsPage() {
   const [reviews, setReviews] = useState([]);
@@ -60,6 +61,10 @@ export default function AdminReviewsPage() {
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const year = String(date.getFullYear()).slice(-2);
     return `${day}/${month}/${year}`;
+  }
+
+  if (loading) {
+    return <Spinner />
   }
 
   return (

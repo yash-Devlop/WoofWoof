@@ -1,134 +1,3 @@
-// "use client";
-
-// import React, { use, useEffect, useState } from "react";
-// import {
-//   Table,
-//   TableBody,
-//   TableCell,
-//   TableContainer,
-//   TableHead,
-//   TableRow,
-//   Paper,
-//   Button,
-//   Pagination,
-// } from "@mui/material";
-// import VisibilityIcon from "@mui/icons-material/Visibility";
-// import { useDispatch, useSelector } from "react-redux";
-// import { fetchOrders } from "@/store/slices/admin/adminOrderSlice";
-// import OrderDetailsModal from "@/app/components/admin/OrderDetailsModal";
-
-// // 🔧 Hardcoded data
-
-// export default function AdminOrdersPage() {
-//   const dispatch = useDispatch();
-//   const [page, setPage] = useState(1);
-//   const [viewProduct, setViewProduct] = useState(null);
-//   const { orders, loading } = useSelector((state) => state.adminOrder);
-
-//   useEffect(() => {
-//     dispatch(fetchOrders());
-//   }, [dispatch]);
-
-//   const rowsPerPage = 10;
-//   const paginatedOrders = orders.slice(
-//     (page - 1) * rowsPerPage,
-//     page * rowsPerPage
-//   );
-//   const totalPages = Math.ceil(orders.length / rowsPerPage);
-
-//   const handleViewProduct = (product) => {
-//     setViewProduct(product);
-//   };
-
-//   const handleCloseViewModal = () => {
-//     setViewProduct(null);
-//   };
-
-//   if (loading) {
-//     return <div>loading...</div>;
-//   }
-
-//   return (
-//     <div className="p-6">
-//       <h1 className="text-2xl font-bold mb-4">All Orders</h1>
-
-//       <TableContainer component={Paper}>
-//         <Table>
-//           <TableHead>
-//             <TableRow>
-//               <TableCell>
-//                 <strong>User Name</strong>
-//               </TableCell>
-//               <TableCell>
-//                 <strong>Email</strong>
-//               </TableCell>
-//               <TableCell>
-//                 <strong>Phone</strong>
-//               </TableCell>
-//               <TableCell>
-//                 <strong>Products</strong>
-//               </TableCell>
-//               <TableCell>
-//                 <strong>Price</strong>
-//               </TableCell>
-//               <TableCell>
-//                 <strong>Status</strong>
-//               </TableCell>
-//               <TableCell align="center">
-//                 <strong>Actions</strong>
-//               </TableCell>
-//             </TableRow>
-//           </TableHead>
-//           <TableBody>
-//             {paginatedOrders.map((order) => (
-//               <TableRow key={order._id}>
-//                 <TableCell>{order?.user?.username}</TableCell>
-//                 <TableCell>{order?.user?.email}</TableCell>
-//                 <TableCell>{order?.user?.phone}</TableCell>
-//                 <TableCell>{order?.items?.length}</TableCell>
-//                 <TableCell>₹{order?.amount}</TableCell>
-//                 <TableCell>{order?.status}</TableCell>
-//                 <TableCell align="center">
-//                   <Button
-//                     variant="contained"
-//                     size="small"
-//                     sx={{ gap: 1 }}
-//                     onClick={() => handleViewProduct(order?.items)}
-//                   >
-//                     <VisibilityIcon />
-//                     View
-//                   </Button>
-//                 </TableCell>
-//               </TableRow>
-//             ))}
-//           </TableBody>
-//         </Table>
-//       </TableContainer>
-
-//       <div className="flex justify-center mt-4">
-//         <Pagination
-//           count={totalPages}
-//           page={page}
-//           onChange={(e, val) => setPage(val)}
-//           color="primary"
-//         />
-//       </div>
-
-//       {viewProduct && (
-//         <OrderDetailsModal
-//           open={!!viewProduct}
-//           onClose={handleCloseViewModal}
-//           items={viewProduct}
-//         />
-//       )}
-//     </div>
-//   );
-// }
-
-
-
-
-
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -146,6 +15,10 @@ import {
 } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import LocalShippingIcon from "@mui/icons-material/LocalShipping";
+import HourglassEmptyIcon from "@mui/icons-material/HourglassEmpty";
+import AutorenewIcon from "@mui/icons-material/Autorenew";
+import CancelIcon from "@mui/icons-material/Cancel";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchOrders, updateOrderStatus } from "@/store/slices/admin/adminOrderSlice";
 import OrderDetailsModal from "@/app/components/admin/OrderDetailsModal";
@@ -187,19 +60,39 @@ export default function AdminOrdersPage() {
     setViewOrder(null);
   };
 
-  const handleMarkAsCompleted = async (orderId) => {
-    await dispatch(updateOrderStatus({ orderId, status: "Delivered" }));
+  const handleUpdateStatus = async (orderId, Status) => {
+    await dispatch(updateOrderStatus({ orderId, status: Status }));
   };
 
-  const getStatusColor = (status) => {
-    const colors = {
-      Pending: "warning",
-      Processing: "info",
-      Shipped: "primary",
-      Delivered: "success",
-      Cancelled: "error",
+  const getStatusConfig = (status) => {
+    const configs = {
+      Pending: {
+        color: "#FFA726",
+        bgColor: "#FFF3E0",
+        icon: <HourglassEmptyIcon sx={{ fontSize: 16 }} />,
+      },
+      Processing: {
+        color: "#42A5F5",
+        bgColor: "#E3F2FD",
+        icon: <AutorenewIcon sx={{ fontSize: 16 }} />,
+      },
+      Shipped: {
+        color: "#AB47BC",
+        bgColor: "#F3E5F5",
+        icon: <LocalShippingIcon sx={{ fontSize: 16 }} />,
+      },
+      Delivered: {
+        color: "#66BB6A",
+        bgColor: "#E8F5E9",
+        icon: <CheckCircleIcon sx={{ fontSize: 16 }} />,
+      },
+      Cancelled: {
+        color: "#EF5350",
+        bgColor: "#FFEBEE",
+        icon: <CancelIcon sx={{ fontSize: 16 }} />,
+      },
     };
-    return colors[status] || "default";
+    return configs[status] || { color: "#9E9E9E", bgColor: "#F5F5F5", icon: null };
   };
 
   if (loading) {
@@ -246,6 +139,7 @@ export default function AdminOrdersPage() {
                 (sum, item) => sum + item.quantity,
                 0
               );
+              const statusConfig = getStatusConfig(order?.status);
 
               return (
                 <TableRow key={order._id}>
@@ -264,32 +158,58 @@ export default function AdminOrdersPage() {
                   <TableCell>
                     <Chip
                       label={order?.status}
-                      color={getStatusColor(order?.status)}
+                      icon={statusConfig.icon}
                       size="small"
+                      sx={{
+                        backgroundColor: statusConfig.bgColor,
+                        color: statusConfig.color,
+                        fontWeight: 600,
+                        "& .MuiChip-icon": {
+                          color: statusConfig.color,
+                        },
+                      }}
                     />
                   </TableCell>
                   <TableCell align="center">
                     <div className="flex gap-2 justify-center">
                       <Button
-                        variant="contained"
+                        variant="outlined"
                         size="small"
                         sx={{ gap: 1 }}
                         onClick={() => handleViewOrder(order)}
                       >
-                        <VisibilityIcon />
+                        <VisibilityIcon fontSize="small" />
                         View
                       </Button>
+                      {order?.status !== "Delivered" && 
+                       order?.status !== "Cancelled" && 
+                       order?.status !== "Shipped" && (
+                        <Button
+                          variant="contained"
+                          size="small"
+                          sx={{
+                            gap: 1,
+                            bgcolor: "#AB47BC",
+                            "&:hover": { bgcolor: "#9C27B0" },
+                          }}
+                          onClick={() => handleUpdateStatus(order._id, "Shipped")}
+                          disabled={updateLoading}
+                        >
+                          <LocalShippingIcon fontSize="small" />
+                          Ship
+                        </Button>
+                      )}
                       {order?.status !== "Delivered" && order?.status !== "Cancelled" && (
                         <Button
                           variant="contained"
                           size="small"
                           color="success"
                           sx={{ gap: 1 }}
-                          onClick={() => handleMarkAsCompleted(order._id)}
+                          onClick={() => handleUpdateStatus(order._id, "Delivered")}
                           disabled={updateLoading}
                         >
-                          <CheckCircleIcon />
-                          Mark Complete
+                          <CheckCircleIcon fontSize="small" />
+                          Complete
                         </Button>
                       )}
                     </div>

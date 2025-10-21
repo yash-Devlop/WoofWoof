@@ -6,6 +6,10 @@ import axios from "axios";
 import { Accordion, AccordionSummary, AccordionDetails, Typography } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import { useSelector } from "react-redux";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+import Spinner from "../components/loader/Spinner";
 
 export default function UserOrdersPage() {
     const [orders, setOrders] = useState([]);
@@ -13,14 +17,19 @@ export default function UserOrdersPage() {
     const [error, setError] = useState(null);
     const [expandedOrder, setExpandedOrder] = useState(null);
 
+    const router = useRouter()
+    const { isAuthenticated } = useSelector((state) => state.auth);
+
     useEffect(() => {
+        if (!isAuthenticated) {
+            toast.error("Login to see orders.")
+            router.push("/login")
+            return
+        }
         fetchOrders();
     }, []);
 
-    useEffect(() => {
-        console.log(orders);
 
-    }, [orders])
 
     const fetchOrders = async () => {
         try {
@@ -29,8 +38,8 @@ export default function UserOrdersPage() {
 
             // Sort: Delivered orders last
             const sortedOrders = response.data.orders.sort((a, b) => {
-                if (a.status === "Delivered" && b.status !== "Delivered") return 1;  // move a after b
-                if (b.status === "Delivered" && a.status !== "Delivered") return -1; // move b after a
+                if (a.status === "Delivered" && b.status !== "Delivered") return 1;
+                if (b.status === "Delivered" && a.status !== "Delivered") return -1;
                 return new Date(b.createdAt) - new Date(a.createdAt); // optional: newest first
             });
 
@@ -53,10 +62,9 @@ export default function UserOrdersPage() {
             case "Delivered":
                 return { label: "Delivered", color: "text-green-600", icon: true, step: 3 };
             case "Shipped":
-            case "Processing":
                 return { label: "In Progress", color: "text-orange-500", icon: false, step: 2 };
             case "Pending":
-                return { label: "Pending", color: "text-orange-500", icon: false, step: 2 }; // pending = first step
+                return { label: "Pending", color: "text-orange-500", icon: false, step: 1 };
             case "Cancelled":
                 return { label: "Cancelled", color: "text-red-600", icon: false, step: 0 };
             default:
@@ -73,9 +81,10 @@ export default function UserOrdersPage() {
                     fill
                     className="h-full w-full absolute inset-0 opacity-30"
                 />
-                <div className="relative z-10 container mx-auto px-4 py-8 text-center">
+                {/* <div className="relative z-10 container mx-auto px-4 py-8 text-center">
                     <p className="text-xl">Loading your orders...</p>
-                </div>
+                </div> */}
+                <Spinner />
             </div>
         );
     }
@@ -97,12 +106,12 @@ export default function UserOrdersPage() {
     }
 
     return (
-        <div className="relative bg-white m-4 rounded-3xl md:m-12 md:py-16 min-h-screen">
+        <div className="relative bg-white m-4 rounded-3xl md:m-12 py-16 min-h-screen">
             <Image
                 src="/images/bgPaws1.png"
                 alt="bgpaws"
                 fill
-                className="h-full w-full absolute inset-0 opacity-30"
+                className="h-full w-full absolute inset-0 opacity-30 object-cover"
             />
 
             <div className="relative z-10 container mx-auto px-4 py-4 md:px-24 xl:px-20">

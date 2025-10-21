@@ -10,7 +10,7 @@ export async function DELETE(req, { params }) {
     const { id } = params;
 
     if (!id) {
-      return Response.json(
+      return NextResponse.json(
         { success: false, message: "Blog ID is required" },
         { status: 400 }
       );
@@ -19,13 +19,13 @@ export async function DELETE(req, { params }) {
     const deletedBlog = await Blog.findByIdAndDelete(id);
 
     if (!deletedBlog) {
-      return Response.json(
+      return NextResponse.json(
         { success: false, message: "Blog not found" },
         { status: 404 }
       );
     }
 
-    return Response.json(
+    return NextResponse.json(
       {
         success: true,
         message: "Blog deleted successfully",
@@ -34,7 +34,7 @@ export async function DELETE(req, { params }) {
       { status: 200 }
     );
   } catch (error) {
-    return Response.json(
+    return NextResponse.json(
       {
         success: false,
         message: "Failed to delete blog",
@@ -45,20 +45,21 @@ export async function DELETE(req, { params }) {
   }
 }
 
+// ✅ PUT /api/blogs/:id → update existing blog
 export async function PUT(req, { params }) {
   await connectDB();
 
   try {
-    const { id } = params; // blog id from URL
+    const { id } = params;
     const body = await req.json();
 
     // 🔎 Destructure fields
-    const { title, slug, excerpt, content, coverImage, type } = body;
+    const { title, slug, excerpt, content, coverImage, innerImage, type } = body;
 
     // 🔎 Validate required fields
-    if (!title || !slug || !excerpt || !content || !coverImage || !type) {
+    if (!title || !slug || !excerpt || !content || !coverImage || !innerImage || !type) {
       return NextResponse.json(
-        { success: false, message: "All fields including type are required" },
+        { success: false, message: "All fields including both images and type are required" },
         { status: 400 }
       );
     }
@@ -84,7 +85,7 @@ export async function PUT(req, { params }) {
     // ✅ Update blog
     const updatedBlog = await Blog.findByIdAndUpdate(
       id,
-      { title, slug, excerpt, content, coverImage, type },
+      { title, slug, excerpt, content, coverImage, innerImage, type },
       {
         new: true, // return updated document
         runValidators: true,
@@ -112,14 +113,13 @@ export async function PUT(req, { params }) {
   }
 }
 
-
-// ✅ GET /api/admin/blogs/:slug
+// ✅ GET /api/blogs/:slug → fetch single blog by slug
 export async function GET(req, { params }) {
   try {
     await connectDB();
 
-    const { id } = await params;
-    const slug = id; // Assuming 'id' is actually the slug
+    const { id } = params;
+    const slug = id;
 
     if (!slug) {
       return NextResponse.json(

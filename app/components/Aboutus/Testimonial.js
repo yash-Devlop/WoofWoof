@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
+import TestimonialLoader from "../loader/TestimonialLoader";
 
 const Testimonial = () => {
   const [testimonials, setTestimonials] = useState([]);
@@ -40,18 +41,7 @@ const Testimonial = () => {
   };
 
   if (loading) {
-    return (
-      <div className="w-full">
-        <div className="bg-white rounded-3xl m-4 md:m-12 py-6">
-          <div className="px-4 md:px-24 xl:px-40">
-            <div className="animate-pulse space-y-4">
-              <div className="h-6 w-32 bg-gray-200 rounded"></div>
-              <div className="h-12 w-72 bg-gray-200 rounded"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+    return <TestimonialLoader />;
   }
 
   if (error || testimonials.length === 0) {

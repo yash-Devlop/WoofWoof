@@ -48,8 +48,9 @@ export default function Home() {
       <div id="thirdSection">
         <SmartWay />
       </div>
-      {/* 👇 Make sure this matches the hash name */}
-      <BestSelling id="bestseller" />
+      <div id="bestseller" >
+        <BestSelling/>
+      </div>
       <NewsAndBlogs />
       <Footer />
     </div>

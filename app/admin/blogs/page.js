@@ -19,6 +19,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import AddBlogModal from "@/app/components/admin/AddBlog";
 import EditBlogModal from "@/app/components/admin/EditBlogModal";
 import ViewBlogModal from "@/app/components/admin/ViewBlogModal";
+import Spinner from "@/app/components/loader/Spinner";
 
 export default function BlogsPage() {
   const [blogs, setBlogs] = useState([]);
@@ -28,7 +29,6 @@ export default function BlogsPage() {
   const [openAdd, setOpenAdd] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [openView, setOpenView] = useState(false);
-
   const [selectedBlog, setSelectedBlog] = useState(null);
 
   // Pagination
@@ -100,7 +100,7 @@ export default function BlogsPage() {
       </div>
 
       {loading ? (
-        <div>Loading...</div>
+        <Spinner />
       ) : blogs.length === 0 ? (
         <div>No blogs found.</div>
       ) : (
@@ -109,21 +109,35 @@ export default function BlogsPage() {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>
-                    <strong>Title</strong>
-                  </TableCell>
-                  <TableCell align="center">
-                    <strong>Published Date</strong>
-                  </TableCell>
-                  <TableCell align="center">
-                    <strong>Actions</strong>
-                  </TableCell>
+                  <TableCell><strong>Title</strong></TableCell>
+                  <TableCell align="center"><strong>Cover Image</strong></TableCell>
+                  <TableCell align="center"><strong>Inner Image</strong></TableCell>
+                  <TableCell align="center"><strong>Published Date</strong></TableCell>
+                  <TableCell align="center"><strong>Actions</strong></TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {paginatedBlogs.map((blog) => (
                   <TableRow key={blog._id}>
                     <TableCell>{blog.title}</TableCell>
+                    <TableCell align="center">
+                      {blog.coverImage && (
+                        <img
+                          src={blog.coverImage}
+                          alt=""
+                          className="w-20 h-12 object-cover rounded"
+                        />
+                      )}
+                    </TableCell>
+                    <TableCell align="center">
+                      {blog.innerImage && (
+                        <img
+                          src={blog.innerImage}
+                          alt=""
+                          className="w-20 h-12 object-cover rounded"
+                        />
+                      )}
+                    </TableCell>
                     <TableCell align="center">
                       {new Date(blog.createdAt).toLocaleDateString("en-GB", {
                         day: "2-digit",
@@ -163,7 +177,6 @@ export default function BlogsPage() {
             </Table>
           </TableContainer>
 
-          {/* Pagination */}
           <div className="flex justify-center mt-4">
             <Pagination
               count={totalPages}

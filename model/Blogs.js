@@ -23,16 +23,24 @@ const BlogSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+
     coverImage: {
       type: String,
-      required: true,
+      required: [true, "Cover image is required"],
+      trim: true,
     },
+
+    innerImage: {
+      type: String,
+      required: [true, "Inner image is required"],
+      trim: true,
+    },
+
     type: {
       type: String,
       required: true,
       enum: ["News", "Blogs"],
       default: "Blogs",
-      require: true,
     },
   },
   {

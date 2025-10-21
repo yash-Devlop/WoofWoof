@@ -14,7 +14,6 @@ import {
   Pagination,
   Chip,
   Box,
-  CircularProgress,
 } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
@@ -22,6 +21,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import TestimonialModal from "@/app/components/admin/TestimonialModal";
 import Image from "next/image";
+import Spinner from "@/app/components/loader/Spinner";
 
 export default function AdminTestimonialsPage() {
   const [page, setPage] = useState(1);
@@ -93,7 +93,7 @@ export default function AdminTestimonialsPage() {
   if (loading) {
     return (
       <div className="flex justify-center items-center p-6">
-        <CircularProgress />
+        <Spinner />
       </div>
     );
   }

@@ -10,6 +10,7 @@ import { useDispatch } from "react-redux";
 import { addToCart } from "@/store/slices/user/cartSlice";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
+import SimilarProductsSkeleton from "../../loader/SimilarProductsSkeleton";
 
 export default function SimilarProducts({ productId }) {
   const [products, setProducts] = useState([]);
@@ -71,7 +72,7 @@ export default function SimilarProducts({ productId }) {
 
     try {
       const res = await axios.post("/api/wishlist", { productId });
-      
+
       if (wishlist.includes(productId)) {
         setWishlist((prev) => prev.filter((id) => id !== productId));
         toast.success("Removed from wishlist");
@@ -136,7 +137,7 @@ export default function SimilarProducts({ productId }) {
 
         <div className="flex gap-4 overflow-x-auto scrollbar-hide py-2 snap-x">
           {loading ? (
-            <p className="text-gray-500 text-center w-full">Loading...</p>
+            <SimilarProductsSkeleton count={8} />
           ) : products.length === 0 ? (
             <p className="text-gray-500 text-center w-full">
               No related products found.
@@ -176,12 +177,12 @@ export default function SimilarProducts({ productId }) {
                     transition={{ duration: 0.3 }}
                   >
                     {isInWishlist(product._id) ? (
-                      <FavoriteIcon 
-                        fontSize="small" 
-                        sx={{ 
+                      <FavoriteIcon
+                        fontSize="small"
+                        sx={{
                           color: "#ff0047",
                           filter: "drop-shadow(0 2px 4px rgba(255, 0, 71, 0.3))"
-                        }} 
+                        }}
                       />
                     ) : (
                       <FavoriteBorderOutlinedIcon fontSize="small" />
@@ -213,7 +214,7 @@ export default function SimilarProducts({ productId }) {
                     height={200}
                     className="h-full object-contain transition-transform duration-300 group-hover:scale-105"
                   />
-                  <button 
+                  <button
                     onClick={(e) => handleAddToCart(e, product)}
                     disabled={loadingCart[product._id]}
                     className="w-full bg-black text-white text-sm py-2 opacity-0 group-hover:opacity-100 transition duration-300 cursor-pointer disabled:opacity-50"

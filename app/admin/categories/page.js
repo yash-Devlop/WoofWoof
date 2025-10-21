@@ -30,6 +30,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import Swal from "sweetalert2";
 import axios from "axios";
+import Spinner from "@/app/components/loader/Spinner";
 // import AdminAddCategoryModal from "@/app/components/admin/category/AdminAddCategoryModal";
 // import AdminViewCategoryModal from "@/app/components/admin/category/AdminViewCategoryModal";
 
@@ -113,7 +114,7 @@ export default function AdminCategoriesPage() {
       </div>
 
       {loading ? (
-        <p>Loading...</p>
+        <Spinner />
       ) : (
         <TableContainer component={Paper}>
           <Table>

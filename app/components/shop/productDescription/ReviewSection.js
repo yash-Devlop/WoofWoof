@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import { useParams } from "next/navigation";
 import { useSelector } from "react-redux";
+import ReviewSectionSkeleton from "../../loader/ReviewSectionSkeleton";
 
 export default function ReviewSection() {
   const { productId } = useParams();
@@ -92,6 +93,8 @@ const fetchReviews = useCallback(
     }
   };
 
+  if (loadingReviews) return <ReviewSectionSkeleton /> 
+
   return (
     <div className="relative bg-white m-4 rounded-2xl py-8 md:mx-12 md:py-16">
       <div className="h-full w-full absolute inset-0 opacity-30">
@@ -139,9 +142,7 @@ const fetchReviews = useCallback(
         <div className="border-t my-6 border-gray-200"></div>
 
         {/* Reviews List */}
-        {loadingReviews ? (
-          <p className="text-center text-gray-500">Loading reviews...</p>
-        ) : reviews.length === 0 ? (
+        {reviews.length === 0 ? (
           <p className="text-center text-gray-500">
             No reviews yet. Be the first!
           </p>

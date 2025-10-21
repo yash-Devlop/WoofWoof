@@ -30,17 +30,16 @@ export async function POST(req) {
     const body = await req.json();
 
     // 🔎 Extract fields
-    const { title, slug, excerpt, content, coverImage, type } = body;
+    const { title, slug, excerpt, content, coverImage, innerImage, type } = body;
 
     // 🔎 Validate required fields
-    if (!title || !slug || !excerpt || !content || !coverImage || !type) {
+    if (!title || !slug || !excerpt || !content || !coverImage || !innerImage || !type) {
       return Response.json(
-        { success: false, message: "All fields including type are required" },
+        { success: false, message: "All fields including both images and type are required" },
         { status: 400 }
       );
     }
 
-    // 🔎 Validate type
     const allowedTypes = ["News", "Blogs"];
     if (!allowedTypes.includes(type)) {
       return Response.json(
@@ -49,7 +48,6 @@ export async function POST(req) {
       );
     }
 
-    // 🔎 Check duplicate slug
     const exists = await Blog.findOne({ slug });
     if (exists) {
       return Response.json(
@@ -58,13 +56,13 @@ export async function POST(req) {
       );
     }
 
-    // ✅ Create blog
     const blog = await Blog.create({
       title,
       slug,
       excerpt,
       content,
       coverImage,
+      innerImage,
       type,
     });
 
@@ -83,4 +81,3 @@ export async function POST(req) {
     );
   }
 }
-

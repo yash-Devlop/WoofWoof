@@ -19,6 +19,7 @@ import {
 import Swal from "sweetalert2";
 import AdminAddCouponModal from "@/app/components/admin/coupon/AdminAddCouponModal";
 import EditCouponModal from "@/app/components/admin/coupon/AdminEditCouponModal";
+import Spinner from "@/app/components/loader/Spinner";
 
 export default function AdminCouponsPage() {
   const dispatch = useDispatch();
@@ -92,7 +93,7 @@ export default function AdminCouponsPage() {
       </div>
 
       {loading ? (
-        <p>Loading...</p>
+        <Spinner />
       ) : (
         <TableContainer component={Paper}>
           <Table>

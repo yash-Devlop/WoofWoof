@@ -21,6 +21,7 @@ import {
   Pagination,
 } from "@mui/material";
 import axios from "axios";
+import Spinner from "@/app/components/loader/Spinner";
 
 export default function AdminUsersPage() {
   const dispatch = useDispatch();
@@ -42,12 +43,12 @@ export default function AdminUsersPage() {
   );
   const totalPages = Math.ceil(users.length / rowsPerPage);
 
+if (loading) return <Spinner />
+
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">All Users</h1>
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
+
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
@@ -97,7 +98,7 @@ export default function AdminUsersPage() {
             </TableBody>
           </Table>
         </TableContainer>
-      )}
+      
 
       <div className="flex justify-center mt-4">
         <Pagination

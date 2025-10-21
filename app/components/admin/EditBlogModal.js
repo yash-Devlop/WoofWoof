@@ -22,18 +22,21 @@ export default function EditBlogModal({
   handleUpdate,
 }) {
   const [loading, setLoading] = useState(false);
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [preview, setPreview] = useState(null);
+  const [coverPreview, setCoverPreview] = useState(null);
+  const [innerPreview, setInnerPreview] = useState(null);
+  const [selectedCoverFile, setSelectedCoverFile] = useState(null);
+  const [selectedInnerFile, setSelectedInnerFile] = useState(null);
+
   const [formData, setFormData] = useState({
     title: "",
     slug: "",
     excerpt: "",
     content: "",
     coverImage: "",
-    type: "", // ✅ added type field
+    innerImage: "",
+    type: "",
   });
 
-  // Pre-fill form when modal opens
   useEffect(() => {
     if (blog) {
       setFormData({
@@ -42,9 +45,11 @@ export default function EditBlogModal({
         excerpt: blog.excerpt || "",
         content: blog.content || "",
         coverImage: blog.coverImage || "",
-        type: blog.type || "", // ✅ prefill type
+        innerImage: blog.innerImage || "",
+        type: blog.type || "",
       });
-      setPreview(blog.coverImage || null);
+      setCoverPreview(blog.coverImage || null);
+      setInnerPreview(blog.innerImage || null);
     }
   }, [blog]);
 
@@ -55,60 +60,66 @@ export default function EditBlogModal({
 
   const uploadImage = async (file) => {
     if (!file) return null;
-
     const data = new FormData();
     data.append("file", file);
-
     try {
-      const response = await axios.post("/api/upload", data);
-      const result = response.data;
-      return result.url; // e.g. /uploads/16930012345-myimg.png
+      const res = await axios.post("/api/upload", data);
+      return res.data.url;
     } catch (err) {
       console.error("Image upload failed", err);
       return null;
     }
   };
 
-  const onSubmit = async () => {
-    // Validate required fields
-    if (
-      !formData.title.trim() ||
-      !formData.slug.trim() ||
-      !formData.content.trim() ||
-      !formData.excerpt.trim() ||
-      !formData.coverImage.trim() ||
-      !formData.type.trim()
-    ) {
-      alert("Please fill all required fields including Type.");
-      return;
+  const handleFileUpload = async (e, type) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const uploadedUrl = await uploadImage(file);
+    if (!uploadedUrl) return;
+
+    setFormData((prev) => ({ ...prev, [type]: uploadedUrl }));
+
+    if (type === "coverImage") {
+      setSelectedCoverFile(file);
+      setCoverPreview(URL.createObjectURL(file));
     }
+    if (type === "innerImage") {
+      setSelectedInnerFile(file);
+      setInnerPreview(URL.createObjectURL(file));
+    }
+  };
 
-    let imageUrl = formData.coverImage;
+  const validateForm = () => {
+    const requiredFields = ["title", "slug", "excerpt", "content", "type"];
+    for (const key of requiredFields) {
+      if (!formData[key] || formData[key].trim() === "") return false;
+    }
+    // Ensure both images are uploaded
+    if (!formData.coverImage || !formData.innerImage) return false;
+    return true;
+  };
 
-    if (selectedFile) {
-      const uploadedUrl = await uploadImage(selectedFile);
-      if (uploadedUrl) {
-        imageUrl = uploadedUrl;
-      }
+  const onSubmit = async () => {
+    if (!validateForm()) {
+      alert("Please fill all fields and upload both images before saving.");
+      return;
     }
 
     try {
       setLoading(true);
-      const res = await axios.put(`/api/admin/blogs/${blog._id}`, {
-        ...formData,
-        coverImage: imageUrl,
-      });
+      const res = await axios.put(`/api/admin/blogs/${blog._id}`, formData);
 
       if (res.data.success) {
         alert("✅ Blog updated successfully!");
-        handleUpdate(res.data.data); // Update parent list
+        handleUpdate(res.data.data);
         handleClose();
       } else {
-        alert("Failed to update blog: " + res.data.message);
+        alert("❌ Failed to update blog: " + res.data.message);
       }
-    } catch (error) {
-      console.error("Error updating blog:", error);
-      alert("Something went wrong while updating the blog.");
+    } catch (err) {
+      console.error("Error updating blog:", err);
+      alert("❌ Something went wrong while updating the blog.");
     } finally {
       setLoading(false);
     }
@@ -153,7 +164,6 @@ export default function EditBlogModal({
           rows={6}
         />
 
-        {/* ✅ Select Type (Required) */}
         <FormControl fullWidth required>
           <InputLabel id="type-label">Type</InputLabel>
           <Select
@@ -168,47 +178,62 @@ export default function EditBlogModal({
           </Select>
         </FormControl>
 
-        <div>
-          <p className="text-sm font-medium mb-1">Cover Image</p>
+        <div className="flex gap-4">
+          {/* Cover Image */}
+          <div>
+            <p className="text-sm font-medium mb-1">Cover Image</p>
+            <input
+              type="file"
+              accept="image/*"
+              style={{ display: "none" }}
+              id="editCoverImageUpload"
+              onChange={(e) => handleFileUpload(e, "coverImage")}
+            />
+            <label htmlFor="editCoverImageUpload">
+              <Button variant="outlined" component="span">
+                Change Cover
+              </Button>
+            </label>
+            {coverPreview && (
+              <div className="mt-2">
+                <Image
+                  src={coverPreview}
+                  width={100}
+                  height={100}
+                  alt="Cover Preview"
+                  className="w-40 h-40 object-cover rounded-md border"
+                />
+              </div>
+            )}
+          </div>
 
-          {/* Hidden file input */}
-          <input
-            type="file"
-            accept="image/*"
-            id="editCoverImageUpload"
-            style={{ display: "none" }}
-            onChange={async (e) => {
-              const file = e.target.files[0];
-              if (file) {
-                setSelectedFile(file);
-                setPreview(URL.createObjectURL(file));
-                const uploadedUrl = await uploadImage(file);
-                if (uploadedUrl) {
-                  setFormData((prev) => ({ ...prev, coverImage: uploadedUrl }));
-                }
-              }
-            }}
-          />
-
-          {/* Upload button */}
-          <label htmlFor="editCoverImageUpload">
-            <Button variant="outlined" component="span">
-              Change Image
-            </Button>
-          </label>
-
-          {/* Preview */}
-          {preview && (
-            <div className="mt-3">
-              <Image
-                src={preview}
-                width={100}
-                height={100}
-                alt="Preview"
-                className="w-40 h-40 object-cover rounded-md border"
-              />
-            </div>
-          )}
+          {/* Inner Image */}
+          <div>
+            <p className="text-sm font-medium mb-1">Inner Image</p>
+            <input
+              type="file"
+              accept="image/*"
+              style={{ display: "none" }}
+              id="editInnerImageUpload"
+              onChange={(e) => handleFileUpload(e, "innerImage")}
+            />
+            <label htmlFor="editInnerImageUpload">
+              <Button variant="outlined" component="span">
+                Change Inner
+              </Button>
+            </label>
+            {innerPreview && (
+              <div className="mt-2">
+                <Image
+                  src={innerPreview}
+                  width={100}
+                  height={100}
+                  alt="Inner Preview"
+                  className="w-40 h-40 object-cover rounded-md border"
+                />
+              </div>
+            )}
+          </div>
         </div>
       </DialogContent>
 

@@ -23,22 +23,45 @@ export default function ViewBlogModal({ open, handleClose, blog }) {
       </DialogTitle>
 
       <DialogContent dividers>
-        {/* Cover Image */}
-        {blog.coverImage && (
-          <Box display="flex" justifyContent="center" mb={3}>
-            <Image
-              src={blog.coverImage}
-              alt={blog.title}
-              width={500}
-              height={300}
-              style={{
-                borderRadius: "8px",
-                objectFit: "cover",
-                border: "1px solid #e0e0e0",
-              }}
-            />
-          </Box>
-        )}
+        {/* Images */}
+        <Box display="flex" justifyContent="center" gap={2} flexWrap="wrap" mb={3}>
+          {blog.coverImage && (
+            <Box>
+              <Typography variant="caption" display="block" mb={1} textAlign="center">
+                Cover Image
+              </Typography>
+              <Image
+                src={blog.coverImage}
+                alt={`${blog.title} - Cover`}
+                width={400}
+                height={250}
+                style={{
+                  borderRadius: "8px",
+                  objectFit: "cover",
+                  border: "1px solid #e0e0e0",
+                }}
+              />
+            </Box>
+          )}
+          {blog.innerImage && (
+            <Box>
+              <Typography variant="caption" display="block" mb={1} textAlign="center">
+                Inner Image
+              </Typography>
+              <Image
+                src={blog.innerImage}
+                alt={`${blog.title} - Inner`}
+                width={400}
+                height={250}
+                style={{
+                  borderRadius: "8px",
+                  objectFit: "cover",
+                  border: "1px solid #e0e0e0",
+                }}
+              />
+            </Box>
+          )}
+        </Box>
 
         {/* Title + Slug */}
         <Typography variant="h5" fontWeight="bold" gutterBottom>
@@ -48,7 +71,7 @@ export default function ViewBlogModal({ open, handleClose, blog }) {
           <strong>Slug:</strong> {blog.slug}
         </Typography>
 
-        {/* ✅ Type Section */}
+        {/* Type */}
         {blog.type && (
           <Box my={1}>
             <Typography variant="body2" color="text.secondary" gutterBottom>
@@ -84,12 +107,10 @@ export default function ViewBlogModal({ open, handleClose, blog }) {
 
         {/* Meta Info */}
         <Typography variant="caption" color="text.secondary" display="block">
-          <strong>Created At:</strong>{" "}
-          {new Date(blog.createdAt).toLocaleString()}
+          <strong>Created At:</strong> {new Date(blog.createdAt).toLocaleString()}
         </Typography>
         <Typography variant="caption" color="text.secondary" display="block">
-          <strong>Updated At:</strong>{" "}
-          {new Date(blog.updatedAt).toLocaleString()}
+          <strong>Updated At:</strong> {new Date(blog.updatedAt).toLocaleString()}
         </Typography>
       </DialogContent>
 

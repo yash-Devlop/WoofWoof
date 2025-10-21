@@ -50,8 +50,8 @@ const SmartWay = () => {
                   <motion.span className=" ">
                     <Image
                       src="/images/logo.png"
-                      width={33}
-                      height={33}
+                      width={40}
+                      height={40}
                       alt="logo"
                       className="  group-hover:block transition-all duration-300"
                     />

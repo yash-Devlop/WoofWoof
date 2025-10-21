@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import axios from "axios";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import Spinner from "@/app/components/loader/Spinner";
 
 export default function BlogDetail() {
   const { slug } = useParams();
@@ -28,144 +29,159 @@ export default function BlogDetail() {
   }, [slug]);
 
   if (loading) {
-    return <p className="text-center py-20 text-gray-500">Loading blog...</p>;
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-white">
+        <Spinner />
+      </div>
+    );
   }
 
   if (!blog) {
-    return <p className="text-center py-20 text-red-500">Blog not found.</p>;
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-800 mb-2">
+            Blog not found
+          </h2>
+          <p className="text-gray-500">
+            The blog post you're looking for doesn't exist.
+          </p>
+        </div>
+      </div>
+    );
   }
 
-  const createdDate = new Date(blog.createdAt).toLocaleDateString("en-GB", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "2-digit",
+  const createdDate = new Date(blog.createdAt).toLocaleDateString("en-US", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
   });
 
-  const updatedDate = new Date(blog.updatedAt).toLocaleDateString("en-GB", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "2-digit",
+  const updatedDate = new Date(blog.updatedAt).toLocaleDateString("en-US", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
   });
 
   return (
-    <div className="w-full h-full relative overflow-hidden">
-      {/* Background paws */}
-      <div className="absolute inset-0 opacity-60">
+    <div className="min-h-screen bg-white">
+      {/* Hero Section with Cover Image */}
+      <div className="relative w-full h-[300px] md:h-[500px] bg-gray-100">
         <Image
-          src="/images/pinkPaws.png"
-          alt="background paws"
+          src={blog.innerImage}
+          alt={blog.title}
           fill
-          className="object-top w-full h-full"
+          priority
+          className="object-cover"
         />
-      </div>
-
-      {/* Floating Vectors */}
-      <div className="absolute inset-0 pointer-events-none">
-        {/* Top floating vector */}
-        <div className="absolute top-0 left-0">
-          <motion.div
-            initial={{ x: 20, y: -10, scale: 1 }}
-            animate={{
-              x: [0, -30, -50, -30, 0],
-              y: [0, 20, 40, 20, 0],
-            }}
-            transition={{
-              duration: 7,
-              repeat: Infinity,
-              ease: "linear",
-            }}
-          >
-            <Image
-              src="/images/testimonialBg.png"
-              alt="floatingVector1"
-              width={200}
-              height={200}
-              className="object-contain h-[100px] w-[100px] lg:h-[150px] lg:w-[150px]"
-            />
-          </motion.div>
-        </div>
-
-        {/* Bottom floating vector */}
-        <div className="absolute bottom-3/5 lg:bottom-1 right-10 lg:right-1/2">
-          <motion.div
-            initial={{ x: 10, y: -10, scale: 1 }}
-            animate={{
-              x: [0, 20, 40, 20, 0],
-              y: [0, -10, 0, 10, 0],
-            }}
-            transition={{
-              duration: 7,
-              repeat: Infinity,
-              ease: "linear",
-            }}
-          >
-            <Image
-              src="/images/transitionBg.png"
-              alt="floatingVector2"
-              width={200}
-              height={200}
-              className="object-contain h-[100px] w-[100px] lg:h-[150px] lg:w-[150px]"
-            />
-          </motion.div>
-        </div>
-
-        {/* Right-side floating vector */}
-        <div className="absolute bottom-1/2 right-0">
-          <motion.div
-            initial={{ x: -20, y: -30, scale: 1 }}
-            animate={{
-              x: [0, -30, -50, -30, 0],
-              y: [0, 20, 40, 20, 0],
-            }}
-            transition={{
-              duration: 7,
-              repeat: Infinity,
-              ease: "linear",
-            }}
-          >
-            <Image
-              src="/images/testimonialBg.png"
-              alt="floatingVector3"
-              width={200}
-              height={200}
-              className="object-contain h-[100px] w-[100px] lg:h-[150px] lg:w-[150px]"
-            />
-          </motion.div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+        
+        {/* Title Overlay */}
+        <div className="absolute bottom-0 left-0 right-0 p-6 md:p-12">
+          <div className="max-w-5xl mx-auto">
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-3 md:mb-4 drop-shadow-lg"
+            >
+              {blog.title}
+            </motion.h1>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="flex flex-wrap items-center gap-3 md:gap-4 text-white/90 text-sm md:text-base"
+            >
+              <span className="flex items-center gap-2">
+                <svg
+                  className="w-4 h-4 md:w-5 md:h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  />
+                </svg>
+                {createdDate}
+              </span>
+              {createdDate !== updatedDate && (
+                <span className="flex items-center gap-2">
+                  <svg
+                    className="w-4 h-4 md:w-5 md:h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                    />
+                  </svg>
+                  Updated {updatedDate}
+                </span>
+              )}
+            </motion.div>
+          </div>
         </div>
       </div>
 
-      {/* Blog Content */}
-      <div className="relative z-10 max-w-4xl mx-auto py-12 px-4">
-        {/* Title */}
-        <h1 className="text-4xl text-[#ff0047] font-bold mb-2">{blog.title}</h1>
-
-        {/* Slug & Dates */}
-        <p className="text-gray-500 text-sm">
-          Slug: <span className="italic">{blog.slug}</span>
-        </p>
-        <p className="text-gray-500 text-sm">
-          Published: {createdDate} | Updated: {updatedDate}
-        </p>
-
-        {/* Cover Image */}
-        <div className="my-6">
-          <Image
-            src={blog.coverImage}
-            alt={blog.title}
-            width={800}
-            height={500}
-            className="rounded-xl shadow-md"
-          />
-        </div>
-
+      {/* Content Section */}
+      <div className="max-w-5xl mx-auto px-6 md:px-12 lg:px-16 py-12 md:py-16 lg:py-20">
         {/* Excerpt */}
-        <p className="text-lg text-gray-700 mb-6">{blog.excerpt}</p>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="mb-12 md:mb-16"
+        >
+          <p className="text-lg md:text-xl lg:text-2xl text-gray-600 leading-relaxed">
+            {blog.excerpt}
+          </p>
+        </motion.div>
 
-        {/* Content */}
-        <article
-          className="prose lg:prose-lg max-w-none"
-          dangerouslySetInnerHTML={{ __html: blog.content }}
-        />
+        {/* Main Content */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4 }}
+        >
+          <article
+            className="prose prose-lg md:prose-xl lg:prose-2xl max-w-none
+              prose-headings:font-semibold prose-headings:text-gray-900 prose-headings:tracking-tight
+              prose-h1:text-3xl md:prose-h1:text-4xl lg:prose-h1:text-5xl prose-h1:mb-6 prose-h1:mt-12
+              prose-h2:text-2xl md:prose-h2:text-3xl lg:prose-h2:text-4xl prose-h2:mb-4 prose-h2:mt-10
+              prose-h3:text-xl md:prose-h3:text-2xl lg:prose-h3:text-3xl prose-h3:mb-3 prose-h3:mt-8
+              prose-p:text-gray-600 prose-p:leading-relaxed prose-p:mb-6 prose-p:text-lg md:prose-p:text-xl
+              prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline
+              prose-strong:text-gray-900 prose-strong:font-semibold
+              prose-ul:list-disc prose-ul:pl-6 prose-ul:mb-6 prose-ul:space-y-2
+              prose-ol:list-decimal prose-ol:pl-6 prose-ol:mb-6 prose-ol:space-y-2
+              prose-li:text-gray-600 prose-li:text-lg md:prose-li:text-xl
+              prose-blockquote:border-l-4 prose-blockquote:border-gray-300
+              prose-blockquote:pl-6 prose-blockquote:italic prose-blockquote:text-gray-600 prose-blockquote:my-6 prose-blockquote:text-lg md:prose-blockquote:text-xl
+              prose-code:text-pink-600 prose-code:bg-gray-50 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:text-base
+              prose-pre:bg-gray-900 prose-pre:text-gray-100 prose-pre:p-6 prose-pre:rounded-lg prose-pre:overflow-x-auto prose-pre:my-6
+              prose-img:rounded-lg prose-img:my-8 prose-img:w-full"
+            dangerouslySetInnerHTML={{ __html: blog.content }}
+          />
+        </motion.div>
+
+        {/* Metadata Footer */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.5 }}
+          className="mt-16 pt-8 border-t border-gray-200 text-sm text-gray-500"
+        >
+          <p>Slug: <span className="font-mono text-gray-700">{blog.slug}</span></p>
+        </motion.div>
       </div>
     </div>
   );

@@ -17,76 +17,84 @@ import Image from "next/image";
 
 export default function AddBlogModal({ open, handleClose, handleSave }) {
   const [loading, setLoading] = useState(false);
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [preview, setPreview] = useState(null);
   const [formData, setFormData] = useState({
     title: "",
     slug: "",
     excerpt: "",
     content: "",
     coverImage: "",
-    type: "", // ✅ added
+    innerImage: "",
+    type: "", // News or Blogs
   });
+  const [coverPreview, setCoverPreview] = useState(null);
+  const [innerPreview, setInnerPreview] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const validateForm = () => {
-    // check if any field is empty
-    for (const key in formData) {
-      if (!formData[key] || formData[key].trim() === "") {
-        return false;
-      }
-    }
-    return true;
-  };
-
   const uploadImage = async (file) => {
     if (!file) return null;
-
     const data = new FormData();
     data.append("file", file);
-
     try {
       const response = await axios.post("/api/upload", data);
-      const result = response.data;
-      return result.url; // e.g. /uploads/16930012345-myimg.png
+      return response.data.url;
     } catch (err) {
       console.error("Image upload failed", err);
       return null;
     }
   };
 
+  const handleFileUpload = async (e, type) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const uploadedUrl = await uploadImage(file);
+    if (!uploadedUrl) return;
+
+    setFormData((prev) => ({ ...prev, [type]: uploadedUrl }));
+
+    if (type === "coverImage") setCoverPreview(URL.createObjectURL(file));
+    if (type === "innerImage") setInnerPreview(URL.createObjectURL(file));
+  };
+
+  const validateForm = () => {
+    const requiredFields = ["title", "slug", "excerpt", "content", "type"];
+    for (const key of requiredFields) {
+      if (!formData[key] || formData[key].trim() === "") return false;
+    }
+    // Exactly 2 images required
+    if (!formData.coverImage || !formData.innerImage) return false;
+    return true;
+  };
+
   const onSubmit = async () => {
     if (!validateForm()) {
-      alert("Please fill all the fields before submitting.");
+      alert("Please fill all fields and upload both images before submitting.");
       return;
     }
 
-    const blog = { ...formData };
-
     try {
       setLoading(true);
-      const res = await axios.post("/api/admin/blogs", blog);
+      const res = await axios.post("/api/admin/blogs", formData);
 
       if (res.data.success) {
         alert("Blog created successfully!");
         handleSave(res.data.data);
         handleClose();
-
-        // reset form
         setFormData({
           title: "",
           slug: "",
           excerpt: "",
           content: "",
           coverImage: "",
+          innerImage: "",
           type: "",
         });
-        setSelectedFile(null);
-        setPreview(null);
+        setCoverPreview(null);
+        setInnerPreview(null);
       } else {
         alert("❌ Failed to create blog: " + res.data.message);
       }
@@ -145,49 +153,64 @@ export default function AddBlogModal({ open, handleClose, handleSave }) {
             value={formData.type}
             onChange={handleChange}
             label="Type"
-            required
           >
             <MenuItem value="News">News</MenuItem>
             <MenuItem value="Blogs">Blogs</MenuItem>
           </Select>
         </FormControl>
 
-        <div>
-          <p className="text-sm font-medium mb-1">Cover Image</p>
-          <input
-            type="file"
-            accept="image/*"
-            id="coverImageUpload"
-            style={{ display: "none" }}
-            onChange={async (e) => {
-              const file = e.target.files[0];
-              if (file) {
-                setSelectedFile(file);
-                setPreview(URL.createObjectURL(file));
-                const uploadedUrl = await uploadImage(file);
-                if (uploadedUrl) {
-                  setFormData((prev) => ({ ...prev, coverImage: uploadedUrl }));
-                }
-              }
-            }}
-          />
-          <label htmlFor="coverImageUpload">
-            <Button variant="outlined" component="span">
-              Upload Image
-            </Button>
-          </label>
-          {preview && (
-            <div className="mt-3">
-              <p className="text-xs text-gray-500 mb-1">Preview:</p>
-              <Image
-                src={preview}
-                width={100}
-                height={100}
-                alt="Preview"
-                className="w-40 h-40 object-cover rounded-md border"
-              />
-            </div>
-          )}
+        <div className="flex gap-4">
+          {/* Cover Image */}
+          <div>
+            <p className="text-sm font-medium mb-1">Cover Image</p>
+            <input
+              type="file"
+              accept="image/*"
+              id="coverImageUpload"
+              style={{ display: "none" }}
+              onChange={(e) => handleFileUpload(e, "coverImage")}
+            />
+            <label htmlFor="coverImageUpload">
+              <Button variant="outlined" component="span">Upload Cover</Button>
+            </label>
+            {coverPreview && (
+              <div className="mt-2">
+                <Image
+                  src={coverPreview}
+                  width={100}
+                  height={100}
+                  alt="Cover Preview"
+                  className="w-40 h-40 object-cover rounded-md border"
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Inner Image */}
+          <div>
+            <p className="text-sm font-medium mb-1">Inner Image</p>
+            <input
+              type="file"
+              accept="image/*"
+              id="innerImageUpload"
+              style={{ display: "none" }}
+              onChange={(e) => handleFileUpload(e, "innerImage")}
+            />
+            <label htmlFor="innerImageUpload">
+              <Button variant="outlined" component="span">Upload Inner</Button>
+            </label>
+            {innerPreview && (
+              <div className="mt-2">
+                <Image
+                  src={innerPreview}
+                  width={100}
+                  height={100}
+                  alt="Inner Preview"
+                  className="w-40 h-40 object-cover rounded-md border"
+                />
+              </div>
+            )}
+          </div>
         </div>
       </DialogContent>
       <DialogActions>
