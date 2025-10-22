@@ -141,11 +141,11 @@ export default function WishlistPage() {
           <p className="text-center text-gray-500 text-xl">Loading your wishlist...</p>
         </div> */}
         <Image
-        src="/images/bgPaws1.png"
-        alt="bgpaws"
-        fill
-        className="h-full w-full absolute inset-0 opacity-30"
-      />
+          src="/images/bgPaws1.png"
+          alt="bgpaws"
+          fill
+          className="h-full w-full absolute inset-0 opacity-30"
+        />
         <Spinner />
       </div>
     );
@@ -178,12 +178,13 @@ export default function WishlistPage() {
             <FavoriteIcon sx={{ color: "#ff0047", fontSize: 80, opacity: 0.3 }} />
             <h2 className="text-2xl font-semibold mt-6 text-gray-700">Your wishlist is empty</h2>
             <p className="text-gray-500 mt-2">Start adding products you love!</p>
-            <Link
-              href="/shop"
-              className="mt-6 bg-[#F91F54] hover:bg-[#d20037] text-white px-8 py-3 rounded-lg transition-colors"
+            <button
+              className="bg-[#F91F54] flex items-center px-4 py-2 gap-2 text-white font-medium rounded-full uppercase hover:scale-105 transition-all duration-300"
+              onClick={() => {router.push("/shop")}}
             >
               Continue Shopping
-            </Link>
+              <Image src="/images/logo2.png" width={33} height={33} alt="logo" />
+            </button>
           </div>
         ) : (
           /* Products Grid */
@@ -222,11 +223,10 @@ export default function WishlistPage() {
                   {/* Stock Status */}
                   <div className="absolute top-3 right-3">
                     <span
-                      className={`text-xs px-3 py-1 rounded-full font-medium ${
-                        product.inStock
+                      className={`text-xs px-3 py-1 rounded-full font-medium ${product.inStock
                           ? "bg-green-100 text-green-700"
                           : "bg-red-100 text-red-700"
-                      }`}
+                        }`}
                     >
                       {product.inStock ? "In Stock" : "Out of Stock"}
                     </span>

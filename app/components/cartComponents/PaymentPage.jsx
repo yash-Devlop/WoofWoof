@@ -1,10 +1,12 @@
 
 "use client";
 import Button from "@mui/material/Button";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Shield, Check, Truck, CreditCard, Tag, X } from "lucide-react";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import { motion } from "framer-motion";
 import useRazorpayLoader from "@/hooks/useRazorpayLoader";
 
 const PaymentPage = ({ onBack, onOrderComplete, guestAddress }) => {
@@ -30,6 +32,11 @@ const PaymentPage = ({ onBack, onOrderComplete, guestAddress }) => {
     size: item.size || null,
     color: item.color || { code: null, name: null },
   }));
+
+  useEffect(() => {
+    console.log("shipping address", shippingAddress);
+
+  }, [shippingAddress])
 
   const subtotal = items.reduce(
     (sum, item) => sum + (item?.product?.price || 0) * item.quantity,
@@ -277,7 +284,6 @@ const PaymentPage = ({ onBack, onOrderComplete, guestAddress }) => {
         return;
       }
 
-      // ✅ Create Razorpay order using new endpoint
       const { data } = await axios.post("/api/payment/createOrder", {
         amount: parseFloat(total.toFixed(2)),
         email: customerEmail,
@@ -583,7 +589,15 @@ const PaymentPage = ({ onBack, onOrderComplete, guestAddress }) => {
       </div>
 
       <div className="w-full flex justify-end items-center lg:px-8 px-4 pb-8">
-        <Button onClick={onBack} disabled={isProcessing}>Back to Checkout</Button>
+        {/* <Button onClick={onBack} disabled={isProcessing}>Back to Checkout</Button> */}
+        <button
+          className="bg-[#F91F54] flex items-center px-4 py-2 gap-2 text-white font-medium rounded-full uppercase hover:scale-105 transition-all duration-300"
+          onClick={onBack}
+          disabled={isProcessing}
+        >
+          Back to Checkout
+          <Image src="/images/logo2.png" width={33} height={33} alt="logo" />
+        </button>
       </div>
     </div>
   );

@@ -1,8 +1,8 @@
 // app/api/payment/createOrder/route.js
 import Razorpay from "razorpay";
 import { NextResponse } from "next/server";
-import User from "@/model/User"; // ✅ adjust path if needed
-import { connectDB } from "@/lib/connect"; // ✅ your DB connect utility
+import User from "@/model/User";
+import { connectDB } from "@/lib/connect";
 import { cookies } from "next/headers";
 import { verifyToken } from "@/lib/jwt";
 
@@ -13,19 +13,11 @@ const razorpay = new Razorpay({
 
 export async function POST(req) {
   try {
-    await connectDB(); // ✅ Ensure database is connected
-    const cookieStore = await cookies();
-    const token = cookieStore.get("auth-token")?.value;
+    await connectDB();
+    
+    const { amount, email } = await req.json();
 
-    if (!token) {
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-    }
-
-    const decoded = verifyToken(token);
-
-    const { amount } = await req.json();
-    const email = decoded.email;
-
+    // ✅ Validate required fields
     if (!email || !amount) {
       return NextResponse.json(
         { success: false, message: "Email and amount are required" },
@@ -33,19 +25,38 @@ export async function POST(req) {
       );
     }
 
-    const user = await User.findOne({ email });
+    // ✅ Check if user is authenticated (optional)
+    const cookieStore = await cookies();
+    const token = cookieStore.get("auth-token")?.value;
+    
+    let userId = null;
+    let isAuthenticated = false;
 
-    if (!user) {
-      return NextResponse.json(
-        { success: false, message: "User not found" },
-        { status: 404 }
-      );
+    if (token) {
+      try {
+        const decoded = verifyToken(token);
+        const user = await User.findOne({ email: decoded.email });
+        
+        if (user) {
+          userId = user._id;
+          isAuthenticated = true;
+        }
+      } catch (error) {
+        console.warn("Token verification failed, treating as guest:", error.message);
+        // Continue as guest user
+      }
     }
 
+    // ✅ Create Razorpay order (works for both authenticated and guest users)
     const options = {
       amount: amount * 100, // in paise
       currency: "INR",
       receipt: `receipt_${Date.now()}`,
+      notes: {
+        email: email,
+        isGuest: !isAuthenticated,
+        ...(userId && { userId: userId.toString() })
+      }
     };
 
     const order = await razorpay.orders.create(options);
@@ -53,7 +64,8 @@ export async function POST(req) {
     return NextResponse.json({
       success: true,
       order,
-      userId: user._id,
+      userId: userId || null,
+      isGuest: !isAuthenticated,
     });
   } catch (error) {
     console.error("Create Order Error:", error);

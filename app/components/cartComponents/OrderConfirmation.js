@@ -3,6 +3,7 @@ import React from 'react';
 import Image from 'next/image';
 import { Check, Package, Truck, MapPin, CreditCard, Calendar, Mail } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { easeInOut, motion } from "framer-motion";
 
 const OrderConfirmation = ({ orderData }) => {
   const router = useRouter();
@@ -254,18 +255,40 @@ const OrderConfirmation = ({ orderData }) => {
 
               {/* Action Buttons */}
               <div className="space-y-3">
-                <button
-                  onClick={handleViewOrders}
-                  className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 px-6 rounded-xl font-medium hover:from-blue-700 hover:to-blue-800 transform hover:scale-[1.02] transition-all duration-200 shadow-lg hover:shadow-xl"
-                >
-                  View Order Details
-                </button>
-                <button
-                  onClick={handleContinueShopping}
-                  className="w-full bg-white text-gray-700 py-3 px-6 rounded-xl font-medium border-2 border-gray-300 hover:border-gray-400 hover:bg-gray-50 transition-all duration-200"
-                >
-                  Continue Shopping
-                </button>
+                <div className="flex gap-8">
+                  <button
+                    onClick={handleViewOrders}
+                    className="bg-black/97 gap-1 flex justify-center items-center pl-4 pr-1.5 py-1 group hover:scale-105 transition-all duration-300 text-white font-medium lg:text-lg rounded-full uppercase cursor-pointer"
+                  >
+                    Order Details
+                    <motion.span>
+                      <Image
+                        src="/images/logo.png"
+                        width={40}
+                        height={40}
+                        alt="logo"
+                        className="group-hover:block transition-all duration-300"
+                      />
+                    </motion.span>
+                  </button>
+                </div>
+                <div className="flex gap-8">
+                  <button
+                    onClick={handleContinueShopping}
+                    className="bg-black/97 gap-1 flex justify-center items-center pl-4 pr-1.5 py-1 group hover:scale-105 transition-all duration-300 text-white font-medium lg:text-lg rounded-full uppercase cursor-pointer"
+                  >
+                    Continue Shopping
+                    <motion.span>
+                      <Image
+                        src="/images/logo.png"
+                        width={40}
+                        height={40}
+                        alt="logo"
+                        className="group-hover:block transition-all duration-300"
+                      />
+                    </motion.span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
