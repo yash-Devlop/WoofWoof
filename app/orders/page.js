@@ -5,6 +5,7 @@ import Image from "next/image";
 import axios from "axios";
 import { Accordion, AccordionSummary, AccordionDetails, Typography } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import CancelIcon from "@mui/icons-material/Cancel";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/navigation";
@@ -151,70 +152,83 @@ export default function UserOrdersPage() {
 
                                     {/* Order Status Timeline */}
                                     <div className="mb-6">
-                                        <div className="flex items-center justify-between relative">
-                                            {/* Order Confirmed */}
-                                            <div className="flex flex-col items-center z-10">
-                                                <div className="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center">
-                                                    <CheckCircleIcon className="text-white" fontSize="small" />
+                                        {order.status === "Cancelled" ? (
+                                            // ✅ Cancelled order UI
+                                            <div className="flex flex-col items-center w-full">
+                                                <div className="w-10 h-10 rounded-full bg-red-500 flex items-center justify-center">
+                                                    <CancelIcon className="text-white" fontSize="small" />
                                                 </div>
-                                                <p className="text-xs mt-2 font-medium">Order confirmed</p>
+                                                <p className="text-xs mt-2 font-medium text-red-600">Cancelled</p>
                                                 <p className="text-xs text-gray-500">
-                                                    {new Date(order.createdAt).toLocaleDateString("en-IN", {
-                                                        day: "numeric",
-                                                        month: "short",
-                                                    })}
+                                                    {new Date(order.updatedAt).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}
                                                 </p>
                                             </div>
-
-                                            {/* Progress Line */}
-                                            <div
-                                                className={`absolute top-5 left-0 h-0.5 ${order.status === "Delivered" ? "bg-green-500" : "bg-gray-300"
-                                                    }`}
-                                                style={{ width: "calc(50% - 20px)", marginLeft: "20px" }}
-                                            />
-
-                                            {/* Shipped */}
-                                            <div className="flex flex-col items-center z-10">
-                                                <div
-                                                    className={`w-10 h-10 rounded-full flex items-center justify-center ${orderStatus.step >= 2 ? "bg-green-500" : "bg-gray-300"
-                                                        }`}
-                                                >
-                                                    <CheckCircleIcon className="text-white" fontSize="small" />
-                                                </div>
-                                                <p className="text-xs mt-2 font-medium">Shipped</p>
-                                                <p className="text-xs text-gray-500">
-                                                    {orderStatus.step >= 2
-                                                        ? new Date(order.updatedAt).toLocaleDateString("en-IN", { day: "numeric", month: "short" })
-                                                        : "Pending"}
-                                                </p>
-                                            </div>
-
-                                            {/* Progress Line */}
-                                            <div
-                                                className={`absolute top-5 right-0 h-0.5 ${order.status === "Delivered" ? "bg-green-500" : "bg-gray-300"
-                                                    }`}
-                                                style={{ width: "calc(50% - 20px)", marginRight: "20px" }}
-                                            />
-
-                                            {/* Delivered */}
-                                            <div className="flex flex-col items-center z-10">
-                                                <div
-                                                    className={`w-10 h-10 rounded-full flex items-center justify-center ${order.status === "Delivered" ? "bg-green-500" : "bg-gray-300"
-                                                        }`}
-                                                >
-                                                    <CheckCircleIcon className="text-white" fontSize="small" />
-                                                </div>
-                                                <p className="text-xs mt-2 font-medium">Delivered</p>
-                                                <p className={`text-xs ${orderStatus.color}`}>
-                                                    {order.status === "Delivered"
-                                                        ? new Date(order.updatedAt).toLocaleDateString("en-IN", {
+                                        ) : (
+                                            <div className="flex items-center justify-between relative">
+                                                {/* Order Confirmed */}
+                                                <div className="flex flex-col items-center z-10">
+                                                    <div className="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center">
+                                                        <CheckCircleIcon className="text-white" fontSize="small" />
+                                                    </div>
+                                                    <p className="text-xs mt-2 font-medium">Order confirmed</p>
+                                                    <p className="text-xs text-gray-500">
+                                                        {new Date(order.createdAt).toLocaleDateString("en-IN", {
                                                             day: "numeric",
                                                             month: "short",
-                                                        })
-                                                        : orderStatus.label}
-                                                </p>
+                                                        })}
+                                                    </p>
+                                                </div>
+
+                                                {/* Progress Line */}
+                                                <div
+                                                    className={`absolute top-5 left-0 h-0.5 ${order.status === "Delivered" ? "bg-green-500" : "bg-gray-300"
+                                                        }`}
+                                                    style={{ width: "calc(50% - 20px)", marginLeft: "20px" }}
+                                                />
+
+                                                {/* Shipped */}
+                                                <div className="flex flex-col items-center z-10">
+                                                    <div
+                                                        className={`w-10 h-10 rounded-full flex items-center justify-center ${orderStatus.step >= 2 ? "bg-green-500" : "bg-gray-300"
+                                                            }`}
+                                                    >
+                                                        <CheckCircleIcon className="text-white" fontSize="small" />
+                                                    </div>
+                                                    <p className="text-xs mt-2 font-medium">Shipped</p>
+                                                    <p className="text-xs text-gray-500">
+                                                        {orderStatus.step >= 2
+                                                            ? new Date(order.updatedAt).toLocaleDateString("en-IN", { day: "numeric", month: "short" })
+                                                            : "Pending"}
+                                                    </p>
+                                                </div>
+
+                                                {/* Progress Line */}
+                                                <div
+                                                    className={`absolute top-5 right-0 h-0.5 ${order.status === "Delivered" ? "bg-green-500" : "bg-gray-300"
+                                                        }`}
+                                                    style={{ width: "calc(50% - 20px)", marginRight: "20px" }}
+                                                />
+
+                                                {/* Delivered */}
+                                                <div className="flex flex-col items-center z-10">
+                                                    <div
+                                                        className={`w-10 h-10 rounded-full flex items-center justify-center ${order.status === "Delivered" ? "bg-green-500" : "bg-gray-300"
+                                                            }`}
+                                                    >
+                                                        <CheckCircleIcon className="text-white" fontSize="small" />
+                                                    </div>
+                                                    <p className="text-xs mt-2 font-medium">Delivered</p>
+                                                    <p className={`text-xs ${orderStatus.color}`}>
+                                                        {order.status === "Delivered"
+                                                            ? new Date(order.updatedAt).toLocaleDateString("en-IN", {
+                                                                day: "numeric",
+                                                                month: "short",
+                                                            })
+                                                            : orderStatus.label}
+                                                    </p>
+                                                </div>
                                             </div>
-                                        </div>
+                                        )}
                                     </div>
 
                                     {/* Order Items */}

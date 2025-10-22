@@ -6,16 +6,13 @@
 // import FavoriteIcon from "@mui/icons-material/Favorite";
 // import { motion } from "framer-motion";
 // import axios from "axios";
-// import Slider from "react-slick";
 // import toast from "react-hot-toast";
 // import { useSelector } from "react-redux";
-// import "slick-carousel/slick/slick.css";
-// import "slick-carousel/slick/slick-theme.css";
-// import Spinner from "../loader/Spinner";
 // import SkeletonLoader from "../loader/SkeletonLoader";
 
 // const BestSelling = () => {
 //   const [products, setProducts] = useState([]);
+//   const [loading, setLoading] = useState(true);
 //   const [isMobile, setIsMobile] = useState(false);
 //   const [wishlist, setWishlist] = useState([]);
 //   const [loadingWishlist, setLoadingWishlist] = useState({});
@@ -25,10 +22,13 @@
 //   useEffect(() => {
 //     const fetchBestSelling = async () => {
 //       try {
+//         setLoading(true);
 //         const res = await axios.get("/api/bestProducts");
 //         setProducts(res.data?.products?.slice(0, 8) || []);
 //       } catch (err) {
 //         console.error("Failed to fetch best-selling products:", err);
+//       } finally {
+//         setLoading(false);
 //       }
 //     };
 //     fetchBestSelling();
@@ -50,32 +50,37 @@
 //   }, [isAuthenticated]);
 
 //   useEffect(() => {
-//     const handleResize = () => setIsMobile(window.innerWidth < 768);
-//     handleResize();
+//     let lastIsMobile = window.innerWidth < 768;
+//     setIsMobile(lastIsMobile);
+
+//     const handleResize = () => {
+//       const currentIsMobile = window.innerWidth < 768;
+//       if (currentIsMobile !== lastIsMobile) {
+//         lastIsMobile = currentIsMobile;
+//         setIsMobile(currentIsMobile);
+//       }
+//     };
+
 //     window.addEventListener("resize", handleResize);
 //     return () => window.removeEventListener("resize", handleResize);
 //   }, []);
 
+
 //   const handleWishlistToggle = async (e, productId) => {
-//     // Stop all event propagation immediately
 //     e.preventDefault();
 //     e.stopPropagation();
 //     e.nativeEvent.stopImmediatePropagation();
 
-//     // Check authentication
 //     if (!isAuthenticated) {
 //       toast.error("Please login to add to wishlist");
 //       return;
 //     }
 
-//     // Prevent multiple clicks
 //     if (loadingWishlist[productId]) return;
 
-//     // Optimistic UI update
 //     const previousWishlist = [...wishlist];
 //     const wasInWishlist = wishlist.includes(productId);
 
-//     // Update UI immediately
 //     if (wasInWishlist) {
 //       setWishlist((prev) => prev.filter((id) => id !== productId));
 //     } else {
@@ -86,13 +91,9 @@
 
 //     try {
 //       await axios.post("/api/wishlist", { productId });
-
-//       // Show success toast after API confirms
 //       toast.success(wasInWishlist ? "Removed from wishlist" : "Added to wishlist");
 //     } catch (err) {
-//       // Rollback on error
 //       setWishlist(previousWishlist);
-
 //       console.error("Wishlist toggle error:", err);
 //       if (err.response?.status === 401) {
 //         toast.error("Please login to add to wishlist");
@@ -115,41 +116,6 @@
 //     }),
 //   };
 
-//   if (!products.length) {  // ← Fix: was products.length, should be !products.length
-//     return (
-//       <div className="w-full relative">
-//         <div className="bg-white rounded-3xl m-4 md:m-12 py-8 md:py-16">
-//           <div className="px-4 md:px-20 xl:px-40">
-//             <div className="flex w-full justify-center">
-//               <h2 className="text-4xl font-semibold">Best Selling Products</h2>
-//             </div>
-
-//             {isMobile ? (
-//               <div className="mt-10">
-//                 <SkeletonLoader count={8} isMobile={isMobile} />
-//               </div>
-//             ) : (
-//               <div className="overflow-x-auto lg:overflow-x-visible no-scrollbar scrollbar-hide">
-//                 <div className="flex gap-6 mt-10 lg:grid lg:grid-cols-3 xl:grid-cols-4 md:px-0">
-//                   <SkeletonLoader count={8} isMobile={isMobile} />
-//                 </div>
-//               </div>
-//             )}
-//           </div>
-//         </div>
-//       </div>
-//     );
-//   }
-
-//   // Slider settings for mobile
-//   const sliderSettings = {
-//     dots: true,
-//     infinite: false,
-//     speed: 500,
-//     slidesToShow: 1,
-//     slidesToScroll: 1,
-//   };
-
 //   const ProductCard = ({ product, index }) => (
 //     <motion.div
 //       key={product._id}
@@ -158,9 +124,9 @@
 //       initial="hidden"
 //       whileInView="visible"
 //       viewport={{ once: true, amount: 0.2 }}
-//       className={isMobile ? "px-2" : ""}
+//       className={isMobile ? "flex-shrink-0 w-[45%]" : ""}
 //     >
-//       <div className="relative flex flex-col items-center justify-center">
+//       <div className="relative flex flex-col">
 //         <Link href={`/shop/${product._id}`} className="w-full">
 //           {product.discount && (
 //             <div className="absolute top-2 left-2 z-10 bg-[#FF3971] text-white text-sm px-2 py-1 rounded-full">
@@ -183,7 +149,6 @@
 //               </span>
 //             </Link>
 
-//             {/* Wishlist Icon - Only show for authenticated users */}
 //             {isAuthenticated && (
 //               <motion.button
 //                 onClick={(e) => handleWishlistToggle(e, product._id)}
@@ -238,6 +203,37 @@
 //     </motion.div>
 //   );
 
+//   if (loading) {
+//     return (
+//       <div className="w-full relative">
+//         <div className="bg-white rounded-3xl m-4 md:m-12 py-8 md:py-16">
+//           <div className="px-4 md:px-20 xl:px-40">
+//             <div className="flex w-full justify-center">
+//               <h2 className="text-4xl font-semibold">Best Selling Products</h2>
+//             </div>
+
+//             {isMobile ? (
+//               <div className="mt-10">
+//                 <div className="flex overflow-x-auto gap-4 pb-4 no-scrollbar scrollbar-hide">
+//                   <SkeletonLoader count={4} isMobile={true} />
+//                 </div>
+//                 <div className="flex overflow-x-auto gap-4 pb-4 mt-4 no-scrollbar scrollbar-hide">
+//                   <SkeletonLoader count={4} isMobile={true} />
+//                 </div>
+//               </div>
+//             ) : (
+//               <div className="overflow-x-auto lg:overflow-x-visible no-scrollbar scrollbar-hide">
+//                 <div className="flex gap-6 mt-10 lg:grid lg:grid-cols-3 xl:grid-cols-4 md:px-0">
+//                   <SkeletonLoader count={8} isMobile={false} />
+//                 </div>
+//               </div>
+//             )}
+//           </div>
+//         </div>
+//       </div>
+//     );
+//   }
+
 //   return (
 //     <div className="w-full relative">
 //       <div className="bg-white rounded-3xl m-4 md:m-12 py-8 md:py-16">
@@ -247,13 +243,17 @@
 //           </div>
 
 //           {isMobile ? (
-//             // Mobile Slider
 //             <div className="mt-10">
-//               <Slider {...sliderSettings}>
-//                 {products.map((product, index) => (
+//               <div className="flex overflow-x-auto gap-4 pb-4 no-scrollbar scrollbar-hide">
+//                 {products.slice(0, 4).map((product, index) => (
 //                   <ProductCard key={product._id} product={product} index={index} />
 //                 ))}
-//               </Slider>
+//               </div>
+//               <div className="flex overflow-x-auto gap-4 pb-4 mt-4 no-scrollbar scrollbar-hide">
+//                 {products.slice(4, 8).map((product, index) => (
+//                   <ProductCard key={product._id} product={product} index={index + 4} />
+//                 ))}
+//               </div>
 //             </div>
 //           ) : (
 //             // Desktop grid
@@ -272,6 +272,13 @@
 // };
 
 // export default BestSelling;
+
+
+
+
+
+
+
 
 
 
@@ -343,14 +350,14 @@ const BestSelling = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-
   const handleWishlistToggle = async (e, productId) => {
     e.preventDefault();
     e.stopPropagation();
     e.nativeEvent.stopImmediatePropagation();
 
+    // Check authentication first
     if (!isAuthenticated) {
-      toast.error("Please login to add to wishlist");
+      toast.error("Login to access wishlist");
       return;
     }
 
@@ -374,7 +381,7 @@ const BestSelling = () => {
       setWishlist(previousWishlist);
       console.error("Wishlist toggle error:", err);
       if (err.response?.status === 401) {
-        toast.error("Please login to add to wishlist");
+        toast.error("Login to access wishlist");
       } else {
         toast.error("Failed to update wishlist");
       }
@@ -427,43 +434,42 @@ const BestSelling = () => {
               </span>
             </Link>
 
-            {isAuthenticated && (
-              <motion.button
-                onClick={(e) => handleWishlistToggle(e, product._id)}
-                disabled={loadingWishlist[product._id]}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                className="focus:outline-none disabled:opacity-50 z-20 relative ml-2"
-                aria-label={isInWishlist(product._id) ? "Remove from wishlist" : "Add to wishlist"}
-                type="button"
+            {/* Wishlist Icon - Show for all users */}
+            <motion.button
+              onClick={(e) => handleWishlistToggle(e, product._id)}
+              disabled={loadingWishlist[product._id]}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              className="focus:outline-none disabled:opacity-50 z-20 relative ml-2"
+              aria-label={isInWishlist(product._id) ? "Remove from wishlist" : "Add to wishlist"}
+              type="button"
+            >
+              <motion.div
+                initial={false}
+                animate={{
+                  scale: isAuthenticated && isInWishlist(product._id) ? [1, 1.3, 1] : 1,
+                  rotate: isAuthenticated && isInWishlist(product._id) ? [0, 10, -10, 0] : 0,
+                }}
+                transition={{ duration: 0.3 }}
               >
-                <motion.div
-                  initial={false}
-                  animate={{
-                    scale: isInWishlist(product._id) ? [1, 1.3, 1] : 1,
-                    rotate: isInWishlist(product._id) ? [0, 10, -10, 0] : 0,
-                  }}
-                  transition={{ duration: 0.3 }}
-                >
-                  {isInWishlist(product._id) ? (
-                    <FavoriteIcon
-                      sx={{
-                        color: "#F91F54",
-                        fontSize: 28,
-                        filter: "drop-shadow(0 2px 4px rgba(249, 31, 84, 0.3))"
-                      }}
-                    />
-                  ) : (
-                    <FavoriteBorderIcon
-                      sx={{
-                        color: "#F91F54",
-                        fontSize: 28
-                      }}
-                    />
-                  )}
-                </motion.div>
-              </motion.button>
-            )}
+                {isAuthenticated && isInWishlist(product._id) ? (
+                  <FavoriteIcon
+                    sx={{
+                      color: "#F91F54",
+                      fontSize: 28,
+                      filter: "drop-shadow(0 2px 4px rgba(249, 31, 84, 0.3))"
+                    }}
+                  />
+                ) : (
+                  <FavoriteBorderIcon
+                    sx={{
+                      color: "#F91F54",
+                      fontSize: 28
+                    }}
+                  />
+                )}
+              </motion.div>
+            </motion.button>
           </div>
           <Link href={`/shop/${product._id}`}>
             <div className="text-sm">
@@ -534,7 +540,6 @@ const BestSelling = () => {
               </div>
             </div>
           ) : (
-            // Desktop grid
             <div className="overflow-x-auto lg:overflow-x-visible no-scrollbar scrollbar-hide">
               <div className="flex gap-6 mt-10 lg:grid lg:grid-cols-3 xl:grid-cols-4 md:px-0">
                 {products.map((product, index) => (

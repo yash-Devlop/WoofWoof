@@ -153,6 +153,8 @@ export default function AdminProductViewModal({ open, onClose, product }) {
                     key={idx}
                     src={img.url}
                     alt={img.altText || "Product Image"}
+                    width={100}
+                    height={100}
                     style={{
                       width: 100,
                       height: 100,
@@ -161,7 +163,7 @@ export default function AdminProductViewModal({ open, onClose, product }) {
                       border: "1px solid #ccc",
                       cursor: "pointer",
                     }}
-                    onClick={() => setSelectedImage(`/${img.url}`)}
+                    onClick={() => setSelectedImage(img.url)}
                   />
                 ))}
               </Box>
@@ -185,16 +187,20 @@ export default function AdminProductViewModal({ open, onClose, product }) {
       >
         <DialogTitle>Image Preview</DialogTitle>
         <DialogContent dividers sx={{ textAlign: "center" }}>
-          <Image
-            src={selectedImage}
-            alt="Preview"
-            style={{
-              maxWidth: "100%",
-              maxHeight: "80vh",
-              objectFit: "contain",
-              borderRadius: 8,
-            }}
-          />
+          {selectedImage && (
+            <Image
+              src={selectedImage}
+              alt="Preview"
+              width={800}
+              height={600}
+              style={{
+                maxWidth: "100%",
+                height: "auto",
+                objectFit: "contain",
+                borderRadius: 8,
+              }}
+            />
+          )}
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setSelectedImage(null)}>Close</Button>

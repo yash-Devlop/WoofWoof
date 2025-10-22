@@ -24,7 +24,7 @@ import {
 import ImageUploader from "../ImageUploader";
 
 const sizeOptions = ["XS", "S", "M", "L", "XL", "XXL"];
-const stockOptions = ["In Stock", "Sold Out"]; 
+const stockOptions = ["In Stock", "Sold Out"];
 
 // Helper to validate URL
 const isValidURL = (string) => {
@@ -300,7 +300,13 @@ const AdminEditProductModal = ({ open, onClose, product }) => {
             <Box display="flex" gap={2} flexWrap="wrap" mb={2}>
               {product.images.map((img, idx) => (
                 <Box key={idx} sx={{ width: 80, height: 80, borderRadius: 2, overflow: "hidden", border: "1px solid #ccc" }}>
-                  <Image src={img.url.startsWith("/uploads") ? img.url : `/${img.url}`} alt={img.altText || `image-${idx}`} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  <Image
+                    src={img.url.startsWith("/uploads") ? img.url : `/${img.url}`}
+                    alt={img.altText || `image-${idx}`}
+                    width={80}
+                    height={80}
+                    style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                  />
                 </Box>
               ))}
             </Box>

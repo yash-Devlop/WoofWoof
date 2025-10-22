@@ -23,13 +23,27 @@ const ClientLayout = ({ children }) => {
     "/privacy-policy",
     "/login",
     "/register",
-    "/blog",
   ];
   const shouldHideNavAndOffers = hideNavAndOffersRoutes.some((route) =>
     path.startsWith(route)
   );
 
-  const [showIntro, setShowIntro] = useState(true);
+  // Initialize showIntro based on current path
+  const [showIntro, setShowIntro] = useState(() => {
+    if (typeof window === "undefined") return false;
+    const hasSeenIntro = sessionStorage.getItem("hasSeenIntro");
+    return path === "/" && !hasSeenIntro;
+  });
+
+  useEffect(() => {
+    // Only show intro on home page and only once per session
+    const hasSeenIntro = sessionStorage.getItem("hasSeenIntro");
+    if (path === "/" && !hasSeenIntro) {
+      setShowIntro(true);
+    } else {
+      setShowIntro(false);
+    }
+  }, [path]);
 
   useEffect(() => {
     document.body.style.overflow = showIntro ? "hidden" : "auto";
@@ -37,6 +51,7 @@ const ClientLayout = ({ children }) => {
 
   const handleVideoFinish = () => {
     setShowIntro(false);
+    sessionStorage.setItem("hasSeenIntro", "true");
   };
 
   useEffect(() => {
@@ -112,7 +127,6 @@ const ClientLayout = ({ children }) => {
       )}
     </Provider>
   );
-
 };
 
 export default ClientLayout;

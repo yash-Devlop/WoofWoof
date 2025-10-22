@@ -22,6 +22,7 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchOrders, updateOrderStatus } from "@/store/slices/admin/adminOrderSlice";
 import OrderDetailsModal from "@/app/components/admin/OrderDetailsModal";
+import Spinner from "@/app/components/loader/Spinner";
 
 export default function AdminOrdersPage() {
   const dispatch = useDispatch();
@@ -96,7 +97,7 @@ export default function AdminOrdersPage() {
   };
 
   if (loading) {
-    return <div>loading...</div>;
+    return <Spinner />
   }
 
   return (
@@ -181,9 +182,7 @@ export default function AdminOrdersPage() {
                         <VisibilityIcon fontSize="small" />
                         View
                       </Button>
-                      {order?.status !== "Delivered" && 
-                       order?.status !== "Cancelled" && 
-                       order?.status !== "Shipped" && (
+                      {order?.status !== "Delivered" && order?.status !== "Cancelled" && order?.status !== "Shipped" && (
                         <Button
                           variant="contained"
                           size="small"
@@ -199,6 +198,7 @@ export default function AdminOrdersPage() {
                           Ship
                         </Button>
                       )}
+
                       {order?.status !== "Delivered" && order?.status !== "Cancelled" && (
                         <Button
                           variant="contained"
@@ -212,6 +212,21 @@ export default function AdminOrdersPage() {
                           Complete
                         </Button>
                       )}
+
+                      {order?.status !== "Delivered" && order?.status !== "Cancelled" && (
+                        <Button
+                          variant="contained"
+                          size="small"
+                          color="error" // changed to red for cancel
+                          sx={{ gap: 1 }}
+                          onClick={() => handleUpdateStatus(order._id, "Cancelled")}
+                          disabled={updateLoading}
+                        >
+                          <CancelIcon fontSize="small" /> {/* changed icon */}
+                          Cancel Order
+                        </Button>
+                      )}
+
                     </div>
                   </TableCell>
                 </TableRow>

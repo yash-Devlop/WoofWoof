@@ -196,10 +196,11 @@ export async function DELETE(req) {
 
     // Delete all associated image files
     for (const image of product.images) {
+      if (image.url === product.primaryImage) continue; // skip primary
       const imagePath = path.resolve("public", image.url);
       try {
         if (fs.existsSync(imagePath)) {
-          fs.unlinkSync(imagePath); // Or: await fs.promises.unlink(imagePath)
+          fs.unlinkSync(imagePath); // or await fs.promises.unlink(imagePath)
         }
       } catch (fileErr) {
         console.error(`Error deleting image at ${imagePath}:`, fileErr);
