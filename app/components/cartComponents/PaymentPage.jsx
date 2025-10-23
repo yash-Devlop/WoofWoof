@@ -591,7 +591,7 @@ const PaymentPage = ({ onBack, onOrderComplete, guestAddress }) => {
       <div className="w-full flex justify-end items-center lg:px-8 px-4 pb-8">
         {/* <Button onClick={onBack} disabled={isProcessing}>Back to Checkout</Button> */}
         <button
-          className="bg-[#F91F54] flex items-center px-4 py-2 gap-2 text-white font-medium rounded-full uppercase hover:scale-105 transition-all duration-300"
+          className="bg-[#F91F54] flex items-center px-4 py-2 md:mr-72 mr-0 gap-2 text-white font-medium rounded-full uppercase hover:scale-105 transition-all duration-300"
           onClick={onBack}
           disabled={isProcessing}
         >
