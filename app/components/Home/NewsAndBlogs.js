@@ -2,11 +2,15 @@ import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import NewsAndBlogsLoader from "../loader/NewsAndBlogsLoader";
+import { useRouter } from "next/navigation";
 
 const NewsAndBlogs = () => {
   const [loading, setLoading] = useState(true);
   const [blogData, setBlogData] = useState([]);
+
+  const router  = useRouter()
 
   useEffect(() => {
     const fetchBlogdata = async () => {
@@ -98,9 +102,21 @@ const NewsAndBlogs = () => {
 
             {/* Static View All Button - Always visible */}
             <div className="flex w-full justify-end mt-8">
-              <Link href="/blog" className="px-6 py-1 text-black underline">
-                View All...
-              </Link>
+                <button
+                  onClick={() => router.push("/blog")}
+                  className="bg-black/97 gap-1 flex justify-center items-center pl-4 pr-1.5 py-1 group hover:scale-105 transition-all duration-300 text-white font-medium lg:text-lg rounded-full uppercase cursor-pointer"
+                >
+                  View All...
+                  <motion.span>
+                    <Image
+                      src="/images/logo.png"
+                      width={40}
+                      height={40}
+                      alt="logo"
+                      className="group-hover:block transition-all duration-300"
+                    />
+                  </motion.span>
+                </button>
             </div>
           </div>
         </div>
