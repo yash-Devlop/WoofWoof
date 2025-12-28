@@ -83,16 +83,6 @@ export default function AdminOrdersPage() {
 
   const getStatusConfig = (status) => {
     const configs = {
-      // Pending: {
-      //   color: "#FFA726",
-      //   bgColor: "#FFF3E0",
-      //   icon: <HourglassEmptyIcon sx={{ fontSize: 16 }} />,
-      // },
-      // Processing: {
-      //   color: "#42A5F5",
-      //   bgColor: "#E3F2FD",
-      //   icon: <AutorenewIcon sx={{ fontSize: 16 }} />,
-      // },
       Shipped: {
         color: "#AB47BC",
         bgColor: "#F3E5F5",
