@@ -83,6 +83,11 @@ export default function AdminOrdersPage() {
 
   const getStatusConfig = (status) => {
     const configs = {
+      Pending: {
+        color: "#FF9800",
+        bgColor: "#FFF3E0",
+        icon: <HourglassEmptyIcon sx={{ fontSize: 16 }} />,
+      },
       Shipped: {
         color: "#AB47BC",
         bgColor: "#F3E5F5",
@@ -105,6 +110,7 @@ export default function AdminOrdersPage() {
   // Count orders by status
   const statusCounts = {
     All: orders.length,
+    Pending: orders.filter(o => o.status === "Pending").length,
     Shipped: orders.filter(o => o.status === "Shipped").length,
     Delivered: orders.filter(o => o.status === "Delivered").length,
     Cancelled: orders.filter(o => o.status === "Cancelled").length,
@@ -129,6 +135,20 @@ export default function AdminOrdersPage() {
         >
           <ToggleButton value="All" aria-label="all orders">
             All ({statusCounts.All})
+          </ToggleButton>
+          <ToggleButton
+            value="Pending"
+            aria-label="pending orders"
+            sx={{
+              "&.Mui-selected": {
+                backgroundColor: "#FFF3E0",
+                color: "#FF9800",
+                "&:hover": { backgroundColor: "#FFE0B2" }
+              }
+            }}
+          >
+            <HourglassEmptyIcon sx={{ fontSize: 18, mr: 0.5 }} />
+            Pending ({statusCounts.Pending})
           </ToggleButton>
           <ToggleButton
             value="Shipped"
