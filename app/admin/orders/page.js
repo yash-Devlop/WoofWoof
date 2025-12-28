@@ -12,6 +12,9 @@ import {
   Button,
   Pagination,
   Chip,
+  Box,
+  ToggleButtonGroup,
+  ToggleButton,
 } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -28,14 +31,20 @@ export default function AdminOrdersPage() {
   const dispatch = useDispatch();
   const [page, setPage] = useState(1);
   const [viewOrder, setViewOrder] = useState(null);
+  const [statusFilter, setStatusFilter] = useState("All");
   const { orders, loading, updateLoading } = useSelector((state) => state.adminOrder);
 
   useEffect(() => {
     dispatch(fetchOrders());
   }, [dispatch]);
 
+  // Filter orders based on selected status
+  const filteredOrders = statusFilter === "All"
+    ? orders
+    : orders.filter(order => order.status === statusFilter);
+
   // Sort orders: Pending first, then others, Delivered last
-  const sortedOrders = [...orders].sort((a, b) => {
+  const sortedOrders = [...filteredOrders].sort((a, b) => {
     const statusOrder = {
       Pending: 1,
       Processing: 2,
@@ -65,18 +74,25 @@ export default function AdminOrdersPage() {
     await dispatch(updateOrderStatus({ orderId, status: Status }));
   };
 
+  const handleStatusFilterChange = (event, newFilter) => {
+    if (newFilter !== null) {
+      setStatusFilter(newFilter);
+      setPage(1); // Reset to first page when filter changes
+    }
+  };
+
   const getStatusConfig = (status) => {
     const configs = {
-      Pending: {
-        color: "#FFA726",
-        bgColor: "#FFF3E0",
-        icon: <HourglassEmptyIcon sx={{ fontSize: 16 }} />,
-      },
-      Processing: {
-        color: "#42A5F5",
-        bgColor: "#E3F2FD",
-        icon: <AutorenewIcon sx={{ fontSize: 16 }} />,
-      },
+      // Pending: {
+      //   color: "#FFA726",
+      //   bgColor: "#FFF3E0",
+      //   icon: <HourglassEmptyIcon sx={{ fontSize: 16 }} />,
+      // },
+      // Processing: {
+      //   color: "#42A5F5",
+      //   bgColor: "#E3F2FD",
+      //   icon: <AutorenewIcon sx={{ fontSize: 16 }} />,
+      // },
       Shipped: {
         color: "#AB47BC",
         bgColor: "#F3E5F5",
@@ -96,6 +112,14 @@ export default function AdminOrdersPage() {
     return configs[status] || { color: "#9E9E9E", bgColor: "#F5F5F5", icon: null };
   };
 
+  // Count orders by status
+  const statusCounts = {
+    All: orders.length,
+    Shipped: orders.filter(o => o.status === "Shipped").length,
+    Delivered: orders.filter(o => o.status === "Delivered").length,
+    Cancelled: orders.filter(o => o.status === "Cancelled").length,
+  };
+
   if (loading) {
     return <Spinner />
   }
@@ -104,10 +128,70 @@ export default function AdminOrdersPage() {
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">All Orders</h1>
 
+      {/* Status Filter */}
+      <Box sx={{ mb: 3 }}>
+        <ToggleButtonGroup
+          value={statusFilter}
+          exclusive
+          onChange={handleStatusFilterChange}
+          aria-label="order status filter"
+          sx={{ flexWrap: "wrap", gap: 1 }}
+        >
+          <ToggleButton value="All" aria-label="all orders">
+            All ({statusCounts.All})
+          </ToggleButton>
+          <ToggleButton
+            value="Shipped"
+            aria-label="shipped orders"
+            sx={{
+              "&.Mui-selected": {
+                backgroundColor: "#F3E5F5",
+                color: "#AB47BC",
+                "&:hover": { backgroundColor: "#E1BEE7" }
+              }
+            }}
+          >
+            <LocalShippingIcon sx={{ fontSize: 18, mr: 0.5 }} />
+            Shipped ({statusCounts.Shipped})
+          </ToggleButton>
+          <ToggleButton
+            value="Delivered"
+            aria-label="delivered orders"
+            sx={{
+              "&.Mui-selected": {
+                backgroundColor: "#E8F5E9",
+                color: "#66BB6A",
+                "&:hover": { backgroundColor: "#C8E6C9" }
+              }
+            }}
+          >
+            <CheckCircleIcon sx={{ fontSize: 18, mr: 0.5 }} />
+            Delivered ({statusCounts.Delivered})
+          </ToggleButton>
+          <ToggleButton
+            value="Cancelled"
+            aria-label="cancelled orders"
+            sx={{
+              "&.Mui-selected": {
+                backgroundColor: "#FFEBEE",
+                color: "#EF5350",
+                "&:hover": { backgroundColor: "#FFCDD2" }
+              }
+            }}
+          >
+            <CancelIcon sx={{ fontSize: 18, mr: 0.5 }} />
+            Cancelled ({statusCounts.Cancelled})
+          </ToggleButton>
+        </ToggleButtonGroup>
+      </Box>
+
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
             <TableRow>
+              <TableCell>
+                <strong>Order ID</strong>
+              </TableCell>
               <TableCell>
                 <strong>User Name</strong>
               </TableCell>
@@ -144,6 +228,11 @@ export default function AdminOrdersPage() {
 
               return (
                 <TableRow key={order._id}>
+                  <TableCell>
+                    <span style={{ fontFamily: 'monospace', fontSize: '0.9rem' }}>
+                      {order?.orderNumber}
+                    </span>
+                  </TableCell>
                   <TableCell>
                     {order?.user?.username || order?.customerInfo?.name}
                   </TableCell>
@@ -217,16 +306,15 @@ export default function AdminOrdersPage() {
                         <Button
                           variant="contained"
                           size="small"
-                          color="error" // changed to red for cancel
+                          color="error"
                           sx={{ gap: 1 }}
                           onClick={() => handleUpdateStatus(order._id, "Cancelled")}
                           disabled={updateLoading}
                         >
-                          <CancelIcon fontSize="small" /> {/* changed icon */}
+                          <CancelIcon fontSize="small" />
                           Cancel Order
                         </Button>
                       )}
-
                     </div>
                   </TableCell>
                 </TableRow>
